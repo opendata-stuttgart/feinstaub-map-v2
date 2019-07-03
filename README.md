@@ -22,7 +22,7 @@ Requirements:
 
 install all dependencies
 ```
-cp config.js.dist config.js
+cp src/js/config.js.dist src/js/config.js
 npm install
 ```
 
