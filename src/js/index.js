@@ -471,8 +471,11 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 };
 
 function data_median(data) {
-	var d_temp = data.filter(d => !d.o.indoor);
-	return median(d_temp, (o) => o.o.data[user_selected_value]);
+	var d_temp = data
+		.filter(d => !d.o.indoor)
+		.map(o => o.o.data[user_selected_value])
+		.sort();
+	return median(d_temp);
 }
 
 function switchLegend(val) {
