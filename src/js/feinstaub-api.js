@@ -32,7 +32,7 @@ let api = {
 	},
 	
 	noise_sensors: {
-		"Laerm": true,
+		"DNMS (Laerm)": true,
 	},
 
 	checkValues(obj, sel) {
