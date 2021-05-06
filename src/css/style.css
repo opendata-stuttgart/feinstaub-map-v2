@@ -498,3 +498,25 @@ tr {
 .leaflet-control-velocity {
 	display: none;
 }
+
+.leaflet-control-geosearch {
+	margin-top: 10px !important;
+}
+
+.leaflet-control-geosearch form input {
+	height: 30px !important;
+}
+
+.leaflet-control-locate {
+	margin-top: 10px !important;
+	font-weight: bolder;
+	font-size: 150%;
+}
+
+.leaflet-bar-part span:before {
+	content: "⌖";
+}
+.leaflet-bar-part span {
+	position: relative;
+	top: -3px;
+}

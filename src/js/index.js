@@ -1,7 +1,11 @@
 // import leaflet
 import leaflet from 'leaflet';
 import hash from 'leaflet-hash';
+import * as GeoSearch from 'leaflet-geosearch';
+import 'leaflet.locatecontrol';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet-geosearch/dist/geosearch.css';
+import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 
 // d3 libraries
 import * as d3_Hexbin from "d3-hexbin";
@@ -505,6 +509,17 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 		map.zoomIn();
 		clicked += 1;
 	});
+
+	// add searchbox
+	new GeoSearch.GeoSearchControl({ 
+			style: 'button',
+			position: 'topleft',
+			showMarker: false,
+			autoClose: true,
+			provider: new GeoSearch.OpenStreetMapProvider(), 
+		}).addTo(map);
+
+	L.control.locate().addTo(map);
 
 	// Load lab and windlayer, init checkboxes
 	if (config.layer_labs) {
