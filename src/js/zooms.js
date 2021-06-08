@@ -59,6 +59,7 @@ module.exports = {
 	"france": 6,
 	"alsace": 8,
 	"valenciennes": 12,
+	"rouen": 13,
 
 //	Finland
 	"finland": 5,
