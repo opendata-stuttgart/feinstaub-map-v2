@@ -10,7 +10,7 @@ module.exports = {
 	"layer_wind": 1,
 	"layer_eustations": 0,
 	// Tiles
-	"tiles": "https://{s}.maps.sensor.community/tiles/{z}/{x}/{y}.png",
+	"tiles_server": "https://{s}.maps.sensor.community",
 	"tiles_path": "/{z}/{x}/{y}.png",
 	"tiles_subdomains": ["osmc1","osmc2","osmc3"],
 	"attribution": "Map data © <a href='https://openstreetmap.org'>OpenStreetMap</a> contributors"
