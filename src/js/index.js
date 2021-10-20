@@ -56,14 +56,23 @@ const locale = timeFormatLocale({
 	"shortMonths": ["Jan.", "Feb.", "Mar.", "Apr.", "Mai", "Jun.", "Jul.", "Aug.", "Sep.", "Okt.", "Nov.", "Dez."]
 });
 
+//EU-colors:
+
+// #50F0E6
+// #50CCAA
+// #F0E641
+// #FF5050
+// #960032
+// #7D2181
+
 const scale_options = {
 	"PM10": {
-		valueDomain: [20, 40, 60, 100, 500],
-		colorRange: ['#00796B', '#F9A825', '#E65100', '#DD2C00', '#960084']
+		valueDomain: [5, 15, 35, 75, 125, 150],
+		colorRange: ['#50F0E6', '#50CCAA', '#F0E641', '#FF5050', '#960032', '#7D2181'] 
 	},
 	"PM25": {
-		valueDomain: [10, 20, 40, 60, 100],
-		colorRange: ['#00796B', '#F9A825', '#E65100', '#DD2C00', '#960084']
+		valueDomain: [2.5, 7.5, 17.5, 37.5, 62.5, 75],
+		colorRange: ['#50F0E6', '#50CCAA', '#F0E641', '#FF5050', '#960032', '#7D2181'] 
 	},
 	"Official_AQI_US": {
 		valueDomain: [0, 50, 100, 150, 200, 300],
