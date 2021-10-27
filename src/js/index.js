@@ -35,7 +35,7 @@ import * as translate from './translate.js';
 import './static-files'
 
 // declare variables
-let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise;
+let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise,hmhexaPM_WHO,hmhexaPM_EU;
 
 // save browser lanuage for translation
 const lang = translate.getFirstBrowserLanguage().substring(0, 2);
@@ -67,12 +67,28 @@ const locale = timeFormatLocale({
 
 const scale_options = {
 	"PM10": {
-		valueDomain: [5, 15, 35, 75, 125, 150],
-		colorRange: ['#50F0E6', '#50CCAA', '#F0E641', '#FF5050', '#960032', '#7D2181'] 
+		valueDomain: [20, 40, 60, 100, 500],
+		colorRange: ['#00796B', '#F9A825', '#E65100', '#DD2C00', '#960084']
 	},
 	"PM25": {
-		valueDomain: [2.5, 7.5, 17.5, 37.5, 62.5, 75],
+		valueDomain: [10, 20, 40, 60, 100],
+		colorRange: ['#00796B', '#F9A825', '#E65100', '#DD2C00', '#960084']
+	},
+	"PM10eu": {
+		valueDomain: [10, 30, 45, 75, 125, 150],
 		colorRange: ['#50F0E6', '#50CCAA', '#F0E641', '#FF5050', '#960032', '#7D2181'] 
+	},
+	"PM25eu": {
+		valueDomain: [5, 15, 22.5, 37.5, 62.5, 75],
+		colorRange: ['#50F0E6', '#50CCAA', '#F0E641', '#FF5050', '#960032', '#7D2181'] 
+	},
+	"PM10who": {
+		valueDomain: [0, 45, 150],
+		colorRange: ['#8bf3ff', '#fff148', '#ff5353'] 
+	},
+	"PM25who": {
+		valueDomain: [0, 15, 75],
+		colorRange: ['#8bf3ff', '#fff148', '#ff5353'] 
 	},
 	"Official_AQI_US": {
 		valueDomain: [0, 50, 100, 150, 200, 300],
@@ -99,6 +115,10 @@ const scale_options = {
 const titles = {
 	"PM10": "PM10 &micro;g/m&sup3;",
 	"PM25": "PM2.5 &micro;g/m&sup3;",
+	"PM10eu": "PM10 &micro;g/m&sup3;",
+	"PM25eu": "PM2.5 &micro;g/m&sup3;",
+	"PM10who": "PM10 &micro;g/m&sup3;",
+	"PM25who": "PM2.5 &micro;g/m&sup3;",
 	"Official_AQI_US": "AQI US",
 	"Temperature": "Temperature °C",
 	"Humidity": "Humidity %",
@@ -109,6 +129,10 @@ const titles = {
 const panelIDs = {
 	"PM10": [2, 1],
 	"PM25": [2, 1],
+	"PM10eu": [2, 1],
+	"PM25eu": [2, 1],
+	"PM10who": [2, 1], //WHICH PANELS?
+	"PM25who": [2, 1], //WHICH PANELS?
 	"Temperature": [4, 3],
 	"Humidity": [6, 5],
 	"Pressure": [8, 7],
@@ -462,8 +486,27 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 				timestamp_from = result.timestamp_from;
 			}
 			ready(1);
+			api.getData(data_host + "/data/v2/data.24h.json", 5).then(function (result) {
+				hmhexaPM_WHO = result.cells;
+				console.log(hmhexaPM_WHO);
+				if (result.timestamp > timestamp_data) {
+					timestamp_data = result.timestamp;
+					timestamp_from = result.timestamp_from;
+				}
+				ready(5);
+			});
+			api.getData(data_host + "/data/v2/data.24h.json", 6).then(function (result) {
+				hmhexaPM_EU = result.cells;
+				console.log(hmhexaPM_EU);
+				if (result.timestamp > timestamp_data) {
+					timestamp_data = result.timestamp;
+					timestamp_from = result.timestamp_from;
+				}
+				ready(6);
+			});
 			api.getData(data_host + "/data/v2/data.24h.json", 2).then(function (result) {
 				hmhexaPM_AQI = result.cells;
+				console.log(hmhexaPM_AQI);
 				if (result.timestamp > timestamp_data) {
 					timestamp_data = result.timestamp;
 					timestamp_from = result.timestamp_from;
@@ -598,6 +641,7 @@ function data_median(data) {
 }
 
 function switchLegend(val) {
+	console.log(val);
 	d3.select('#legendcontainer').selectAll("[id^=legend_]").style("display", "none");
 	d3.select('#legend_' + val).style("display", "block");
 }
@@ -648,6 +692,18 @@ function ready(num) {
 		hexagonheatmap.initialize(scale_options[user_selected_value]);
 		hexagonheatmap.data(hmhexaPM_aktuell);
 	}
+	if (num === 6 && (user_selected_value === "PM10eu" || user_selected_value === "PM25eu")) {
+		hexagonheatmap.initialize(scale_options[user_selected_value]);
+		hexagonheatmap.data(hmhexaPM_aktuell);
+	}
+	if (num === 5 && (user_selected_value === "PM10who" || user_selected_value === "PM25who")) {
+		hexagonheatmap.initialize(scale_options[user_selected_value]);
+		hexagonheatmap.data(hmhexaPM_WHO);
+	}
+
+	//REVOIR MAP
+
+
 	if (num === 2 && user_selected_value === "Official_AQI_US") {
 		hexagonheatmap.initialize(scale_options[user_selected_value]);
 		hexagonheatmap.data(hmhexaPM_AQI);
@@ -666,6 +722,7 @@ function ready(num) {
 }
 
 function reloadMap(val) {
+	console.log(val);
 	d3.selectAll('path.hexbin-hexagon').remove();
 
 	closeSidebar();
@@ -674,6 +731,10 @@ function reloadMap(val) {
 	hexagonheatmap.initialize(scale_options[val]);
 	if (val === "PM10" || val === "PM25") {
 		hexagonheatmap.data(hmhexaPM_aktuell);
+	} else if (val === "PM10eu" || val === "PM25eu") {
+		hexagonheatmap.data(hmhexaPM_EU);
+	} else if (val === "PM10who" || val === "PM25who") {
+		hexagonheatmap.data(hmhexaPM_WHO);
 	} else if (val === "Official_AQI_US") {
 		hexagonheatmap.data(hmhexaPM_AQI);
 	} else if (val === "Temperature" || val === "Humidity" || val === "Pressure") {
@@ -704,6 +765,18 @@ function sensorNr(data) {
 			sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
 		}
 		if (user_selected_value === "PM25") {
+			sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+		}
+		if (user_selected_value === "PM10eu") {
+			sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+		}
+		if (user_selected_value === "PM25eu") {
+			sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+		}
+		if (user_selected_value === "PM10who") {
+			sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+		}
+		if (user_selected_value === "PM25who") {
 			sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
 		}
 		if (user_selected_value === "Official_AQI_US") {
@@ -797,6 +870,7 @@ function switchTo(element) {
 	custom_select.select("select").property("value", element.id.substring(12));
 	custom_select.select(".select-selected").html("<span>"+custom_select.select("select").select("option:checked").html()+"</span>");
 	user_selected_value = element.id.substring(12);
+	console.log(user_selected_value);
 	if (user_selected_value === "Noise") {
 		custom_select.select(".select-selected").select("span").attr("id","noise_option");
 	} else {

@@ -180,9 +180,10 @@ let api = {
 							return {
 								"data": {
 									"Official_AQI_US": data_out.AQI,
-									"origin": data_out.origin,
-									"PM10_24h": data_in.PM10,
-									"PM25_24h": data_in.PM25
+									"origin": data_out.origin
+									// ,
+									// "PM10who": data_in.PM10, //24 hour average
+									// "PM25who": data_in.PM25 //24 hour average
 								},
 								"id": values.sensor.id,
 								"latitude": values.location.latitude,
@@ -243,7 +244,67 @@ let api = {
 						})
 						.value();
 					return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-				}
+				} else if (num === 5) {
+					let cells = _.chain(json)
+						.filter((sensor) =>
+							typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined"
+							&& api.pm_sensors[sensor.sensor.sensor_type.name]
+							&& api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P1")), "PM10")
+							&& api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P2")), "PM25")
+						)
+						.map((values) => {
+							if (values.timestamp > timestamp_data) {
+								timestamp_data = values.timestamp;
+								timestamp_from = "data.24h"
+							}
+							const data_in = {
+								"PM10": parseInt(getRightValue(values.sensordatavalues, "P1")),
+								"PM25": parseInt(getRightValue(values.sensordatavalues, "P2"))
+							};
+							return {
+								"data": {
+									"PM10who": data_in.PM10, //24 hour average
+									"PM25who": data_in.PM25 //24 hour average
+								},
+								"id": values.sensor.id,
+								"latitude": values.location.latitude,
+								"longitude": values.location.longitude,
+								"indoor": values.location.indoor,
+							}
+						})
+						.value();
+					return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
+				} else if (num === 6) {
+					let cells = _.chain(json)
+						.filter((sensor) =>
+							typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined"
+							&& api.pm_sensors[sensor.sensor.sensor_type.name]
+							&& api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P1")), "PM10")
+							&& api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P2")), "PM25")
+						)
+						.map((values) => {
+							if (values.timestamp > timestamp_data) {
+								timestamp_data = values.timestamp;
+								timestamp_from = "data.24h"
+							}
+							const data_in = {
+								"PM10": parseInt(getRightValue(values.sensordatavalues, "P1")),
+								"PM25": parseInt(getRightValue(values.sensordatavalues, "P2"))
+							};
+							return {
+								"data": {
+									"PM10eu": data_in.PM10, //24 hour average
+									"PM25eu": data_in.PM25 //24 hour average
+								},
+								"id": values.sensor.id,
+								"latitude": values.location.latitude,
+								"longitude": values.location.longitude,
+								"indoor": values.location.indoor,
+							}
+						})
+						.value();
+					return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
+				} 
 			}).catch(function (error) {
 				// If there is any error you will catch them here
 				throw new Error(`Problems fetching data ${error}`)

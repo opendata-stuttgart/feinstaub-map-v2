@@ -56,7 +56,38 @@
 	</div>
 	<div id="UI_container">
 		<div id ='legendcontainer'>
-			<div class ="legend" id="legend_PM10" style="display: none;">
+
+			<div class="legend" id="legend_PM10" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 100%;"><b>500</b></div>
+						<div class="label" style="bottom: 80%;"><b>100</b></div>
+						<div class="label" style="bottom: 60%;"><b>75</b></div>
+						<div class="label limit" style="bottom: 40%;"><b>50</b></div>
+						<div class="label" style="bottom: 20%;"><b>25</b></div>
+						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="legend" id="legend_PM25" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 100%;"><b>500</b></div>
+						<div class="label" style="bottom: 80%;"><b>100</b></div>
+						<div class="label" style="bottom: 60%;"><b>75</b></div>
+						<div class="label" style="bottom: 41%;"><b>50</b></div>
+						<div class="label limit" style="bottom: 20%;"><b>25</b></div>
+						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+					</div>
+				</div>
+			</div>
+
+			<div class ="legend" id="legend_PM10eu" style="display: none;">
 				<div class="legend-inner">
 					<div class="gradient">
 					</div>
@@ -65,14 +96,14 @@
 						<div class="label" style="bottom: 87%;"><b>150</b></div>
 						<div class="label" style="bottom: 75%;"><b>100</b></div>
 						<div class="label" style="bottom: 60%;"><b>50</b></div>
-						<div class="label" style="bottom: 40%;"><b>20</b></div>
-						<div class="label" style="bottom: 20%;"><b>10</b></div>
+						<div class="label" style="bottom: 40%;"><b>40</b></div>
+						<div class="label" style="bottom: 20%;"><b>20</b></div>
 						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
 					</div>
 				</div>
 			</div>
 
-			<div class ="legend" id="legend_PM25" style="display: none;">
+			<div class ="legend" id="legend_PM25eu" style="display: none;">
 				<div class="legend-inner">
 					<div class="gradient">
 					</div>
@@ -81,12 +112,34 @@
 						<div class="label" style="bottom: 87%;"><b>75</b></div>
 						<div class="label" style="bottom: 75%;"><b>50</b></div>
 						<div class="label" style="bottom: 60%;"><b>25</b></div>
-						<div class="label" style="bottom: 40%;"><b>10</b></div>
-						<div class="label" style="bottom: 20%;"><b>5</b></div>
+						<div class="label" style="bottom: 40%;"><b>20</b></div>
+						<div class="label" style="bottom: 20%;"><b>10</b></div>
 						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
 					</div>
 				</div>
 			</div> 
+
+			<div class="legend" id="legend_PM10who" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 50%;"><b>45</b></div>
+						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+					</div>
+				</div>
+			</div>
+
+			<div class="legend" id="legend_PM25who" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 50%;"><b>15</b></div>
+						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+					</div>
+				</div>
+			</div>
 
 			<div class ="legend" id="legend_Official_AQI_US" style="display: none;">
 <!--				<h3>Air quality US</h3>-->
@@ -169,6 +222,10 @@
 			<select>
 				<option value="PM10"> PM10</option>
 				<option value="PM25"> PM2.5</option>
+				<option value="PM10eu"> PM10 (EU)</option>
+				<option value="PM25eu"> PM2.5 (EU)</option>
+				<option value="PM10who"> PM10 (WHO)</option>
+				<option value="PM25who"> PM2.5 (WHO)</option>
 				<option value="Official_AQI_US"> Official AQI US</option>
 				<option value="Temperature"> Temperature</option>
 				<option value="Humidity"> rel. Humidity</option>

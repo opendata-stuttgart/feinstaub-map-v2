@@ -227,6 +227,15 @@ body {
     content: '\2013   ';
 }
 
+#legend_PM10 .gradient {
+    background: -webkit-linear-gradient(bottom, #00796b 0%, #00796b 16%, #f9a825 32%, #e65100 48%, #dd2c00 72%, #dd2c00 80%, #8c0084 100%);
+    background: linear-gradient(to top, #00796b 0%, #00796b 16%, #f9a825 32%, #e65100 48%, #dd2c00 72%, #dd2c00 80%, #8c0084 100%);
+}
+
+#legend_PM25 .gradient {
+    background: -webkit-linear-gradient(bottom, #00796b 0%, #00796b 8%, #f9a825 16%, #e65100 32%, #dd2c00 48%, #dd2c00 72%, #8c0084 80%);
+    background: linear-gradient(to top, #00796b 0%, #00796b 8%, #f9a825 16%, #e65100 32%, #dd2c00 48%, #dd2c00 72%, #8c0084 80%);
+}
 
 
 /* 
@@ -239,14 +248,25 @@ body {
  */
 
 
-#legend_PM10 .gradient {
+#legend_PM10eu .gradient {
     background: -webkit-linear-gradient(bottom, #50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 100%);
     background: linear-gradient(to top, #50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 100%);
 }
 
-#legend_PM25 .gradient {
+
+#legend_PM25eu .gradient {
     background: -webkit-linear-gradient(bottom,#50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 87%);
     background: linear-gradient(to top, #50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 87%);
+}
+
+#legend_PM10who .gradient {
+    background: -webkit-linear-gradient(bottom, #8bf3ff 0, #fff148 50%, #ff5353 100%);
+    background: linear-gradient(to top, #8bf3ff 0%, #fff148 50%, #ff5353 100%);
+}
+
+#legend_PM25who .gradient {
+    background: -webkit-linear-gradient(bottom, #8bf3ff 0, #fff148 50%, #ff5353 100%);
+    background: linear-gradient(to top, #8bf3ff 0%, #fff148 50%, #ff5353 100%);
 }
 
 #legend_Temperature .gradient {
