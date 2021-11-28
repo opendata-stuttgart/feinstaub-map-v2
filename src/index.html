@@ -44,16 +44,16 @@
 	<title>Map Sensor.Community</title>
 </head>
 <body>
-	<div id="topcontainer">
+	<!-- <div id="topcontainer">
 		<div id="betterplace"></div>
 		<div id="update"></div>
-	</div>
+	</div> -->
 	<span id="menu">&#9776;</span>
 	<div id="loading_layer"><div id="loading">Loading data...</div></div>
     <div id="sidebar" style="display: none;">
 		<div id="explanation"></div>
 		<div id="map-info" style="display: none;"></div>
-	</div>
+	<div id="update"></div>
 	<div id="UI_container">
 		<div id ='legendcontainer'>
 
@@ -218,26 +218,33 @@
 				</div>
 			</div> 
 		</div>
-		<div id="custom-select" class="custom-select" style="display: none;">
-			<select>
-				<option value="PM10"> PM10</option>
-				<option value="PM25"> PM2.5</option>
-				<option value="PM10eu"> PM10 (EU)</option>
-				<option value="PM25eu"> PM2.5 (EU)</option>
-				<option value="PM10who"> PM10 (WHO)</option>
-				<option value="PM25who"> PM2.5 (WHO)</option>
-				<option value="Official_AQI_US"> Official AQI US</option>
-				<option value="Temperature"> Temperature</option>
-				<option value="Humidity"> rel. Humidity</option>
-				<option value="Pressure"> Pressure</option>
-				<option value="Noise"> Noise</option>
-			</select>
-		</div>
+	</div>
+			<div id="custom-select" class="custom-select" style="display: none;">
+				<select>
+					<option value="PM10"> PM10</option>
+					<option value="PM25"> PM2.5</option>
+					<option value="PM10eu"> PM10 (EU)</option>
+					<option value="PM25eu"> PM2.5 (EU)</option>
+					<option value="PM10who"> PM10 (WHO)</option>
+					<option value="PM25who"> PM2.5 (WHO)</option>
+					<option value="Official_AQI_US"> Official AQI US</option>
+					<option value="Temperature"> Temperature</option>
+					<option value="Humidity"> rel. Humidity</option>
+					<option value="Pressure"> Pressure</option>
+					<option value="Noise"> Noise</option>
+				</select>
+			</div>
 		<div id="layer-select" class="layer-select">
-			<input type="checkbox" id="cb_labs" name="labs" checked="checked" /><label for="cb_labs" id="label_local_labs">Local labs</label><br/>
-			<input type="checkbox" id="cb_wind" name="wind" checked="checked" /><label for="cb_wind" id="label_wind_layer">Wind layer</label><br/>
+			<input type="checkbox" id="cb_labs" name="labs" checked="checked" /><label for="cb_labs" id="label_local_labs">Local
+				labs</label><br />
+			<input type="checkbox" id="cb_wind" name="wind" checked="checked" /><label for="cb_wind" id="label_wind_layer">Wind
+				layer</label><br />
 			<!-- <input type="checkbox" id="cb_eustations" name="eustations" checked="" /><label for="cb_eustations" id="label_eustations">EU stations</label><br/> -->
 		</div>
+
+
+
+
 	</div>
 
 	<div id='map'>

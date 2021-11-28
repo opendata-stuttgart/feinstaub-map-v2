@@ -141,7 +141,9 @@ const panelIDs = {
 
 const div = d3.select("#sidebar").append("div").attr("id", "table").style("display", "none");
 
-const map = L.map('map', {zoomControl: true, minZoom: config.minZoom, maxZoom: config.maxZoom, doubleClickZoom: false});
+const map = L.map('map', { zoomControl: true, minZoom: config.minZoom, maxZoom: config.maxZoom, doubleClickZoom: false });
+
+map.zoomControl.setPosition('topright');
 
 var data_host = "";
 data_host = "https://maps.sensor.community";
@@ -181,7 +183,7 @@ if (query.nolabs === "false") { config.layer_labs = 1 } else {config.layer_labs 
 if (query.noeustations === "false") { config.layer_eustations = 1 } else {config.layer_eustations = 0;}
 
 // show betterplace overlay
-if (query.nooverlay === "false") d3.select("#betterplace").style("display", "inline-block");
+//if (query.nooverlay === "false") d3.select("#betterplace").style("display", "inline-block");
 
 d3.select("#loading").html(translate.tr(lang,d3.select("#loading").html()));
 
@@ -446,7 +448,7 @@ window.onload = function () {
 <p>By clicking on the plus symbol next to a sensor ID, you can display two graphics: the individual measurements for the last 24 hours and the 24 hours floating mean for the last seven days. For technical reasons, the first of the 8 days displayed on the graphic has to stay empty.\
 The values are refreshed every 5 minutes in order to fit with the measurement frequency of the Airrohr sensors.</p> \
 <p>The Air Quality Index (AQI) is calculated according to the recommandations of the United States Environmental Protection Agency. Further information is available on the official page.(<a href='https://www.airnow.gov/aqi/aqi-basics/'>Link</a>). Hover over the AQI scale to display the levels of health concern.</p>"));
-	d3.select('#betterplace').html("<a title='" + translate.tr(lang, "Donate for Sensor.Community (Hardware, Software) now on Betterplace.org") + " href='https://www.betterplace.org/de/projects/38071-fur-den-feinstaub-sensor-sds011-als-bastel-kit-spenden/' target='_blank' rel='noreferrer'>" + translate.tr(lang, "Donate for<br/>Sensor.Community<br/>now on<br/><span>Betterplace.org</span>") + "</a>");
+	//d3.select('#betterplace').html("<a title='" + translate.tr(lang, "Donate for Sensor.Community (Hardware, Software) now on Betterplace.org") + " href='https://www.betterplace.org/de/projects/38071-fur-den-feinstaub-sensor-sds011-als-bastel-kit-spenden/' target='_blank' rel='noreferrer'>" + translate.tr(lang, "Donate for<br/>Sensor.Community<br/>now on<br/><span>Betterplace.org</span>") + "</a>");
 
 	d3.select("#menu").on("click", toggleSidebar);
 	d3.select("#explanation").on("click", toggleExplanation);
@@ -565,13 +567,13 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 	// add searchbox
 	new GeoSearch.GeoSearchControl({ 
 			style: 'button',
-			position: 'topleft',
+			position: 'topright',
 			showMarker: false,
 			autoClose: true,
 			provider: new GeoSearch.OpenStreetMapProvider(), 
 		}).addTo(map);
 
-	L.control.locate().addTo(map);
+	L.control.locate({ position: 'topright' }).addTo(map);
 
 	// Load lab and windlayer, init checkboxes
 	if (config.layer_labs) {

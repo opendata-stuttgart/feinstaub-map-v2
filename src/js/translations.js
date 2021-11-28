@@ -395,7 +395,7 @@ module.exports = {
 		"it": "Strato del vento",
 		"es": "capa de viento",
 		"pl": "warstwa wiatru",
-		"fr": "couche de vent",
+		"fr": "Couche de vent",
 		"sk": "vrstva vetra",
 		"sv": "vindskikt",
 		"pt": "camada de vento",
