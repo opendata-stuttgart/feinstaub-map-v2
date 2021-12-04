@@ -463,14 +463,34 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 	d3.select("#AQI_Very_Unhealthy").html(" " + translate.tr(lang, "Very Unhealthy<div class='tooltip-div'>Health alert: everyone may experience more serious health effects.</div>"));
 	d3.select("#AQI_Hazardous").html(" " + translate.tr(lang, "Hazardous<div class='tooltip-div'>Health warnings of emergency conditions. The entire population is more likely to be affected.</div>"));
 
+
+	d3.select("#countriesButtons").selectAll("button").on("click", countrySelector);
+
+
+
 	//	Select
 	const custom_select = d3.select("#custom-select");
 	custom_select.select("select").property("value", config.selection);
 	custom_select.select("select").selectAll("option").each(function () {
 		d3.select(this).html(translate.tr(lang, d3.select(this).html()));
 	});
-	custom_select.append("div").attr("class", "select-selected").html("<span>"+translate.tr(lang,
-		custom_select.select("select").select("option:checked").html())+"</span>").on("click", showAllSelect);
+
+	custom_select.append("div").attr("class", "select-items");
+	custom_select.select("select").selectAll("option").each(function (d) {
+		custom_select.select(".select-items").append("div").html("<span>" + d3.select(this).html() + "</span>").attr("id", "select-item-" + this.value).attr("value",this.value).on("click", function () {switchTo(this);});
+		custom_select.select("#select-item-Noise").select("span").attr("id","noise_option");
+	});
+	
+	console.log(d3.select(".select-items").selectAll("div"));
+
+	d3.select(".select-items").selectAll("div").each(function (d) {
+		if (this.getAttribute('value') == custom_select.select("select").select("option:checked").node().value) {
+			this.setAttribute("class","select-selected");
+		};
+	});
+
+	console.log(custom_select.select("select").select("option:checked").node().value);
+
 	custom_select.style("display", "inline-block");
 
 	switchLegend(user_selected_value);
@@ -549,14 +569,14 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 
 	map.on('click', function (e) {
 		/* if the user clicks anywhere outside the opened select drop down, then close all select boxes */
-		if (! d3.select("#custom-select").select(".select-items").empty()) {
-			d3.select("#custom-select").select(".select-items").remove();
-			d3.select("#custom-select").select(".select-selected").attr("class", "select-selected");
-		} else {
-			setTimeout(function () {
-				map.setView([e.latlng.lat, e.latlng.lng], map.getZoom());
-			}, 300);
-		}
+		// if (! d3.select("#custom-select").select(".select-items").empty()) {
+		// 	d3.select("#custom-select").select(".select-items").remove();
+		// 	d3.select("#custom-select").select(".select-selected").attr("class", "select-selected");
+		// } else {
+		// 	setTimeout(function () {
+		// 		map.setView([e.latlng.lat, e.latlng.lng], map.getZoom());
+		// 	}, 300);
+		// }
 		clicked = null;
 	});
 	map.on('dblclick', function () {
@@ -664,7 +684,9 @@ function toggleSidebar() {
 	if (document.getElementById("sidebar").style.display === "block") {
 		closeSidebar();
 	} else {
-		openSidebar()
+		openSidebar();
+		document.getElementById("mainContainer").style.display = "block";
+
 	}
 }
 
@@ -689,6 +711,9 @@ function ready(num) {
 
 	d3.select("#update").html(translate.tr(lang, "Last update") + ": " + dateFormater(newTime));
 	console.log("Timestamp " + timestamp_data + " from " + timestamp_from);
+
+	d3.select("#current").html(d3.select(".select-selected").select("span").html());
+
 
 	if (num === 1 && (user_selected_value === "PM10" || user_selected_value === "PM25")) {
 		hexagonheatmap.initialize(scale_options[user_selected_value]);
@@ -726,7 +751,8 @@ function ready(num) {
 function reloadMap(val) {
 	console.log(val);
 	d3.selectAll('path.hexbin-hexagon').remove();
-
+	console.log(d3.select(".select-selected").select("span").html());
+	d3.select("#current").html(d3.select(".select-selected").select("span").html());
 	closeSidebar();
 	switchLegend(val);
 
@@ -754,7 +780,10 @@ function sensorNr(data) {
 		inner_pre = "(+) #";
 	}
 
+
 	openSidebar();
+
+	document.getElementById("mainContainer").style.display = "none";
 
 	let textefin = "<table id='results' style='width:380px;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, titles[user_selected_value]) + "</th></tr>";
 	if (data.length > 1) {
@@ -850,35 +879,33 @@ function removeInArray(array) {
 	return array;
 }
 
-function showAllSelect() {
-	const custom_select = d3.select("#custom-select");
-	if (custom_select.select(".select-items").empty()) {
-		custom_select.append("div").attr("class", "select-items");
-		custom_select.select("select").selectAll("option").each(function (d) {
-			if (this.value !== user_selected_value) custom_select.select(".select-items").append("div").html("<span>"+d3.select(this).html()+"</span>").attr("id", "select-item-" + this.value).on("click", function () {
-				switchTo(this);
-			});
-			custom_select.select("#select-item-Noise").select("span").attr("id","noise_option");
-		});
-		custom_select.select(".select-selected").attr("class", "select-selected select-arrow-active");
-	}else{
-        custom_select.select(".select-items").remove();
-        custom_select.select(".select-selected").attr("class", "select-selected select-arrow-inactive"); 
-    }	
-}
+
 
 function switchTo(element) {
 	const custom_select = d3.select("#custom-select");
 	custom_select.select("select").property("value", element.id.substring(12));
-	custom_select.select(".select-selected").html("<span>"+custom_select.select("select").select("option:checked").html()+"</span>");
 	user_selected_value = element.id.substring(12);
+	console.log(element.id.substring(12));
 	console.log(user_selected_value);
 	if (user_selected_value === "Noise") {
 		custom_select.select(".select-selected").select("span").attr("id","noise_option");
 	} else {
 		custom_select.select(".select-selected").select("span").attr("id",null);
 	}
-	custom_select.select(".select-selected").attr("class", "select-selected");
+	custom_select.select(".select-selected").attr("class", null);
+	console.log(element);
+	element.setAttribute("class", "select-selected");
 	reloadMap(user_selected_value);
-	custom_select.select(".select-items").remove();
+}
+
+
+function countrySelector() {
+	console.log(this);
+	d3.select(".countryButtonselected").attr('class', 'countryButton');
+	d3.select(this).attr('class', 'countryButtonselected')
+
+	console.log(this.value);
+
+	map.setView(places[this.value], zooms[this.value]);
+	closeSidebar();
 }

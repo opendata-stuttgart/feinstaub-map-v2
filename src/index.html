@@ -44,181 +44,25 @@
 	<title>Map Sensor.Community</title>
 </head>
 <body>
-	<!-- <div id="topcontainer">
-		<div id="betterplace"></div>
-		<div id="update"></div>
-	</div> -->
+	<div id="update"></div>
 	<span id="menu">&#9776;</span>
+	<span id="current"></span>
 	<div id="loading_layer"><div id="loading">Loading data...</div></div>
     <div id="sidebar" style="display: none;">
-		<div id="explanation"></div>
-		<div id="map-info" style="display: none;"></div>
-	<div id="update"></div>
-	<div id="UI_container">
-		<div id ='legendcontainer'>
 
-			<div class="legend" id="legend_PM10" style="display: none;">
-				<div class="legend-inner">
-					<div class="gradient">
-					</div>
-					<div class="labels">
-						<div class="label" style="bottom: 100%;"><b>500</b></div>
-						<div class="label" style="bottom: 80%;"><b>100</b></div>
-						<div class="label" style="bottom: 60%;"><b>75</b></div>
-						<div class="label limit" style="bottom: 40%;"><b>50</b></div>
-						<div class="label" style="bottom: 20%;"><b>25</b></div>
-						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
-					</div>
-				</div>
-			</div>
 
-			<div class="legend" id="legend_PM25" style="display: none;">
-				<div class="legend-inner">
-					<div class="gradient">
-					</div>
-					<div class="labels">
-						<div class="label" style="bottom: 100%;"><b>500</b></div>
-						<div class="label" style="bottom: 80%;"><b>100</b></div>
-						<div class="label" style="bottom: 60%;"><b>75</b></div>
-						<div class="label" style="bottom: 41%;"><b>50</b></div>
-						<div class="label limit" style="bottom: 20%;"><b>25</b></div>
-						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
-					</div>
-				</div>
-			</div>
 
-			<div class ="legend" id="legend_PM10eu" style="display: none;">
-				<div class="legend-inner">
-					<div class="gradient">
-					</div>
-					<div class="labels">
-						<div class="label" style="bottom: 100%;"><b>500</b></div>
-						<div class="label" style="bottom: 87%;"><b>150</b></div>
-						<div class="label" style="bottom: 75%;"><b>100</b></div>
-						<div class="label" style="bottom: 60%;"><b>50</b></div>
-						<div class="label" style="bottom: 40%;"><b>40</b></div>
-						<div class="label" style="bottom: 20%;"><b>20</b></div>
-						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
-					</div>
-				</div>
-			</div>
-
-			<div class ="legend" id="legend_PM25eu" style="display: none;">
-				<div class="legend-inner">
-					<div class="gradient">
-					</div>
-					<div class="labels">
-						<div class="label" style="bottom: 100%;"><b>300</b></div>
-						<div class="label" style="bottom: 87%;"><b>75</b></div>
-						<div class="label" style="bottom: 75%;"><b>50</b></div>
-						<div class="label" style="bottom: 60%;"><b>25</b></div>
-						<div class="label" style="bottom: 40%;"><b>20</b></div>
-						<div class="label" style="bottom: 20%;"><b>10</b></div>
-						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
-					</div>
-				</div>
-			</div> 
-
-			<div class="legend" id="legend_PM10who" style="display: none;">
-				<div class="legend-inner">
-					<div class="gradient">
-					</div>
-					<div class="labels">
-						<div class="label" style="bottom: 50%;"><b>45</b></div>
-						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
-					</div>
-				</div>
-			</div>
-
-			<div class="legend" id="legend_PM25who" style="display: none;">
-				<div class="legend-inner">
-					<div class="gradient">
-					</div>
-					<div class="labels">
-						<div class="label" style="bottom: 50%;"><b>15</b></div>
-						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
-					</div>
-				</div>
-			</div>
-
-			<div class ="legend" id="legend_Official_AQI_US" style="display: none;">
-<!--				<h3>Air quality US</h3>-->
-				<ul>
-					<li class="tooltip"><span class="AQI_color" style="background-color:#00E400"></span><span class="tooltip-text" id="AQI_Good"></span></li>
-					<li class="tooltip"><span class="AQI_color" style="background-color:#FFFF00"></span><span class="tooltip-text" id="AQI_Moderate"></span></li>
-					<li class="tooltip"><span class="AQI_color" style="background-color:#FF7E00"></span><span class="tooltip-text" id="AQI_Unhealthy_Sensitive"></span></li>
-					<li class="tooltip"><span class="AQI_color" style="background-color:#FF0000"></span><span class="tooltip-text" id="AQI_Unhealthy"></span></li>
-					<li class="tooltip"><span class="AQI_color" style="background-color:#8F3F97"></span><span class="tooltip-text" id="AQI_Very_Unhealthy"></span></li>
-					<li class="tooltip"><span class="AQI_color" style="background-color:#7E0023"></span><span class="tooltip-text" id="AQI_Hazardous"></span></li>
-				</ul>
-			</div>
-
-			<div class ="legend" id="legend_Temperature" style="display: none;">
-				<div class="legend-inner">
-					<div class="gradient">
-						<div class="limit">
-						</div>
-					</div>
-					<div class="labels">
-						<div class="label" style="bottom: 100%;"><b>40</b></div>
-						<div class="label" style="bottom: 66%;"><b>20</b></div>
-						<div class="label" style="bottom: 33%;"><b>0</b></div>
-						<div class="label" style="bottom: 1%;"><b>-20 &deg;</b></div>
-					</div>
-				</div>
-			</div>
-
-			<div class ="legend" id="legend_Humidity" style="display: none;">
-				<div class="legend-inner">
-					<div class="gradient">
-						<div class="limit">
-						</div>
-					</div>
-					<div class="labels">
-						<div class="label" style="bottom: 100%;"><b>100</b></div>
-						<div class="label" style="bottom: 80%;"><b>80</b></div>
-						<div class="label" style="bottom: 60%;"><b>60</b></div>
-						<div class="label" style="bottom: 40%;"><b>40</b></div>
-						<div class="label" style="bottom: 20%;"><b>20</b></div>
-						<div class="label" style="bottom: 1%;"><b>0 &#37;</b></div>
-					</div>
-				</div>
-			</div> 
-
-			<div class ="legend" id="legend_Pressure" style="display: none;">
-				<div class="legend-inner">
-					<div class="gradient">
-						<div class="limit">
-						</div>
-					</div>
-					<div class="labels">
-						<div class="label" style="bottom: 100%;"><b>1100</b></div>
-						<div class="label" style="bottom: 75%;"><b>1057</b></div>
-						<div class="label" style="bottom: 50%;"><b>1013</b></div>
-						<div class="label" style="bottom: 25%;"><b>970</b></div>
-						<div class="label" style="bottom: 1%;"><b>926 hPa</b></div>
-					</div>
-				</div>
-			</div> 
-
-			<div class ="legend" id="legend_Noise" style="display: none;">
-				<div class="legend-inner">
-					<div class="gradient">
-						<div class="limit">
-						</div>
-					</div>
-					<div class="labels">
-						<div class="label" style="bottom: 100%;"><b>100</b></div>
-						<div class="label" style="bottom: 80%;"><b>80</b></div>
-						<div class="label" style="bottom: 60%;"><b>60</b></div>
-						<div class="label" style="bottom: 40%;"><b>40</b></div>
-						<div class="label" style="bottom: 20%;"><b>20</b></div>
-						<div class="label" style="bottom: 1%;"><b>0 dBA</b></div>
-					</div>
-				</div>
-			</div> 
+<div id="mainContainer">
+	<div id="countriesButtonsContainer">
+		<div id="countriesButtons">
+			<button class="countryButtonselected" value="world">World</button>
+			<button class="countryButton" value="europa">Europa</button>
+			<button class="countryButton" value="germany">Germany</button>
+			<button class="countryButton" value="france">France</button>
 		</div>
 	</div>
+
+
 			<div id="custom-select" class="custom-select" style="display: none;">
 				<select>
 					<option value="PM10"> PM10</option>
@@ -234,6 +78,7 @@
 					<option value="Noise"> Noise</option>
 				</select>
 			</div>
+
 		<div id="layer-select" class="layer-select">
 			<input type="checkbox" id="cb_labs" name="labs" checked="checked" /><label for="cb_labs" id="label_local_labs">Local
 				labs</label><br />
@@ -241,10 +86,197 @@
 				layer</label><br />
 			<!-- <input type="checkbox" id="cb_eustations" name="eustations" checked="" /><label for="cb_eustations" id="label_eustations">EU stations</label><br/> -->
 		</div>
+		<div id="link-div" class="link-div">
+			<p class="link">LINK1</p>
+			<p class="link">LINK2</p>
+		</div>
+
+
+
+			<!-- <div id="explanation"></div>
+			<div id="map-info" style="display: none;"></div> -->
+</div>
 
 
 
 
+
+
+
+
+
+	</div>
+	
+	<div id="UI_container">
+		<div id='legendcontainer'>
+	
+			<div class="legend" id="legend_PM10" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 100%;"><b>500</b></div>
+						<div class="label" style="bottom: 80%;"><b>100</b></div>
+						<div class="label" style="bottom: 60%;"><b>75</b></div>
+						<div class="label limit" style="bottom: 40%;"><b>50</b></div>
+						<div class="label" style="bottom: 20%;"><b>25</b></div>
+						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="legend" id="legend_PM25" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 100%;"><b>500</b></div>
+						<div class="label" style="bottom: 80%;"><b>100</b></div>
+						<div class="label" style="bottom: 60%;"><b>75</b></div>
+						<div class="label" style="bottom: 41%;"><b>50</b></div>
+						<div class="label limit" style="bottom: 20%;"><b>25</b></div>
+						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="legend" id="legend_PM10eu" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 100%;"><b>500</b></div>
+						<div class="label" style="bottom: 87%;"><b>150</b></div>
+						<div class="label" style="bottom: 75%;"><b>100</b></div>
+						<div class="label" style="bottom: 60%;"><b>50</b></div>
+						<div class="label" style="bottom: 40%;"><b>40</b></div>
+						<div class="label" style="bottom: 20%;"><b>20</b></div>
+						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="legend" id="legend_PM25eu" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 100%;"><b>300</b></div>
+						<div class="label" style="bottom: 87%;"><b>75</b></div>
+						<div class="label" style="bottom: 75%;"><b>50</b></div>
+						<div class="label" style="bottom: 60%;"><b>25</b></div>
+						<div class="label" style="bottom: 40%;"><b>20</b></div>
+						<div class="label" style="bottom: 20%;"><b>10</b></div>
+						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="legend" id="legend_PM10who" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 50%;"><b>45</b></div>
+						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="legend" id="legend_PM25who" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 50%;"><b>15</b></div>
+						<div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="legend" id="legend_Official_AQI_US" style="display: none;">
+				<!--				<h3>Air quality US</h3>-->
+				<ul>
+					<li class="tooltip"><span class="AQI_color" style="background-color:#00E400"></span><span
+							class="tooltip-text" id="AQI_Good"></span></li>
+					<li class="tooltip"><span class="AQI_color" style="background-color:#FFFF00"></span><span
+							class="tooltip-text" id="AQI_Moderate"></span></li>
+					<li class="tooltip"><span class="AQI_color" style="background-color:#FF7E00"></span><span
+							class="tooltip-text" id="AQI_Unhealthy_Sensitive"></span></li>
+					<li class="tooltip"><span class="AQI_color" style="background-color:#FF0000"></span><span
+							class="tooltip-text" id="AQI_Unhealthy"></span></li>
+					<li class="tooltip"><span class="AQI_color" style="background-color:#8F3F97"></span><span
+							class="tooltip-text" id="AQI_Very_Unhealthy"></span></li>
+					<li class="tooltip"><span class="AQI_color" style="background-color:#7E0023"></span><span
+							class="tooltip-text" id="AQI_Hazardous"></span></li>
+				</ul>
+			</div>
+	
+			<div class="legend" id="legend_Temperature" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+						<div class="limit">
+						</div>
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 100%;"><b>40</b></div>
+						<div class="label" style="bottom: 66%;"><b>20</b></div>
+						<div class="label" style="bottom: 33%;"><b>0</b></div>
+						<div class="label" style="bottom: 1%;"><b>-20 &deg;</b></div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="legend" id="legend_Humidity" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+						<div class="limit">
+						</div>
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 100%;"><b>100</b></div>
+						<div class="label" style="bottom: 80%;"><b>80</b></div>
+						<div class="label" style="bottom: 60%;"><b>60</b></div>
+						<div class="label" style="bottom: 40%;"><b>40</b></div>
+						<div class="label" style="bottom: 20%;"><b>20</b></div>
+						<div class="label" style="bottom: 1%;"><b>0 &#37;</b></div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="legend" id="legend_Pressure" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+						<div class="limit">
+						</div>
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 100%;"><b>1100</b></div>
+						<div class="label" style="bottom: 75%;"><b>1057</b></div>
+						<div class="label" style="bottom: 50%;"><b>1013</b></div>
+						<div class="label" style="bottom: 25%;"><b>970</b></div>
+						<div class="label" style="bottom: 1%;"><b>926 hPa</b></div>
+					</div>
+				</div>
+			</div>
+	
+			<div class="legend" id="legend_Noise" style="display: none;">
+				<div class="legend-inner">
+					<div class="gradient">
+						<div class="limit">
+						</div>
+					</div>
+					<div class="labels">
+						<div class="label" style="bottom: 100%;"><b>100</b></div>
+						<div class="label" style="bottom: 80%;"><b>80</b></div>
+						<div class="label" style="bottom: 60%;"><b>60</b></div>
+						<div class="label" style="bottom: 40%;"><b>40</b></div>
+						<div class="label" style="bottom: 20%;"><b>20</b></div>
+						<div class="label" style="bottom: 1%;"><b>0 dBA</b></div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div id='map'>
