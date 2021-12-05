@@ -83,11 +83,11 @@ const scale_options = {
 		colorRange: ['#50F0E6', '#50CCAA', '#F0E641', '#FF5050', '#960032', '#7D2181'] 
 	},
 	"PM10who": {
-		valueDomain: [0, 45, 150],
+		valueDomain: [0, 45, 150],							//REVOIR LE DEROULÉ DU GRADIENT
 		colorRange: ['#8bf3ff', '#fff148', '#ff5353'] 
 	},
 	"PM25who": {
-		valueDomain: [0, 15, 75],
+		valueDomain: [0, 15, 75],							//REVOIR LE DEROULÉ DU GRADIENT
 		colorRange: ['#8bf3ff', '#fff148', '#ff5353'] 
 	},
 	"Official_AQI_US": {

@@ -168,10 +168,14 @@ body {
     background: linear-gradient(to top, #50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 87%);
 }
 
+/* REVOIR LE DEROULE DU GRADIENT */
+
 #legend_PM10who .gradient {
     background: -webkit-linear-gradient(bottom, #8bf3ff 0, #fff148 50%, #ff5353 100%);
     background: linear-gradient(to top, #8bf3ff 0%, #fff148 50%, #ff5353 100%);
 }
+
+/* REVOIR LE DEROULE DU GRADIENT */
 
 #legend_PM25who .gradient {
     background: -webkit-linear-gradient(bottom, #8bf3ff 0, #fff148 50%, #ff5353 100%);
