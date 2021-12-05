@@ -464,7 +464,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 	d3.select("#AQI_Hazardous").html(" " + translate.tr(lang, "Hazardous<div class='tooltip-div'>Health warnings of emergency conditions. The entire population is more likely to be affected.</div>"));
 
 
-	d3.select("#countriesButtons").selectAll("button").on("click", countrySelector);
+	d3.selectAll(".countriesButtons").selectAll("button").on("click", countrySelector);
 
 
 
@@ -692,11 +692,16 @@ function toggleSidebar() {
 
 function toggleExplanation() {
 	const x = document.getElementById("map-info");
+	const y = document.getElementById("mainContainer");
+
 	if (x.style.display === "none") {
 		x.style.display = "block";
+		y.style.display = "none";
 		d3.select("#explanation").html(translate.tr(lang, "Hide explanation"));
+
 	} else {
 		x.style.display = "none";
+		y.style.display = "block";
 		d3.select("#explanation").html(translate.tr(lang, "Show explanation"));
 	}
 }
@@ -784,6 +789,7 @@ function sensorNr(data) {
 	openSidebar();
 
 	document.getElementById("mainContainer").style.display = "none";
+	document.getElementById("explanation").style.display = "none";
 
 	let textefin = "<table id='results' style='width:380px;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, titles[user_selected_value]) + "</th></tr>";
 	if (data.length > 1) {

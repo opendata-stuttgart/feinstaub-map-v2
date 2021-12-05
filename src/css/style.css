@@ -87,156 +87,6 @@ body {
     pointer-events: none;
 }
 
-#custom-select{
-left: 25%;
-}
-
-.custom-select {
-    color: black;
-    font-weight: bold;
-    font-size: 1.1rem;
-    width: 16em;
-    display: inline-block;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    position: absolute;
-    top: 27rem;
-    margin:auto;
-    margin-left: 1rem;
-    pointer-events: auto;
-}
-
-.custom-select:hover, .custom-select:focus {
-    /* background-color: rgb(49, 135, 127); */
-}
-
-.custom-select select {
-    display: none; /*hide original SELECT element:*/
-}
-
-.select-selected {
-    bottom: 0;
-    /* width: 100%; */
-}
-
-/* .select-selected:after {
-    position: absolute;
-    content: "▲";
-    right: 10px;
-    width: auto;
-    height: 0;
-    border-left: thin solid white;
-    padding-left: 10px;
-} */
-
-/*point the arrow downwards when the select box is open (active):*/
-/* .select-selected.select-arrow-active:after {
-    content: "▼"
-} */
-
-/*point the arrow upwards when the select box is closed (inactive):*/
-/* .select-selected.select-arrow-inactive:after {
-    content: "▲"
-} */
-
-/*style the items (options), including the selected item:*/
-.select-items div, .select-selected {
-    color: #ffffff;
-    padding: 8px 16px;
-    cursor: pointer;
-    user-select: none;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    background-color: rgba(56, 181, 173, 0.8);
-    border-radius: 8px;
-}
-
-.select-items {
-    position: absolute;
-    bottom: 100%;
-    width: 100%;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    height: 300px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-
-.select-items div:hover, .same-as-selected {
-    border-radius: 8px;
-    background-color: rgb(49, 135, 127);
-}
-
-.layer-select {
-    color: white;
-    font-weight: bold;
-    font-size: 1.1rem;
-    width: 16em;
-    display: inline-block;
-    background-color: rgba(56, 181, 173, 0.8);
-    border-radius: 8px;
-    border: 1px solid transparent;
-    position: absolute;
-    top: 28rem;
-    margin-left: 1rem;
-    pointer-events: auto;
-    /* margin: auto; */
-    left: 25%;
-}
-
-.layer-select:hover, .layer-select:focus {
-    background-color: rgb(49, 135, 127);
-}
-
-.link-div {
-    color: white;
-    font-weight: bold;
-    font-size: 1.1rem;
-    width: 16em;
-    display: inline-block;
-    position: absolute;
-    top: 33rem;
-    margin-left: 1rem;
-    pointer-events: auto;
-    /* margin: auto; */
-    left: 25%;
-}
-
-.link{
-    background-color: rgba(56, 181, 173, 0.8);
-    border-radius: 8px;
-    border: 1px solid transparent;
-    height: 2em;
-    vertical-align: middle;
-}
-
-.link:hover, .link:focus {
-    background-color: rgb(49, 135, 127);
-}
-
-
-
-
-
-#explanation {
-    padding: 20px;
-    font-family: arial, sans-serif;
-    font-weight: bold;
-    color: black;
-    cursor: pointer;
-    font-size: 1.1em;
-    /* position: relative; */
-    /* left: 40px; */
-    display: flex;
-}
-
-#map-info {
-    padding: 10px;
-    font-family: arial, sans-serif;
-    color: black;
-    position: relative;
-    /* top: 30rem; */
-}
 
 #legendcontainer {
     display: inline-block;
@@ -525,7 +375,7 @@ tr {
     display: none;
     z-index: 1000;
     background-color: rgba(250, 250, 250, 0.8);
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 
@@ -635,15 +485,15 @@ tr {
     /* display: block; */
     right: auto;
     top: 50px;
-    height: auto;
+    height: 100vh;
     border-radius: 4px;
     width: 50vw;
+    margin: auto;
     position: -webkit-sticky;
     position: sticky;
     top: 10px;
     left: 15px;
     right: 15px;
-    margin: 0 auto;
     z-index: 1000;
     display: -webkit-box;
     display: -webkit-flex;
@@ -673,11 +523,12 @@ tr {
     box-sizing: content-box;
 }
 
-#countriesButtons {
+.countriesButtons {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
+    padding:10px;
 }
 
 /* SELECTED */
@@ -833,3 +684,152 @@ button, input, optgroup, select, textarea {
     line-height: 1.15;
     margin: 0;
 } */
+
+
+#custom-select{
+left: 25%;
+}
+
+.custom-select {
+    color: black;
+    font-weight: bold;
+    font-size: 1.1rem;
+    width: 25vw;
+    display: inline-block;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    position: absolute;
+    top: 27rem;
+    margin:auto;
+    margin-left: 1rem;
+    pointer-events: auto;
+}
+
+.custom-select:hover, .custom-select:focus {
+    /* background-color: rgb(49, 135, 127); */
+}
+
+.custom-select select {
+    display: none; /*hide original SELECT element:*/
+}
+
+.select-selected {
+    bottom: 0;
+    /* width: 100%; */
+}
+
+/* .select-selected:after {
+    position: absolute;
+    content: "▲";
+    right: 10px;
+    width: auto;
+    height: 0;
+    border-left: thin solid white;
+    padding-left: 10px;
+} */
+
+/*point the arrow downwards when the select box is open (active):*/
+/* .select-selected.select-arrow-active:after {
+    content: "▼"
+} */
+
+/*point the arrow upwards when the select box is closed (inactive):*/
+/* .select-selected.select-arrow-inactive:after {
+    content: "▲"
+} */
+
+/*style the items (options), including the selected item:*/
+.select-items div, .select-selected {
+    color: #ffffff;
+    padding: 8px 16px;
+    cursor: pointer;
+    user-select: none;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    background-color: rgba(56, 181, 173, 0.8);
+    border-radius: 8px;
+}
+
+.select-items {
+    position: absolute;
+    bottom: 100%;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    height: 300px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.select-items div:hover, .same-as-selected {
+    border-radius: 8px;
+    background-color: rgb(49, 135, 127);
+}
+
+.layer-select {
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    width: 25vw;
+    display: inline-block;
+    background-color: rgba(56, 181, 173, 0.8);
+    border-radius: 8px;
+    border: 1px solid transparent;
+    position: absolute;
+    top: 28rem;
+    margin-left: 1rem;
+    pointer-events: auto;
+    /* margin: auto; */
+    left: 25%;
+}
+
+.layer-select:hover, .layer-select:focus {
+    background-color: rgb(49, 135, 127);
+}
+
+.link-div {
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    width: 25vw;
+    display: inline-block;
+    position: absolute;
+    top: 33rem;
+    margin-left: 1rem;
+    pointer-events: auto;
+    /* margin: 0 auto; */
+    left: 25%;
+}
+
+.link{
+    background-color: rgba(56, 181, 173, 0.8);
+    border-radius: 8px;
+    border: 1px solid transparent;
+    height: 2em;
+    vertical-align: middle;
+}
+
+.link:hover, .link:focus {
+    background-color: rgb(49, 135, 127);
+}
+
+
+#explanation {
+    padding: 20px;
+    font-family: arial, sans-serif;
+    font-weight: bold;
+    color: black;
+    cursor: pointer;
+    font-size: 1.1em;
+    position: relative;
+    left: 40px; 
+    display: flex;
+}
+
+#map-info {
+    padding: 10px;
+    font-family: arial, sans-serif;
+    color: black;
+    position: relative;
+    top: 3rem;
+}
