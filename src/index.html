@@ -44,7 +44,6 @@
 	<title>Map Sensor.Community</title>
 </head>
 <body>
-	<div id="update"></div>
 	<span id="menu">&#9776;</span>
 	<span id="current"></span>
 	<div id="loading_layer"><div id="loading">Loading data...</div></div>
@@ -55,30 +54,25 @@
 <div id="mainContainer">
 	<div id="countriesButtonsContainer">
 		<div class="countriesButtons">
-			<button class="countryButtonselected" value="world">World</button>
-			<button class="countryButton" value="europe">Europe</button>
-			<button class="countryButton" value="germany">Germany</button>
-			<button class="countryButton" value="france">France</button>
-			<button class="countryButton" value="bulgaria">Bulgaria</button>
+			<button class="countryButtonselected" id="world" value="world"></button>
+			<button class="countryButton" id="europe" value="europe"></button>
+			<button class="countryButton" id="northamerica" value="northamerica"></button>
+			<button class="countryButton" id="southamerica" value="southamerica"></button>
+			<button class="countryButton" id="africa" value="africa"></button>
+			<button class="countryButton" id="asia" value="asia"></button>
+			<button class="countryButton" id="oceania" value="oceania"></button>
 		</div>
-				<div class="countriesButtons">
-					<button class="countryButton" value="usa">USA</button>
-					<button class="countryButton" value="united-kingdom">UK</button>
-					<button class="countryButton" value="italy">Italy</button>
-					<button class="countryButton" value="poland">Poland</button>
-					<button class="countryButton" value="russia">Russia</button>
-				</div>
 	</div>
 
 
 			<div id="custom-select" class="custom-select" style="display: none;">
 				<select>
-					<option value="PM10"> PM10 (5min mean)</option>
 					<option value="PM25"> PM2.5 (5min mean)</option>
-					<option value="PM10eu"> PM10 (EU, 1h mean)</option>
+					<option value="PM10"> PM10 (5min mean)</option>
 					<option value="PM25eu"> PM2.5 (EU, 1h mean)</option>
-					<option value="PM10who"> PM10 (WHO, 1h mean)</option>
+					<option value="PM10eu"> PM10 (EU, 1h mean)</option>
 					<option value="PM25who"> PM2.5 (WHO, 1h mean))</option>
+					<option value="PM10who"> PM10 (WHO, 1h mean)</option>
 					<option value="Official_AQI_US"> Official AQI US</option>
 					<option value="Temperature"> Temperature</option>
 					<option value="Humidity"> rel. Humidity</option>
@@ -95,8 +89,10 @@
 			<!-- <input type="checkbox" id="cb_eustations" name="eustations" checked="" /><label for="cb_eustations" id="label_eustations">EU stations</label><br/> -->
 		</div>
 		<div id="link-div" class="link-div">
-			<p class="link">LINK1</p>
-			<p class="link">LINK2</p>
+			<p class="link"><a href="https://sensor.community/" target="_blank" id="website" style="text-decoration: none;color: inherit;"></a></p>
+			<p class="link"><a href="https://forum.sensor.community/" target="_blank" id="forum" style="text-decoration: none;color: inherit;"></a></p>
+			<p class="link"><a href="https://sensors2ref.maps.sensor.community/" target="_blank" id="sensatref" style="text-decoration: none;color: inherit;"></a></p>
+			<p class="link"><a href="https://no2.maps.sensor.community/" target="_blank" id="no2" style="text-decoration: none;color: inherit;"></a></p>
 		</div>
 
 </div>

@@ -143,7 +143,7 @@ const div = d3.select("#sidebar").append("div").attr("id", "table").style("displ
 
 const map = L.map('map', { zoomControl: true, minZoom: config.minZoom, maxZoom: config.maxZoom, doubleClickZoom: false });
 
-map.zoomControl.setPosition('topright');
+map.zoomControl.setPosition('topleft');
 
 var data_host = "";
 data_host = "https://maps.sensor.community";
@@ -222,7 +222,10 @@ window.onload = function () {
 			onmouseover: undefined,
 			onmouseout: undefined,
 			
-			attribution: "<br/><span style='font-size:120%'>Measurements: <a href='https://sensor.community/' style='color: red'>Sensor.Community</a> contributors</span>",
+			attribution: "<br/><span style='font-size:120%'>Measurements: <a href='https://sensor.community/' style='color: red'>Sensor.Community</a> contributors</span><br/><span style='font-size:120%' id='update'></span>",
+
+			// <div ></div>
+
 
 			click: function (d) {
 				setTimeout(function () {
@@ -463,10 +466,29 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 	d3.select("#AQI_Very_Unhealthy").html(" " + translate.tr(lang, "Very Unhealthy<div class='tooltip-div'>Health alert: everyone may experience more serious health effects.</div>"));
 	d3.select("#AQI_Hazardous").html(" " + translate.tr(lang, "Hazardous<div class='tooltip-div'>Health warnings of emergency conditions. The entire population is more likely to be affected.</div>"));
 
+	d3.select("#world").html(translate.tr(lang,"World"));
+	d3.select("#europe").html(translate.tr(lang, "Europe"));
+	d3.select("#northamerica").html(translate.tr(lang,"North America"));
+	d3.select("#southamerica").html(translate.tr(lang,"South America" ));
+	d3.select("#asia").html(translate.tr(lang,"Asia"));
+	d3.select("#africa").html(translate.tr(lang,"Africa"));
+	d3.select("#oceania").html(translate.tr(lang,"Oceania"));
 
 	d3.selectAll(".countriesButtons").selectAll("button").on("click", countrySelector);
 
+	d3.select("#website").html(translate.tr(lang,"Website" ));
+	d3.select("#forum").html(translate.tr(lang,"Forum"));
+	d3.select("#sensatref").html(translate.tr(lang,"Map") + " Sensor@RefS");
+	d3.select("#no2").html(translate.tr(lang,"Map") + " NO2");
 
+
+			// <p class="link" id="website"><a href="https://sensor.community/" target="_blank"></a></p>
+			// <p class="link" id="forum"><a href="https://forum.sensor.community/" target="_blank"></a></p>
+			// <p class="link" id="sensatref"><a href="https://sensors2ref.maps.sensor.community/" target="_blank"></a></p>
+			// <p class="link" id="no2"><a href="https://no2.maps.sensor.community/" target="_blank"></a></p>
+	
+	
+	
 
 	//	Select
 	const custom_select = d3.select("#custom-select");
@@ -587,13 +609,13 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 	// add searchbox
 	new GeoSearch.GeoSearchControl({ 
 			style: 'button',
-			position: 'topright',
+			position: 'topleft',
 			showMarker: false,
 			autoClose: true,
 			provider: new GeoSearch.OpenStreetMapProvider(), 
 		}).addTo(map);
 
-	L.control.locate({ position: 'topright' }).addTo(map);
+	L.control.locate({ position: 'topleft' }).addTo(map);
 
 	// Load lab and windlayer, init checkboxes
 	if (config.layer_labs) {
@@ -639,6 +661,7 @@ function switchLabLayer() {
 	} else {
 		map.getPane('markerPane').style.visibility = "hidden";
 	}
+	document.getElementById("sidebar").style.display = "none";
 	setQueryString();
 }
 
@@ -648,6 +671,7 @@ function switchWindLayer() {
 	} else {
 		d3.selectAll(".velocity-overlay").style("visibility", "hidden");
 	}
+	document.getElementById("sidebar").style.display = "none";
 	setQueryString();
 }
 
@@ -686,7 +710,6 @@ function toggleSidebar() {
 	} else {
 		openSidebar();
 		document.getElementById("mainContainer").style.display = "block";
-
 	}
 }
 

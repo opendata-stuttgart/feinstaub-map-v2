@@ -44,17 +44,7 @@ body {
 #update {
     color: white;
     font-weight: bold;
-    font-size: 0.8em;
-    position: absolute;
-    top: 0px;
-    right: 50px;
-    float: left;
-    padding: 10px 10px;
-    text-align: center;
-    height: auto;
-    z-index: 900;
     background-color: rgba(56, 181, 173, 1);
-;
 }
 
 #map {
@@ -378,8 +368,7 @@ tr {
     max-width: 100%;
     display: none;
     z-index: 1000;
-    background-color: rgba(250, 250, 250, 0.8);
-    overflow-y: scroll;
+    background-color: rgba(250, 250, 250, 1);
 }
 
 
@@ -388,11 +377,11 @@ tr {
 }
 
 
-#noise_option::after {
+/* #noise_option::after {
 	content: " (beta)";
 	vertical-align: super;
 	font-size: small;
-}
+} */
 
 .labs_facebook:before {
 	display: inline-block;
@@ -486,7 +475,6 @@ tr {
 #mainContainer {
     left: 20px;
     position: absolute;
-    /* display: block; */
     right: auto;
     top: 50px;
     height: 100vh;
@@ -507,21 +495,15 @@ tr {
     -ms-flex-pack: center;
     -webkit-justify-content: center;
     justify-content: center;
-    height: 0;
+    height: 800px;
     flex-direction: column;
+    overflow-y: scroll;
 }
 
 #countriesButtonsContainer {
     box-shadow: none;
     margin: 0;
-    background-color: #F9F9F9;
-    border-bottom: 1px solid #DDDDDD;
-    border-radius: 4px 4px 0 0;
     padding: 8px 16px;
-    background: white;
-    background-color: white;
-    border-radius: 4px;
-    box-shadow: 0 3px 10px rgba(black, 0.15);
     z-index: 1000;
     min-height: 33px;
     box-sizing: content-box;
@@ -703,7 +685,7 @@ left: 25%;
     border-radius: 8px;
     border: 1px solid transparent;
     position: absolute;
-    top: 27rem;
+    top: 5rem;
     margin:auto;
     margin-left: 1rem;
     pointer-events: auto;
@@ -755,12 +737,12 @@ left: 25%;
 }
 
 .select-items {
-    position: absolute;
+    position: relative;
     bottom: 100%;
     width: 100%;
     border-radius: 8px;
     border: 1px solid transparent;
-    height: 300px;
+    height: 500px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -780,7 +762,7 @@ left: 25%;
     border-radius: 8px;
     border: 1px solid transparent;
     position: absolute;
-    top: 28rem;
+    top: 37rem;
     margin-left: 1rem;
     pointer-events: auto;
     /* margin: auto; */
@@ -798,7 +780,7 @@ left: 25%;
     width: 25vw;
     display: inline-block;
     position: absolute;
-    top: 33rem;
+    top: 40rem;
     margin-left: 1rem;
     pointer-events: auto;
     /* margin: 0 auto; */
@@ -810,7 +792,8 @@ left: 25%;
     border-radius: 8px;
     border: 1px solid transparent;
     height: 2em;
-    vertical-align: middle;
+text-align: center;
+line-height: 35px;
 }
 
 .link:hover, .link:focus {
@@ -819,15 +802,15 @@ left: 25%;
 
 
 #explanation {
-    padding: 20px;
     font-family: arial, sans-serif;
     font-weight: bold;
     color: black;
     cursor: pointer;
     font-size: 1.1em;
     position: relative;
-    left: 40px; 
-    display: flex;
+    left: 60px; 
+    position:absolute;
+    top:15px;
 }
 
 #map-info {
@@ -836,4 +819,8 @@ left: 25%;
     color: black;
     position: relative;
     top: 3rem;
+}
+
+.leaflet-top {
+    top: 60px;
 }
