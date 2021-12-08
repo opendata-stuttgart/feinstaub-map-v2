@@ -710,6 +710,7 @@ function toggleSidebar() {
 	} else {
 		openSidebar();
 		document.getElementById("mainContainer").style.display = "block";
+		document.getElementById("explanation").style.display = "block";
 	}
 }
 
