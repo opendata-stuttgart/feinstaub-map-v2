@@ -662,6 +662,7 @@ function switchLabLayer() {
 		map.getPane('markerPane').style.visibility = "hidden";
 	}
 	document.getElementById("sidebar").style.display = "none";
+	document.getElementById("menu").innerHTML = "&#9776;";
 	setQueryString();
 }
 
@@ -672,6 +673,7 @@ function switchWindLayer() {
 		d3.selectAll(".velocity-overlay").style("visibility", "hidden");
 	}
 	document.getElementById("sidebar").style.display = "none";
+	document.getElementById("menu").innerHTML = "&#9776;";
 	setQueryString();
 }
 
