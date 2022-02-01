@@ -1,17 +1,18 @@
 module.exports = {
-	"center" : [0,0],
-	"zoom" : 2,
-	"minZoom": 2,
+	"initialView" : [10,0],
+	"initialZoom" : 3,
+	"minZoom": 3,
 	"maxZoom": 16,
 	// phenomenon shown at start, possible values: PM10, PM25, Official_AQI_US, Temperature, Humidity, Pressure, Noise
 	"selection": "PM25",
 	// additional layers: enabled (1)/ disabled (0) on startup
-	"layer_labs": 1,
-	"layer_wind": 1,
+	"layer_labs": 0,
+	"layer_wind": 0,
 	"layer_eustations": 0,
 	// Tiles
 	"tiles_server": "https://{s}.maps.sensor.community",
 	"tiles_path": "/{z}/{x}/{y}.png",
 	"tiles_subdomains": ["osmc1","osmc2","osmc3"],
-	"attribution": "Map data © <a href='https://openstreetmap.org'>OpenStreetMap</a> contributors"
+	"attribution": "Map © <a href='https://openstreetmap.org'>OpenStreetMap</a>",
+	"data_host": "https://maps.sensor.community"
 }
