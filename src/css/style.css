@@ -1,24 +1,92 @@
-body {
-    font-family: arial, sans-serif;
-    height: 100%;
+/*
+general tags
+ */
+
+html, body {
+    position: relative;
     width: 100%;
-    margin: 0;
-    padding: 0;
+    height: 100%;
 }
 
-/* #topcontainer {
-    vertical-align: top;
-    position: absolute;
+body {
+    color: #333;
+    margin: 0;
+    padding: 8px;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+a {
+    color: rgb(0, 100, 200);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:visited {
+    color: rgb(0, 80, 160);
+}
+
+ul {
+    display: block;
+    list-style-type: disc;
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0;
+    -webkit-margin-end: 0;
+    -webkit-padding-start: 40px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    width: 30vw;
+    border: 1px solid #404040;
+    border-collapse: collapse;
+    background: transparent;
+    margin: auto;
+}
+
+td {
+    background-color: transparent;
+    border: 1px solid #404040;
+    height: 0.8em;
+    text-align: center;
+    padding: 2px;
+}
+
+th {
+    background-color: rgba(56, 181, 173, 0.7);
+    border: 1px solid #404040;
+    height: 1em;
+    font-weight: bold;
+    color: white;
+    padding: 4px;
+}
+
+tr {
+    background-color: transparent;
+    border: 1px solid #404040;
+    font-weight: lighter;
+    padding: 2px;
+}
+
+li {
+    display: list-item;
+    text-align: -webkit-match-parent;
     width: 100%;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-} */
+    pointer-events: auto;
+}
+
+/*
+loading layer
+ */
 
 #loading_layer {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     text-align: center;
     width: 100%;
     height: 100%;
@@ -34,31 +102,9 @@ body {
     font-weight: bold;
 }
 
-#betterplace {
-    font-size: 0.9em;
-    text-align: center;
-    border: 0;
-    position: relative;
-    top: 0;
-    left: 0;
-    float: left;
-    z-index: 500;
-    max-width: 35%;
-    display: none;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
-    pointer-events: all;
-}
-
-#betterplace a {
-    color: black;
-    text-decoration: none;
-}
-
-#betterplace span {
-    font-weight: bold;
-    color: rgb(56, 181, 173);
-}
+/*
+top items
+ */
 
 #update {
     color: white;
@@ -74,64 +120,51 @@ body {
     height: 100vh;
     z-index: 0;
 }
- /* #UI_container {
-    position: relative;
-    left: 0;
-    top: 5rem;
-    width: 25em;
-    height: 40%;
-    /* z-index: 900; */
-    /* vertical-align: bottom;
-    pointer-events: none;
-}   */
 
-#UI_container {
+/*
+legend
+ */
+
+#legend {
     position: absolute;
     left: 0;
     bottom: 0;
     width: 25em;
     height: 40%;
-    z-index: 900;
+    z-index: 10;
     vertical-align: bottom;
     pointer-events: none;
 }
 
-
-#legendcontainer {
-    display: inline-block;
-    width: 9.5em;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
 .legend {
-    font-family: arial, sans-serif;
+    font-family: arial, sans-serif;;
     color: black;
-    font-size: 15px;
+    font-size: 14px;
     position: absolute;
     bottom: 0;
     height: 100%;
+    display: inline-grid;
 }
 
 .legend-inner {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
     position: absolute;
-    left: 30px;
+    left: 15px;
     bottom: 20px;
     pointer-events: none;
-    height: 80%;
-    display: -webkit-box;
-    display: -ms-flexbox;
+    height: 40%;
     display: flex;
 }
 
 .legend-inner .gradient {
-    opacity: 1;
-    width: 20px;
+    width: 15px;
     position: relative;
 }
 
 .legend-inner .labels {
-    width: 10em;
+    width: 3.25em;
     position: relative;
 }
 
@@ -231,13 +264,9 @@ body {
     list-style-type: none;
 }
 
-
-li {
-    display: list-item;
-    text-align: -webkit-match-parent;
-    width: 100%;
-    pointer-events: auto;
-}
+/*
+tooltip
+ */
 
 .tooltip {
     text-decoration: none;
@@ -268,67 +297,9 @@ li {
     z-index: 1000;
     margin-left: 5px
 }
-
-
-ul {
-    display: block;
-    list-style-type: disc;
-    -webkit-margin-before: 1em;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 0;
-    -webkit-margin-end: 0;
-    -webkit-padding-start: 40px;
-}
-
-.leaflet-pane > svg .d3-overlay path {
-    cursor: help;
-    pointer-events: all;
-}
-
-
-img.leaflet-tile {
-    filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
-    -webkit-filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
-}
-
-
-table {
-    font-family: arial, sans-serif;
-    width: 30vw;
-    border: 1px solid #404040;
-    border-collapse: collapse;
-    background: transparent;
-    margin: auto;
-}
-
-td {
-    background-color: transparent;
-    border: 1px solid #404040;
-    height: 0.8em;
-    text-align: center;
-    padding: 2px;
-}
-
-th {
-    background-color: rgba(56, 181, 173, 0.7);
-    border: 1px solid #404040;
-    height: 1em;
-    font-weight: bold;
-    color: white;
-    padding: 4px;
-}
-
-tr {
-    background-color: transparent;
-    border: 1px solid #404040;
-    font-weight: lighter;
-    padding: 2px;
-}
-
-
-.idsens {
-    cursor: pointer;
-}
+/*
+graph
+ */
 
 #table {
     /*	position: absolute; */
@@ -342,10 +313,6 @@ tr {
     pointer-events: all;
     border-radius: 2px;
     max-height: 90vh;
-}
-
-.hexbin-hexagon {
-    stroke-width: 0;
 }
 
 #current {
@@ -390,112 +357,8 @@ tr {
     background-color: rgba(250, 250, 250, 1);
 }
 
-
-.leaflet-control {
-    margin-top: 10px !important;
-}
-
-
-/* #noise_option::after {
-	content: " (beta)";
-	vertical-align: super;
-	font-size: small;
-} */
-
-.labs_facebook:before {
-	display: inline-block;
-	padding-right: 5px;
-	content: url("../images/facebook.svg");
-	width: 15px;
-	vertical-align: middle;
-}
-.labs_twitter:before {
-	display: inline-block;
-	padding-right: 5px;
-	content: url("../images/twitter.svg");
-	width: 15px;
-	vertical-align: middle;
-}
-.labs_github:before {
-	display: inline-block;
-	padding-right: 5px;
-	content: url("../images/github.svg");
-	width: 15px;
-	vertical-align: middle;
-}
-.labs_gitlab:before {
-	display: inline-block;
-	padding-right: 5px;
-	content: url("../images/gitlab.svg");
-	width: 15px;
-	vertical-align: middle;
-}
-.labs_mastodon:before {
-	display: inline-block;
-	padding-right: 5px;
-	content: url("../images/mastodon.svg");
-	width: 15px;
-	vertical-align: middle;
-}
-.labs_meetup:before {
-	display: inline-block;
-	padding-right: 5px;
-	content: url("../images/meetup.svg");
-	width: 15px;
-	vertical-align: middle;
-}
-.labs_telegram:before {
-	display: inline-block;
-	padding-right: 5px;
-	content: url("../images/telegram.svg");
-	width: 15px;
-	vertical-align: middle;
-}
-
-.labs_sociallinks {
-	border: none;
-	width: auto;
-}
-
-.labs_sociallinks td, .labs_sociallinks tr {
-	text-align: left;
-	vertical-align: middle;
-	border: none;
-}
-
-.leaflet-control-velocity {
-	display: none;
-}
-
-.leaflet-control-geosearch {
-	margin-top: 10px !important;
-}
-
-.leaflet-control-geosearch form input {
-	height: 30px !important;
-}
-
-.leaflet-control-locate {
-	margin-top: 10px !important;
-	font-weight: bolder;
-	font-size: 150%;
-}
-
-.leaflet-bar-part span:before {
-	content: "⌖";
-}
-.leaflet-bar-part span {
-	position: relative;
-	top: -3px;
-}
-
-
-
 #mainContainer {
-    left: 20px;
     position: absolute;
-    right: auto;
-    top: 50px;
     height: 100vh;
     border-radius: 4px;
     width: 50vw;
@@ -514,10 +377,14 @@ tr {
     -ms-flex-pack: center;
     -webkit-justify-content: center;
     justify-content: center;
-    height: 800px;
     flex-direction: column;
     overflow-y: scroll;
 }
+
+
+/*
+country buttons
+ */
 
 #countriesButtonsContainer {
     box-shadow: none;
@@ -536,49 +403,6 @@ tr {
     padding:10px;
 }
 
-/* SELECTED */
-
-.countryButtonselected {
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-        font-family: "Inter",Helvetica,Arial,sans-serif;
-    font-size: 14px;
-    line-height: 1;
-    font-weight: 700;
-    border-radius: 4px;
-    padding: 8px 12px;
-    margin: 0;
-        margin-right: 0px;
-        margin-left: 0px;
-    outline: 0 !important;
-    border-style: solid;
-    border-width: 1px;
-        border-right-width: 1px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-    -webkit-transition: background-color 100ms ease-out,border-color 100ms ease-out;
-    transition: background-color 100ms ease-out,border-color 100ms ease-out;
-    position: relative;
-    cursor: pointer;
-    pointer-events: all;
-    background-color: #FFF;
-    border-color: #C2C2C2;
-        border-bottom-color: rgb(194, 194, 194);
-    border-bottom-color: #969696;
-    color: #222;
-    background-color: #F2F2F2;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15),0 3px 7px rgba(0, 0, 0, 0.15) inset;
-    border-radius: 0;
-        border-top-left-radius: 0px;
-        border-bottom-left-radius: 0px;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    border-right-width: 0;
-    margin-left: 0;
-    margin-right: 0;
-}
-
 #countriesButtonsContainer button {
     -webkit-box-flex: 1;
     -webkit-flex-grow: 1;
@@ -586,22 +410,6 @@ tr {
     flex-grow: 1;
 }
 
-/* button, [type="button"], [type="reset"], [type="submit"] {
-    -webkit-appearance: button;
-}
-button, select {
-    text-transform: none;
-}
-button, input {
-    overflow: visible;
-}
-button, input, optgroup, select, textarea {
-    font-family: inherit;
-    font-size: 100%;
-    line-height: 1.15;
-    margin: 0;
-} */
- 
 .countryButton {
     font-family: "Inter",Helvetica,Arial,sans-serif;
     font-size: 14px;
@@ -609,13 +417,9 @@ button, input, optgroup, select, textarea {
     font-weight: 700;
     border-radius: 4px;
     padding: 8px 12px;
-    margin: 0;
-        margin-right: 0px;
-        margin-left: 0px;
     outline: 0 !important;
     border-style: solid;
     border-width: 1px;
-        border-right-width: 1px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
     -webkit-transition: background-color 100ms ease-out,border-color 100ms ease-out;
     transition: background-color 100ms ease-out,border-color 100ms ease-out;
@@ -624,72 +428,41 @@ button, input, optgroup, select, textarea {
     pointer-events: all;
     background-color: #FFF;
     border-color: #C2C2C2;
-    border-bottom-color: rgb(194, 194, 194);
     border-bottom-color: #969696;
     color: #222;
+    -webkit-box-flex: 1;
+    -webkit-flex-grow: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    border-right-width: 0;
+    margin: 0;
+}
+
+.countryButtonselected {
+    font-family: "Inter",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 700;
+    padding: 8px 12px;
+    outline: 0 !important;
+    border-style: solid;
+    border-width: 1px;
+    -webkit-transition: background-color 100ms ease-out,border-color 100ms ease-out;
+    transition: background-color 100ms ease-out,border-color 100ms ease-out;
+    position: relative;
+    cursor: pointer;
+    pointer-events: all;
+    border-color: #C2C2C2;
+    color: #222;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15),0 3px 7px rgba(0, 0, 0, 0.15) inset;
     border-radius: 0;
     -webkit-box-flex: 1;
     -webkit-flex-grow: 1;
     -ms-flex-positive: 1;
     flex-grow: 1;
     border-right-width: 0;
-    margin-left: 0;
-    margin-right: 0;
-}
-
-
-.countryButton:last-of-type{
-    font-family: "Inter",Helvetica,Arial,sans-serif;
-    font-size: 14px;
-    line-height: 1;
-    font-weight: 700;
-    border-radius: 4px;
-    padding: 8px 12px;
     margin: 0;
-        margin-right: 0px;
-        margin-left: 0px;
-    outline: 0 !important;
-    border-style: solid;
-    border-width: 1px;
-        border-right-width: 1px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-    -webkit-transition: background-color 100ms ease-out,border-color 100ms ease-out;
-    transition: background-color 100ms ease-out,border-color 100ms ease-out;
-    position: relative;
-    cursor: pointer;
-    pointer-events: all;
-    background-color: #FFF;
-    border-color: #C2C2C2;
-    border-bottom-color: rgb(194, 194, 194);
-    border-bottom-color: #969696;
-    color: #222;
-    border-radius: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    border-right-width: 1;
-    margin-left: 0;
-    margin-right: 0;
-
 }
-
-/* button, [type="button"], [type="reset"], [type="submit"] {
-    -webkit-appearance: button;
-}
-button, select {
-    text-transform: none;
-}
-button, input {
-    overflow: visible;
-}
-button, input, optgroup, select, textarea {
-    font-family: inherit;
-    font-size: 100%;
-    line-height: 1.15;
-    margin: 0;
-} */
-
 
 #custom-select{
 left: 25%;
@@ -705,8 +478,7 @@ left: 25%;
     border: 1px solid transparent;
     position: absolute;
     top: 5rem;
-    margin:auto;
-    margin-left: 1rem;
+    margin: auto auto auto 1rem;
     pointer-events: auto;
 }
 
@@ -722,26 +494,6 @@ left: 25%;
     bottom: 0;
     /* width: 100%; */
 }
-
-/* .select-selected:after {
-    position: absolute;
-    content: "▲";
-    right: 10px;
-    width: auto;
-    height: 0;
-    border-left: thin solid white;
-    padding-left: 10px;
-} */
-
-/*point the arrow downwards when the select box is open (active):*/
-/* .select-selected.select-arrow-active:after {
-    content: "▼"
-} */
-
-/*point the arrow upwards when the select box is closed (inactive):*/
-/* .select-selected.select-arrow-inactive:after {
-    content: "▲"
-} */
 
 /*style the items (options), including the selected item:*/
 .select-items div, .select-selected {
@@ -819,15 +571,13 @@ line-height: 35px;
     background-color: rgb(49, 135, 127);
 }
 
-
 #explanation {
     font-family: arial, sans-serif;
     font-weight: bold;
     color: black;
     cursor: pointer;
     font-size: 1.1em;
-    position: relative;
-    left: 60px; 
+    left: 60px;
     position:absolute;
     top:15px;
 }
@@ -840,6 +590,119 @@ line-height: 35px;
     top: 3rem;
 }
 
+/*
+leaflet map
+ */
+
 .leaflet-top {
     top: 60px;
+}
+
+.leaflet-pane > svg .d3-overlay path {
+    cursor: help;
+    pointer-events: all;
+}
+
+img.leaflet-tile {
+    filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
+    -webkit-filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
+}
+
+.idsens {
+    cursor: pointer;
+}
+
+.hexbin-hexagon {
+    stroke-width: 0;
+}
+
+.leaflet-control {
+    margin-top: 10px !important;
+}
+
+.labs_facebook:before {
+    display: inline-block;
+    padding-right: 5px;
+    content: url("../images/facebook.svg");
+    width: 15px;
+    vertical-align: middle;
+}
+.labs_twitter:before {
+    display: inline-block;
+    padding-right: 5px;
+    content: url("../images/twitter.svg");
+    width: 15px;
+    vertical-align: middle;
+}
+.labs_github:before {
+    display: inline-block;
+    padding-right: 5px;
+    content: url("../images/github.svg");
+    width: 15px;
+    vertical-align: middle;
+}
+.labs_gitlab:before {
+    display: inline-block;
+    padding-right: 5px;
+    content: url("../images/gitlab.svg");
+    width: 15px;
+    vertical-align: middle;
+}
+.labs_mastodon:before {
+    display: inline-block;
+    padding-right: 5px;
+    content: url("../images/mastodon.svg");
+    width: 15px;
+    vertical-align: middle;
+}
+.labs_meetup:before {
+    display: inline-block;
+    padding-right: 5px;
+    content: url("../images/meetup.svg");
+    width: 15px;
+    vertical-align: middle;
+}
+.labs_telegram:before {
+    display: inline-block;
+    padding-right: 5px;
+    content: url("../images/telegram.svg");
+    width: 15px;
+    vertical-align: middle;
+}
+
+.labs_sociallinks {
+    border: none;
+    width: auto;
+}
+
+.labs_sociallinks td, .labs_sociallinks tr {
+    text-align: left;
+    vertical-align: middle;
+    border: none;
+}
+
+.leaflet-control-velocity {
+    display: none;
+}
+
+.leaflet-control-geosearch {
+    margin-top: 10px !important;
+}
+
+.leaflet-control-geosearch form input {
+    height: 30px !important;
+}
+
+.leaflet-control-locate {
+    margin-top: 10px !important;
+    font-weight: bolder;
+    font-size: 150%;
+}
+
+.leaflet-bar-part span:before {
+    content: "⌖";
+}
+.leaflet-bar-part span {
+    position: relative;
+    top: -3px;
 }
