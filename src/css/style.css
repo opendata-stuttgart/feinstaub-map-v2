@@ -15,6 +15,25 @@ body {
     pointer-events: none;
 } */
 
+#loading_layer {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    z-index: 1100;
+    background-color: rgba(250,250,250,0.4);
+}
+#loading {
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    font-family: Arial,serif;
+    font-size: 200%;
+    font-weight: bold;
+}
+
 #betterplace {
     font-size: 0.9em;
     text-align: center;

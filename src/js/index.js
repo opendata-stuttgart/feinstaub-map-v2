@@ -30,7 +30,8 @@ import * as places from './places.js';
 import * as zooms from './zooms.js';
 import * as translate from './translate.js';
 
-import './static-files'
+import '../images/lab_marker.png';
+import '../images/lab_marker.svg';
 import '../css/style.css';
 
 // declare variables
@@ -74,7 +75,6 @@ new L.Hash(map);
         telem = search_values[i].split('=');
         config[telem[0]] = '';
         if (typeof telem[1] != 'undefined') config[telem[0]] = telem[1];
-        console.log(telem)
     }
 })();
 
