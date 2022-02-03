@@ -55,89 +55,6 @@ const locale = timeFormatLocale({
     "shortMonths": ["Jan.", "Feb.", "Mar.", "Apr.", "Mai", "Jun.", "Jul.", "Aug.", "Sep.", "Okt.", "Nov.", "Dez."]
 });
 
-//EU-colors:
-
-// #50F0E6
-// #50CCAA
-// #F0E641
-// #FF5050
-// #960032
-// #7D2181
-
-const scale_options = {
-    "PM10": {
-        valueDomain: [20, 40, 60, 100, 500],
-        colorRange: ['#00796B', '#F9A825', '#E65100', '#DD2C00', '#960084']
-    },
-    "PM25": {
-        valueDomain: [10, 20, 40, 60, 100],
-        colorRange: ['#00796B', '#F9A825', '#E65100', '#DD2C00', '#960084']
-    },
-    "PM10eu": {
-        valueDomain: [10, 30, 45, 75, 125, 150],
-        colorRange: ['#50F0E6', '#50CCAA', '#F0E641', '#FF5050', '#960032', '#7D2181']
-    },
-    "PM25eu": {
-        valueDomain: [5, 15, 22.5, 37.5, 62.5, 75],
-        colorRange: ['#50F0E6', '#50CCAA', '#F0E641', '#FF5050', '#960032', '#7D2181']
-    },
-    "PM10who": {
-        valueDomain: [0, 45, 150],							//REVOIR LE DEROULÉ DU GRADIENT
-        colorRange: ['#8bf3ff', '#fff148', '#ff5353']
-    },
-    "PM25who": {
-        valueDomain: [0, 15, 75],							//REVOIR LE DEROULÉ DU GRADIENT
-        colorRange: ['#8bf3ff', '#fff148', '#ff5353']
-    },
-    "Official_AQI_US": {
-        valueDomain: [0, 50, 100, 150, 200, 300],
-        colorRange: ['#00E400', '#FFFF00', '#FF7E00', '#FF0000', 'rgb(143, 63, 151)', '#7E0023']
-    },
-    "Temperature": {
-        valueDomain: [-20, -10, 0, 10, 20, 30, 40],
-        colorRange: ['#4050B0', '#5679f9', '#55cbd9', '#a2cf4a', '#fedb64', '#fe8f52', '#e6380f']
-    },
-    "Humidity": {
-        valueDomain: [0, 20, 40, 60, 80, 100],
-        colorRange: ['#c41a0a', '#f47a0b', '#f4e60b', '#aff474', '#6dbcff', '#00528f']
-    },
-    "Pressure": {
-        valueDomain: [926, 947.75, 969.50, 991.25, 1013, 1034.75, 1056.50, 1078.25, 1100],
-        colorRange: ["#dd2e97", "#6b3b8f", "#2979b9", "#02B9ed", "#13ae52", "#c9d841", "#fad635", "#f0a03d", "#892725"]
-    },
-    "Noise": {
-        valueDomain: [0, 20, 40, 60, 80, 100],
-        colorRange: ['#00528f', '#6dbcff', '#aff474', '#f4e60b', '#f47a0b', '#c41a0a']
-    },
-};
-
-const titles = {
-    "PM10": "PM10 &micro;g/m&sup3;",
-    "PM25": "PM2.5 &micro;g/m&sup3;",
-    "PM10eu": "PM10 &micro;g/m&sup3;",
-    "PM25eu": "PM2.5 &micro;g/m&sup3;",
-    "PM10who": "PM10 &micro;g/m&sup3;",
-    "PM25who": "PM2.5 &micro;g/m&sup3;",
-    "Official_AQI_US": "AQI US",
-    "Temperature": "Temperature °C",
-    "Humidity": "Humidity %",
-    "Pressure": "Pressure hPa",
-    "Noise": "Noise dBA",
-};
-
-const panelIDs = {
-    "PM10": [2, 1],
-    "PM25": [2, 1],
-    "PM10eu": [2, 1],
-    "PM25eu": [2, 1],
-    "PM10who": [2, 1], //WHICH PANELS?
-    "PM25who": [2, 1], //WHICH PANELS?
-    "Temperature": [4, 3],
-    "Humidity": [6, 5],
-    "Pressure": [8, 7],
-    "Noise": [0, 12]
-};
-
 const div = d3.select("#sidebar").append("div").attr("id", "table").style("display", "none");
 
 const map = L.map("map", {preferCanvas: true}).setView(config.initialView, config.initialZoom);
@@ -153,33 +70,26 @@ const tiles = L.tileLayer(config.tiles, {
 // Adds query and hash parameter to the current URL
 new L.Hash(map);
 
-// define query object
-const query = {
-    nowind: "false",
-    nolabs: "false",
-    noeustations: "false",
-    selection: config.selection
-};
 // iife function to read query parameter and fill query object
 (function () {
     let telem;
     const search_values = location.search.replace('\?', '').split('&');
     for (let i = 0; i < search_values.length; i++) {
         telem = search_values[i].split('=');
-        query[telem[0]] = '';
-        if (typeof telem[1] != 'undefined') query[telem[0]] = telem[1];
+        config.query[telem[0]] = '';
+        if (typeof telem[1] != 'undefined') config.query[telem[0]] = telem[1];
     }
 })();
 
 // layers
-(query.nowind === "false") ? config.layer_wind = 1 : config.layer_wind = 0;
-(query.nolabs === "false") ? config.layer_labs = 1 : config.layer_labs = 0;
-(query.noeustations === "false") ? config.layer_eustations = 1 : config.layer_eustations = 0;
+(config.query.nowind === "false") ? config.layer_wind = 1 : config.layer_wind = 0;
+(config.query.nolabs === "false") ? config.layer_labs = 1 : config.layer_labs = 0;
+(config.query.noeustations === "false") ? config.layer_eustations = 1 : config.layer_eustations = 0;
 
 d3.select("#loading").html(translate.tr(lang, d3.select("#loading").html()));
 
 // Query will overwrite default sensor selection. Query Parameter is PM25, PM10, Temperature, Humidity, Pressure or Noise. Query is case sensitive
-config.selection = (query.sensor !== undefined) ? query.sensor : config.selection;
+config.selection = (config.query.sensor !== undefined) ? config.query.sensor : config.selection;
 d3.select("#custom-select").select("select").property("value", config.selection);
 
 let user_selected_value = config.selection;
@@ -497,7 +407,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
         custom_select.select("#select-item-Noise").select("span").attr("id", "noise_option");
     });
 
-    console.log(d3.select(".select-items").selectAll("div"));
+    // console.log(d3.select(".select-items").selectAll("div"));
 
     d3.select(".select-items").selectAll("div").each(function (d) {
         if (this.getAttribute('value') == custom_select.select("select").select("option:checked").node().value) {
@@ -506,7 +416,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
         ;
     });
 
-    console.log(custom_select.select("select").select("option:checked").node().value);
+    // console.log(custom_select.select("select").select("option:checked").node().value);
 
     custom_select.style("display", "inline-block");
 
@@ -514,7 +424,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 
     map.setView(coordsCenter, zoomLevel);
     map.clicked = 0;
-    hexagonheatmap = L.hexbinLayer(scale_options[user_selected_value]).addTo(map);
+    hexagonheatmap = L.hexbinLayer(config.scale_options[user_selected_value]).addTo(map);
 
 //	REVOIR ORDRE DANS FONCTION READY
     function retrieveData() {
@@ -527,7 +437,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
             ready(1);
             api.getData(config.data_host + "/data/v2/data.24h.json", 5).then(function (result) {
                 hmhexaPM_WHO = result.cells;
-                console.log(hmhexaPM_WHO);
+                // console.log(hmhexaPM_WHO);
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
@@ -536,7 +446,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
             });
             api.getData(config.data_host + "/data/v2/data.24h.json", 6).then(function (result) {
                 hmhexaPM_EU = result.cells;
-                console.log(hmhexaPM_EU);
+                // console.log(hmhexaPM_EU);
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
@@ -545,7 +455,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
             });
             api.getData(config.data_host + "/data/v2/data.24h.json", 2).then(function (result) {
                 hmhexaPM_AQI = result.cells;
-                console.log(hmhexaPM_AQI);
+                // console.log(hmhexaPM_AQI);
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
@@ -641,12 +551,11 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 function setQueryString() {
     let stateObj = {};
     let new_path = window.location.pathname + "?";
-    if (query.nooverlay != "false") new_path += "nooverlay&";
-    if (query.selection != config.selection) new_path += "selection=" + query.selection + "&";
+    if (config.query.selection !== config.selection) new_path += "selection=" + config.query.selection + "&";
     if (!d3.select("#cb_wind").property("checked")) new_path += "nowind&";
     if (!d3.select("#cb_labs").property("checked")) new_path += "nolabs&";
     new_path = new_path.slice(0, -1) + location.hash;
-    console.log(new_path);
+    // console.log(new_path);
     history.pushState(stateObj, document.title, new_path);
 }
 
@@ -685,7 +594,7 @@ function data_median(data) {
 }
 
 function switchLegend(val) {
-    console.log(val);
+    // console.log(val);
     d3.select('#legendcontainer').selectAll("[id^=legend_]").style("display", "none");
     d3.select('#legend_' + val).style("display", "block");
 }
@@ -737,21 +646,21 @@ function ready(num) {
     const dateFormater = locale.format("%H:%M:%S");
 
     d3.select("#update").html(translate.tr(lang, "Last update") + ": " + dateFormater(newTime));
-    console.log("Timestamp " + timestamp_data + " from " + timestamp_from);
+    // console.log("Timestamp " + timestamp_data + " from " + timestamp_from);
 
     d3.select("#current").html(d3.select(".select-selected").select("span").html());
 
 
     if (num === 1 && (user_selected_value === "PM10" || user_selected_value === "PM25")) {
-        hexagonheatmap.initialize(scale_options[user_selected_value]);
+        hexagonheatmap.initialize(config.scale_options[user_selected_value]);
         hexagonheatmap.data(hmhexaPM_aktuell);
     }
     if (num === 6 && (user_selected_value === "PM10eu" || user_selected_value === "PM25eu")) {
-        hexagonheatmap.initialize(scale_options[user_selected_value]);
+        hexagonheatmap.initialize(config.scale_options[user_selected_value]);
         hexagonheatmap.data(hmhexaPM_aktuell);
     }
     if (num === 5 && (user_selected_value === "PM10who" || user_selected_value === "PM25who")) {
-        hexagonheatmap.initialize(scale_options[user_selected_value]);
+        hexagonheatmap.initialize(config.scale_options[user_selected_value]);
         hexagonheatmap.data(hmhexaPM_WHO);
     }
 
@@ -759,31 +668,31 @@ function ready(num) {
 
 
     if (num === 2 && user_selected_value === "Official_AQI_US") {
-        hexagonheatmap.initialize(scale_options[user_selected_value]);
+        hexagonheatmap.initialize(config.scale_options[user_selected_value]);
         hexagonheatmap.data(hmhexaPM_AQI);
     }
     if (num === 3 && (user_selected_value === "Temperature" || user_selected_value === "Humidity" || user_selected_value === "Pressure")) {
-        hexagonheatmap.initialize(scale_options[user_selected_value]);
+        hexagonheatmap.initialize(config.scale_options[user_selected_value]);
         hexagonheatmap.data(hmhexa_t_h_p.filter(function (value) {
             return api.checkValues(value.data[user_selected_value], user_selected_value);
         }));
     }
     if (num === 4 && user_selected_value === "Noise") {
-        hexagonheatmap.initialize(scale_options[user_selected_value]);
+        hexagonheatmap.initialize(config.scale_options[user_selected_value]);
         hexagonheatmap.data(hmhexa_noise);
     }
     d3.select("#loading_layer").style("display", "none");
 }
 
 function reloadMap(val) {
-    console.log(val);
+    // console.log(val);
     d3.selectAll('path.hexbin-hexagon').remove();
-    console.log(d3.select(".select-selected").select("span").html());
+    // console.log(d3.select(".select-selected").select("span").html());
     d3.select("#current").html(d3.select(".select-selected").select("span").html());
     closeSidebar();
     switchLegend(val);
 
-    hexagonheatmap.initialize(scale_options[val]);
+    hexagonheatmap.initialize(config.scale_options[val]);
     if (val === "PM10" || val === "PM25") {
         hexagonheatmap.data(hmhexaPM_aktuell);
     } else if (val === "PM10eu" || val === "PM25eu") {
@@ -813,7 +722,7 @@ function sensorNr(data) {
     document.getElementById("mainContainer").style.display = "none";
     document.getElementById("explanation").style.display = "none";
 
-    let textefin = "<table id='results' style='width:380px;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, titles[user_selected_value]) + "</th></tr>";
+    let textefin = "<table id='results' style='width:380px;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, config.titles[user_selected_value]) + "</th></tr>";
     if (data.length > 1) {
         textefin += "<tr><td class='idsens'>Median " + data.length + " Sens.</td><td>" + (isNaN(parseInt(data_median(data))) ? "-" : parseInt(data_median(data))) + "</td></tr>";
     }
@@ -884,7 +793,7 @@ function displayGraph(id) {
         d3.select(iddiv).append("td")
             .attr("id", "frame_" + sens_id)
             .attr("colspan", "2")
-            .html((panelIDs[user_selected_value][0] > 0 ? panel_str.replace("<PANELID>", panelIDs[user_selected_value][0]).replace("<SENSOR>", sens_id) + "<br/>" : "") + (panelIDs[user_selected_value][1] > 0 ? panel_str.replace("<PANELID>", panelIDs[user_selected_value][1]).replace("<SENSOR>", sens_id) : ""));
+            .html((config.panelIDs[user_selected_value][0] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][0]).replace("<SENSOR>", sens_id) + "<br/>" : "") + (config.panelIDs[user_selected_value][1] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][1]).replace("<SENSOR>", sens_id) : ""));
 
         if (user_selected_value !== "Official_AQI_US") inner_pre = "(-) ";
         d3.select("#id_" + sens).html(inner_pre + "#" + sens_desc);
@@ -912,15 +821,15 @@ function switchTo(element) {
     const custom_select = d3.select("#custom-select");
     custom_select.select("select").property("value", element.id.substring(12));
     user_selected_value = element.id.substring(12);
-    console.log(element.id.substring(12));
-    console.log(user_selected_value);
+    // console.log(element.id.substring(12));
+    // console.log(user_selected_value);
     if (user_selected_value === "Noise") {
         custom_select.select(".select-selected").select("span").attr("id", "noise_option");
     } else {
         custom_select.select(".select-selected").select("span").attr("id", null);
     }
     custom_select.select(".select-selected").attr("class", null);
-    console.log(element);
+    // console.log(element);
     element.setAttribute("class", "select-selected");
     reloadMap(user_selected_value);
 }
@@ -931,7 +840,7 @@ function countrySelector() {
     d3.select(".countryButtonselected").attr('class', 'countryButton');
     d3.select(this).attr('class', 'countryButtonselected')
 
-    console.log(this.value);
+    // console.log(this.value);
 
     map.setView(places[this.value], zooms[this.value]);
     closeSidebar();
