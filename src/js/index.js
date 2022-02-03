@@ -60,36 +60,33 @@ const div = d3.select("#sidebar").append("div").attr("id", "table").style("displ
 const map = L.map("map", {preferCanvas: true}).setView(config.initialView, config.initialZoom);
 
 config.tiles = config.tiles_server + config.tiles_path;
-const tiles = L.tileLayer(config.tiles, {
-    attribution: config.attribution,
-    maxZoom: config.maxZoom,
-    minZoom: config.minZoom,
-    subdomains: config.tiles_subdomains
+L.tileLayer(config.tiles, {
+    attribution: config.attribution, maxZoom: config.maxZoom, minZoom: config.minZoom, subdomains: config.tiles_subdomains
 }).addTo(map);
-
 // Adds query and hash parameter to the current URL
 new L.Hash(map);
 
-// iife function to read query parameter and fill query object
+// iife function to read query parameter from URL
 (function () {
     let telem;
     const search_values = location.search.replace('\?', '').split('&');
     for (let i = 0; i < search_values.length; i++) {
         telem = search_values[i].split('=');
-        config.query[telem[0]] = '';
-        if (typeof telem[1] != 'undefined') config.query[telem[0]] = telem[1];
+        config[telem[0]] = '';
+        if (typeof telem[1] != 'undefined') config[telem[0]] = telem[1];
+        console.log(telem)
     }
 })();
 
 // layers
-(config.query.nowind === "false") ? config.layer_wind = 1 : config.layer_wind = 0;
-(config.query.nolabs === "false") ? config.layer_labs = 1 : config.layer_labs = 0;
-(config.query.noeustations === "false") ? config.layer_eustations = 1 : config.layer_eustations = 0;
+(config.layer_wind === "false") ? config.layer_wind = 0 : config.layer_wind = 1;
+(config.layer_labs === "false") ? config.layer_labs = 0 : config.layer_labs = 1;
+(config.layer_euStations === "false") ? config.layer_eustations = 1 : config.layer_eustations = 0;
 
 d3.select("#loading").html(translate.tr(lang, d3.select("#loading").html()));
 
 // Query will overwrite default sensor selection. Query Parameter is PM25, PM10, Temperature, Humidity, Pressure or Noise. Query is case sensitive
-config.selection = (config.query.sensor !== undefined) ? config.query.sensor : config.selection;
+config.selection = (config.sensor !== undefined) ? config.sensor : "PM25";
 d3.select("#custom-select").select("select").property("value", config.selection);
 
 let user_selected_value = config.selection;
@@ -116,19 +113,10 @@ window.onload = function () {
     L.HexbinLayer = L.Layer.extend({
         _undef(a) {
             return typeof a === 'undefined';
-        },
-        options: {
-            radius: 25,
-            opacity: 0.6,
-            duration: 200,
-            onmouseover: undefined,
-            onmouseout: undefined,
+        }, options: {
+            radius: 25, opacity: 0.6, duration: 200, onmouseover: undefined, onmouseout: undefined,
 
             attribution: "<br/><span style='font-size:120%'>Measurements: <a href='https://sensor.community/' style='color: red'>Sensor.Community</a> contributors</span><br/><span style='font-size:120%' id='update'></span>",
-
-            // <div ></div>
-
-
             click: function (d) {
                 setTimeout(function () {
                     if (clicked === null) sensorNr(d);
@@ -138,11 +126,9 @@ window.onload = function () {
 
             lng: function (d) {
                 return d.longitude;
-            },
-            lat: function (d) {
+            }, lat: function (d) {
                 return d.latitude;
-            },
-            value: function (d) {
+            }, value: function (d) {
                 return data_median(d);
             },
         },
@@ -191,16 +177,11 @@ window.onload = function () {
                     zoom = _layer._undef(zoom) ? _layer._zoom : zoom;
                     let projectedPoint = _layer.map.project(L.latLng(latLng), zoom)._round();
                     return projectedPoint._subtract(_layer._pixelOrigin);
-                },
-                layerPointToLatLng: function (point, zoom) {
+                }, layerPointToLatLng: function (point, zoom) {
                     zoom = _layer._undef(zoom) ? _layer._zoom : zoom;
                     let projectedPoint = L.point(point).add(_layer._pixelOrigin);
                     return _layer.map.unproject(projectedPoint, zoom);
-                },
-                unitsPerMeter: 256 * Math.pow(2, _layer._zoom) / 40075017,
-                map: _layer.map,
-                layer: _layer,
-                scale: 1
+                }, unitsPerMeter: 256 * Math.pow(2, _layer._zoom) / 40075017, map: _layer.map, layer: _layer, scale: 1
             };
             this.projection._projectPoint = function (x, y) {
                 let point = _layer.projection.latLngToLayerPoint(new L.LatLng(y, x));
@@ -251,8 +232,7 @@ window.onload = function () {
             this._disableLeafletRounding();
             this._redraw(this.selection, this.projection, this.map.getZoom());
             this._enableLeafletRounding();
-        },
-        getEvents: function () {
+        }, getEvents: function () {
             return {zoomend: this._zoomChange};
         },
 
@@ -271,8 +251,7 @@ window.onload = function () {
             this._rootGroup.attr("transform", shift.concat(scale).join(""));
             this.draw();
             this._enableLeafletRounding();
-        },
-        _redraw(selection, projection, zoom) {
+        }, _redraw(selection, projection, zoom) {
             // Generate the mapped version of the data
             let data = this._data.map((d) => {
                 let lng = this.options.lng(d);
@@ -335,8 +314,7 @@ window.onload = function () {
                 .attr('fill-opacity', 0.01)
                 .attr('stroke-opacity', 0.01)
                 .remove();
-        },
-        data(data) {
+        }, data(data) {
             this._data = (data != null) ? data : [];
             this.draw();
             return this;
@@ -385,13 +363,6 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
     d3.select("#sensatref").html(translate.tr(lang, "Map") + " Sensor@RefS");
     d3.select("#no2").html(translate.tr(lang, "Map") + " NO2");
 
-
-    // <p class="link" id="website"><a href="https://sensor.community/" target="_blank"></a></p>
-    // <p class="link" id="forum"><a href="https://forum.sensor.community/" target="_blank"></a></p>
-    // <p class="link" id="sensatref"><a href="https://sensors2ref.maps.sensor.community/" target="_blank"></a></p>
-    // <p class="link" id="no2"><a href="https://no2.maps.sensor.community/" target="_blank"></a></p>
-
-
     //	Select
     const custom_select = d3.select("#custom-select");
     custom_select.select("select").property("value", config.selection);
@@ -400,7 +371,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
     });
 
     custom_select.append("div").attr("class", "select-items");
-    custom_select.select("select").selectAll("option").each(function (d) {
+    custom_select.select("select").selectAll("option").each(function () {
         custom_select.select(".select-items").append("div").html("<span>" + d3.select(this).html() + "</span>").attr("id", "select-item-" + this.value).attr("value", this.value).on("click", function () {
             switchTo(this);
         });
@@ -409,11 +380,10 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 
     // console.log(d3.select(".select-items").selectAll("div"));
 
-    d3.select(".select-items").selectAll("div").each(function (d) {
+    d3.select(".select-items").selectAll("div").each(function () {
         if (this.getAttribute('value') == custom_select.select("select").select("option:checked").node().value) {
             this.setAttribute("class", "select-selected");
         }
-        ;
     });
 
     // console.log(custom_select.select("select").select("option:checked").node().value);
@@ -494,16 +464,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
         hexagonheatmap._zoomChange();
     });
 
-    map.on('click', function (e) {
-        /* if the user clicks anywhere outside the opened select drop down, then close all select boxes */
-        // if (! d3.select("#custom-select").select(".select-items").empty()) {
-        // 	d3.select("#custom-select").select(".select-items").remove();
-        // 	d3.select("#custom-select").select(".select-selected").attr("class", "select-selected");
-        // } else {
-        // 	setTimeout(function () {
-        // 		map.setView([e.latlng.lat, e.latlng.lng], map.getZoom());
-        // 	}, 300);
-        // }
+    map.on('click', function () {
         clicked = null;
     });
     map.on('dblclick', function () {
@@ -513,11 +474,7 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 
     // add searchbox
     new GeoSearch.GeoSearchControl({
-        style: 'button',
-        position: 'topleft',
-        showMarker: false,
-        autoClose: true,
-        provider: new GeoSearch.OpenStreetMapProvider(),
+        style: 'button', position: 'topleft', showMarker: false, autoClose: true, provider: new GeoSearch.OpenStreetMapProvider(),
     }).addTo(map);
 
     L.control.locate({position: 'topleft'}).addTo(map);
@@ -548,17 +505,6 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
 
 }
 
-function setQueryString() {
-    let stateObj = {};
-    let new_path = window.location.pathname + "?";
-    if (config.query.selection !== config.selection) new_path += "selection=" + config.query.selection + "&";
-    if (!d3.select("#cb_wind").property("checked")) new_path += "nowind&";
-    if (!d3.select("#cb_labs").property("checked")) new_path += "nolabs&";
-    new_path = new_path.slice(0, -1) + location.hash;
-    // console.log(new_path);
-    history.pushState(stateObj, document.title, new_path);
-}
-
 function switchLabLayer() {
     if (d3.select("#cb_labs").property("checked")) {
         map.getPane('markerPane').style.visibility = "visible";
@@ -567,7 +513,6 @@ function switchLabLayer() {
     }
     document.getElementById("sidebar").style.display = "none";
     document.getElementById("menu").innerHTML = "&#9776;";
-    setQueryString();
 }
 
 function switchWindLayer() {
@@ -578,16 +523,15 @@ function switchWindLayer() {
     }
     document.getElementById("sidebar").style.display = "none";
     document.getElementById("menu").innerHTML = "&#9776;";
-    setQueryString();
 }
 
 function data_median(data) {
     function sort_num(a, b) {
-        var c = a - b;
+        let c = a - b;
         return (c < 0 ? -1 : (c = 0 ? 0 : 1));
     }
 
-    var d_temp = data.filter(d => !d.o.indoor)
+    let d_temp = data.filter(d => !d.o.indoor)
         .map(o => o.o.data[user_selected_value])
         .sort(sort_num);
     return median(d_temp);
@@ -650,7 +594,6 @@ function ready(num) {
 
     d3.select("#current").html(d3.select(".select-selected").select("span").html());
 
-
     if (num === 1 && (user_selected_value === "PM10" || user_selected_value === "PM25")) {
         hexagonheatmap.initialize(config.scale_options[user_selected_value]);
         hexagonheatmap.data(hmhexaPM_aktuell);
@@ -665,8 +608,6 @@ function ready(num) {
     }
 
     //REVOIR MAP
-
-
     if (num === 2 && user_selected_value === "Official_AQI_US") {
         hexagonheatmap.initialize(config.scale_options[user_selected_value]);
         hexagonheatmap.data(hmhexaPM_AQI);
@@ -716,7 +657,6 @@ function sensorNr(data) {
         inner_pre = "(+) #";
     }
 
-
     openSidebar();
 
     document.getElementById("mainContainer").style.display = "none";
@@ -765,13 +705,9 @@ function sensorNr(data) {
         sensors += "<tr id='graph_" + i.o.id + "'></tr>";
     });
     textefin += sensors;
-
     textefin += "</table>";
-
     div.transition().duration(200).style("display", "block");
-
     div.html(textefin).style("padding", "10px");
-
     d3.selectAll(".idsens").on("click", function () {
         displayGraph(d3.select(this).attr("id"));
     });
@@ -834,12 +770,10 @@ function switchTo(element) {
     reloadMap(user_selected_value);
 }
 
-
 function countrySelector() {
     console.log(this);
     d3.select(".countryButtonselected").attr('class', 'countryButton');
     d3.select(this).attr('class', 'countryButtonselected')
-
     // console.log(this.value);
 
     map.setView(places[this.value], zooms[this.value]);
