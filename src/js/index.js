@@ -58,11 +58,11 @@ const locale = timeFormatLocale({
 
 const div = d3.select("#sidebar").append("div").attr("id", "table").style("display", "none");
 
-const map = L.map("map", {preferCanvas: true}).setView(config.initialView, config.initialZoom);
+const map = L.map("map", {preferCanvas: true, zoomControl: false, controls:false}).setView(config.initialView, config.initialZoom);
 
 config.tiles = config.tiles_server + config.tiles_path;
 L.tileLayer(config.tiles, {
-    attribution: config.attribution, maxZoom: config.maxZoom, minZoom: config.minZoom, subdomains: config.tiles_subdomains
+    maxZoom: config.maxZoom, minZoom: config.minZoom, subdomains: config.tiles_subdomains
 }).addTo(map);
 // Adds query and hash parameter to the current URL
 new L.Hash(map);
@@ -93,6 +93,7 @@ let user_selected_value = config.selection;
 let coordsCenter = config.initialView;
 let zoomLevel = config.initialZoom;
 
+// read zoom level and coordinates query parameter from URL
 if (location.hash) {
     const hash_params = location.hash.split("/");
     coordsCenter = [hash_params[1], hash_params[2]];
@@ -115,8 +116,7 @@ window.onload = function () {
             return typeof a === 'undefined';
         }, options: {
             radius: 25, opacity: 0.6, duration: 200, onmouseover: undefined, onmouseout: undefined,
-
-            attribution: "<br/><span style='font-size:120%'>Measurements: <a href='https://sensor.community/' style='color: red'>Sensor.Community</a> contributors</span><br/><span style='font-size:120%' id='update'></span>",
+            attribution: config.attribution,
             click: function (d) {
                 setTimeout(function () {
                     if (clicked === null) sensorNr(d);
@@ -334,13 +334,8 @@ window.onload = function () {
 The values are refreshed every 5 minutes in order to fit with the measurement frequency of the Airrohr sensors.</p> \
 <p>The Air Quality Index (AQI) is calculated according to the recommandations of the United States Environmental Protection Agency. Further information is available on the official page.(<a href='https://www.airnow.gov/aqi/aqi-basics/'>Link</a>). Hover over the AQI scale to display the levels of health concern.</p>"));
 
-
     d3.select("#menu").on("click", toggleSidebar);
     d3.select("#explanation").on("click", toggleExplanation);
-    d3.select("#legend_Official_AQI_US").selectAll(".tooltip").on("click", function () {
-        window.open('https://www.airnow.gov/index.cfm?action=aqibasics.aqi', '_blank');
-        return false;
-    });
     d3.select("#AQI_Good").html(" " + translate.tr(lang, "Good<div class='tooltip-div'>Air quality is considered satisfactory, and air pollution poses little or no risk.</div>"));
     d3.select("#AQI_Moderate").html(" " + translate.tr(lang, "Moderate<div class='tooltip-div'>Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution.</div>"));
     d3.select("#AQI_Unhealthy_Sensitive").html(" " + translate.tr(lang, "Unhealthy for Sensitive Groups<div class='tooltip-div'>Members of sensitive groups may experience health effects. The general public is not likely to be affected.</div>"));
@@ -473,11 +468,11 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
     });
 
     // add searchbox
-    new GeoSearch.GeoSearchControl({
+    /*new GeoSearch.GeoSearchControl({
         style: 'button', position: 'topleft', showMarker: false, autoClose: true, provider: new GeoSearch.OpenStreetMapProvider(),
     }).addTo(map);
 
-    L.control.locate({position: 'topleft'}).addTo(map);
+    L.control.locate({position: 'topleft'}).addTo(map);*/
 
     // Load lab and windlayer, init checkboxes
     if (config.layer_labs) {
@@ -511,7 +506,7 @@ function switchLabLayer() {
     } else {
         map.getPane('markerPane').style.visibility = "hidden";
     }
-    document.getElementById("sidebar").style.display = "none";
+    document.getElementById("modal").style.display = "none";
     document.getElementById("menu").innerHTML = "&#9776;";
 }
 
@@ -521,7 +516,7 @@ function switchWindLayer() {
     } else {
         d3.selectAll(".velocity-overlay").style("visibility", "hidden");
     }
-    document.getElementById("sidebar").style.display = "none";
+    document.getElementById("modal").style.display = "none";
     document.getElementById("menu").innerHTML = "&#9776;";
 }
 
@@ -538,7 +533,6 @@ function data_median(data) {
 }
 
 function switchLegend(val) {
-    // console.log(val);
     d3.select('#legendcontainer').selectAll("[id^=legend_]").style("display", "none");
     d3.select('#legend_' + val).style("display", "block");
 }
@@ -546,17 +540,17 @@ function switchLegend(val) {
 /*  Menu and Dropdown */
 function openSidebar() {
     document.getElementById("menu").innerHTML = "&#10006;";
-    document.getElementById("sidebar").style.display = "block";
+    document.getElementById("modal").style.display = "block";
 }
 
 function closeSidebar() {
     document.getElementById("menu").innerHTML = "&#9776;";
-    document.getElementById("sidebar").style.display = "none";
+    document.getElementById("modal").style.display = "none";
     d3.select("#results").remove();
 }
 
 function toggleSidebar() {
-    if (document.getElementById("sidebar").style.display === "block") {
+    if (document.getElementById("modal").style.display === "block") {
         closeSidebar();
     } else {
         openSidebar();
@@ -587,12 +581,11 @@ function ready(num) {
     const localTime = new Date();
     const timeOffset = localTime.getTimezoneOffset();
     const newTime = timeMinute.offset(timestamp, -(timeOffset));
-    const dateFormater = locale.format("%H:%M:%S");
+    const dateFormater = locale.format("%d.%m.%Y %H:%M");
 
-    d3.select("#update").html(translate.tr(lang, "Last update") + ": " + dateFormater(newTime));
-    // console.log("Timestamp " + timestamp_data + " from " + timestamp_from);
+    d3.select("#lastUpdate").html(translate.tr(lang, "Last update") + " " + dateFormater(newTime));
 
-    d3.select("#current").html(d3.select(".select-selected").select("span").html());
+    d3.select("#currentSelection").html(d3.select(".select-selected").select("span").html());
 
     if (num === 1 && (user_selected_value === "PM10" || user_selected_value === "PM25")) {
         hexagonheatmap.initialize(config.scale_options[user_selected_value]);
@@ -626,10 +619,8 @@ function ready(num) {
 }
 
 function reloadMap(val) {
-    // console.log(val);
     d3.selectAll('path.hexbin-hexagon').remove();
-    // console.log(d3.select(".select-selected").select("span").html());
-    d3.select("#current").html(d3.select(".select-selected").select("span").html());
+    d3.select("#currentSelection").html(d3.select(".select-selected").select("span").html());
     closeSidebar();
     switchLegend(val);
 
@@ -662,7 +653,7 @@ function sensorNr(data) {
     document.getElementById("mainContainer").style.display = "none";
     document.getElementById("explanation").style.display = "none";
 
-    let textefin = "<table id='results' style='width:380px;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, config.titles[user_selected_value]) + "</th></tr>";
+    let textefin = "<table id='results' style='width:95%;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, config.titles[user_selected_value]) + "</th></tr>";
     if (data.length > 1) {
         textefin += "<tr><td class='idsens'>Median " + data.length + " Sens.</td><td>" + (isNaN(parseInt(data_median(data))) ? "-" : parseInt(data_median(data))) + "</td></tr>";
     }
@@ -716,7 +707,7 @@ function sensorNr(data) {
 function displayGraph(id) {
 
     let inner_pre = "";
-    const panel_str = "<iframe src='https://maps.sensor.community/grafana/d-solo/000000004/single-sensor-view?orgId=1&panelId=<PANELID>&var-node=<SENSOR>' width='290' height='200' frameborder='0'></iframe>";
+    const panel_str = "<iframe src='https://maps.sensor.community/grafana/d-solo/000000004/single-sensor-view?orgId=1&panelId=<PANELID>&var-node=<SENSOR>' frameborder='0' height='300px' width='100%'></iframe>";
     const sens = id.substr(3);
     const sens_id = sens.replace("_indoor", "");
     const sens_desc = sens.replace("_indoor", " (indoor)");
@@ -752,29 +743,24 @@ function removeInArray(array) {
     return array;
 }
 
-
 function switchTo(element) {
     const custom_select = d3.select("#custom-select");
     custom_select.select("select").property("value", element.id.substring(12));
     user_selected_value = element.id.substring(12);
-    // console.log(element.id.substring(12));
-    // console.log(user_selected_value);
     if (user_selected_value === "Noise") {
         custom_select.select(".select-selected").select("span").attr("id", "noise_option");
     } else {
         custom_select.select(".select-selected").select("span").attr("id", null);
     }
     custom_select.select(".select-selected").attr("class", null);
-    // console.log(element);
     element.setAttribute("class", "select-selected");
     reloadMap(user_selected_value);
 }
 
 function countrySelector() {
     console.log(this);
-    d3.select(".countryButtonselected").attr('class', 'countryButton');
-    d3.select(this).attr('class', 'countryButtonselected')
-    // console.log(this.value);
+    d3.select(".countrySelected").attr('class', 'countryButton');
+    d3.select(this).attr('class', 'countrySelected')
 
     map.setView(places[this.value], zooms[this.value]);
     closeSidebar();

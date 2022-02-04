@@ -11,73 +11,85 @@
     <title>Map Sensor.Community</title>
 </head>
 <body>
-<div class="top-items">
-    <div id="update"></div>
-    <div id="donate"></div>
-</div>
-<span id="menu">&#9776;</span>
-<span id="current"></span>
-<div id="loading_layer">
-    <div id="loading">Loading data...</div>
-</div>
-<div id="sidebar" style="display: none;">
-
-    <div id="mainContainer">
-        <div id="countriesButtonsContainer">
-            <div class="countriesButtons">
-                <button class="countryButtonselected" id="world" value="world"></button>
-                <button class="countryButton" id="europe" value="europe"></button>
-                <button class="countryButton" id="northamerica" value="northamerica"></button>
-                <button class="countryButton" id="southamerica" value="southamerica"></button>
-                <button class="countryButton" id="africa" value="africa"></button>
-                <button class="countryButton" id="asia" value="asia"></button>
-                <button class="countryButton" id="oceania" value="oceania"></button>
-            </div>
+<div id="loading">Loading data...</div>
+<div class="topItems">
+    <div id='lastUpdate'></div>
+    <div id="countriesButtonsContainer">
+        <div class="countriesButtons">
+            <button class="countrySelected" id="world" value="world"></button>
+            <button id="europe" value="europe"></button>
+            <button id="northamerica" value="northamerica"></button>
+            <button id="southamerica" value="southamerica"></button>
+            <button id="africa" value="africa"></button>
+            <button id="asia" value="asia"></button>
+            <button id="oceania" value="oceania"></button>
         </div>
+    </div>
+    <div id='attribution'><strong style="font-size:110%;">Measurements <a href="https://sensor.community/" target="_blank">Sensor.Community</a> contributors</strong><br>
+        Map: <a href="https://leafletjs.com" target="_blank">Leaflet</a> & <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a></div>
 
-        <div id="custom-select" class="custom-select" style="display: none;">
+</div>
+
+<div class="menuPosition">
+    <div class="dropup">
+        <button class="dropbtn"><span id="currentSelection"></span><span id="menu">&#9776;</span></button>
+        <div class="dropup-content">
+            <!-- <div id="custom-select">-->
             <label>
                 <select>
+                    <option value="Noise"> Noise</option>
+                    <option value="Pressure"> Pressure</option>
+                    <option value="Humidity"> rel. Humidity</option>
+                    <option value="Temperature"> Temperature</option>
+                    <option value="Official_AQI_US"> Official AQI US</option>
+                    <option value="PM10who"> PM10 (WHO, 1 h. mean)</option>
+                    <option value="PM25who"> PM2.5 (WHO, 1 h. mean)</option>
+                    <option value="PM10eu"> PM10 (EU, 1 h. mean)</option>
+                    <option value="PM25eu"> PM2.5 (EU, 1 h. mean)</option>
                     <option value="PM25"> PM2.5 (5 min. mean)</option>
                     <option value="PM10"> PM10 (5 min. mean)</option>
-                    <option value="PM25eu"> PM2.5 (EU, 1 h. mean)</option>
-                    <option value="PM10eu"> PM10 (EU, 1 h. mean)</option>
-                    <option value="PM25who"> PM2.5 (WHO, 1 h. mean)</option>
-                    <option value="PM10who"> PM10 (WHO, 1 h. mean)</option>
-                    <option value="Official_AQI_US"> Official AQI US</option>
+                </select>
+            </label>
+            <!--            </div>-->
+        </div>
+    </div>
+</div>
+
+<div id="modal">
+    <div id="mainContainer">
+        <ul>
+            <li><a href="https://sensor.community/" target="_blank">Website</a></li>
+            <li><a href="https://forum.sensor.community/" target="_blank">Forum</a></li>
+            <!--<li><a href="https://sensors2ref.maps.sensor.community/" target="_blank">Sensors and reference stations</a></li>-->
+        </ul>
+        <div id="custom-select" class="custom-select">
+            <label>
+                <select>
                     <option value="Temperature"> Temperature</option>
                     <option value="Humidity"> rel. Humidity</option>
                     <option value="Pressure"> Pressure</option>
                     <option value="Noise"> Noise</option>
+                    <option value="PM10who"> PM10 (WHO, 1 h. mean)</option>
+                    <option value="PM25who"> PM2.5 (WHO, 1 h. mean)</option>
+                    <option value="PM10eu"> PM10 (EU, 1 h. mean)</option>
+                    <option value="PM25eu"> PM2.5 (EU, 1 h. mean)</option>
+                    <option value="PM10"> PM10 (5 min. mean)</option>
+                    <option value="PM25"> PM2.5 (5 min. mean)</option>
                 </select>
             </label>
         </div>
 
-        <div id="layer-select" class="layer-select">
-            <input type="checkbox" id="cb_labs" name="labs" checked="checked"/><label for="cb_labs" id="label_local_labs">Local
-            labs</label><br/>
-            <input type="checkbox" id="cb_wind" name="wind" checked="checked"/><label for="cb_wind" id="label_wind_layer">Wind
-            layer</label><br/>
-            <!-- <input type="checkbox" id="cb_eustations" name="eustations" checked="" /><label for="cb_eustations" id="label_eustations">EU stations</label><br/> -->
-        </div>
-        <div id="link-div" class="link-div">
-            <p class="link"><a href="https://sensor.community/" target="_blank" id="website" style="text-decoration: none;color: inherit;"></a></p>
-            <p class="link"><a href="https://forum.sensor.community/" target="_blank" id="forum" style="text-decoration: none;color: inherit;"></a></p>
-            <p class="link"><a href="https://sensors2ref.maps.sensor.community/" target="_blank" id="sensatref"
-                               style="text-decoration: none;color: inherit;"></a></p>
-            <p class="link"><a href="https://no2.maps.sensor.community/" target="_blank" id="no2" style="text-decoration: none;color: inherit;"></a></p>
-        </div>
-
+        <ul class="layerSelect">
+            <li><input type="checkbox" id="cb_labs" checked="checked"/>
+                <label for="cb_labs" id="label_local_labs">Local labs</label></li>
+            <li><input type="checkbox" id="cb_wind" checked="checked"/>
+                <label for="cb_wind" id="label_wind_layer">Wind layer</label></li>
+        </ul>
+        <!-- <div id="explanation"></div>
+       <div id="map-info" style="display: none;"></div>-->
     </div>
-
-    <div id="explanation"></div>
-    <div id="map-info" style="display: none;"></div>
-
-
 </div>
-
 <div id="legend">
-
     <div class="legend" id="legend_PM10" style="display: none;">
         <div class="legend-inner">
             <div class="gradient">
@@ -88,7 +100,8 @@
                 <div class="label" style="bottom: 60%;"><b>75</b></div>
                 <div class="label limit" style="bottom: 40%;"><b>50</b></div>
                 <div class="label" style="bottom: 20%;"><b>25</b></div>
-                <div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+                <div class="label" style="bottom: 0;"><b>0</b></div>
+                <div class="label" style="bottom: -2%;"><b> &micro;g/m&sup3;</b></div>
             </div>
         </div>
     </div>
@@ -163,7 +176,6 @@
     </div>
 
     <div class="legend" id="legend_Official_AQI_US" style="display: none;">
-        <!--				<h3>Air quality US</h3>-->
         <ul>
             <li class="tooltip"><span class="AQI_color" style="background-color:#00E400"></span><span
                     class="tooltip-text" id="AQI_Good"></span></li>
@@ -246,8 +258,7 @@
     </div>
 </div>
 
-<div id='map'>
-</div>
+<div id='map'></div>
 </body>
 </html>
 
