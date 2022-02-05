@@ -48,7 +48,7 @@ let api = {
 				result = true;
 			} else if ((sel === "PM25") && (obj < 900)) {
 				result = true;
-			} else if (sel === "Official_AQI_US") {
+			} else if (sel === "AQIus") {
 				result = true;
 			} else if (sel === "Noise") {
 				result = true;
@@ -132,7 +132,7 @@ let api = {
 		return fetch(URL)
 			.then((resp) => resp.json())
 			.then((json) => {
-				//console.log('successful retrieved data');
+				console.log('successful retrieved data');
 				let timestamp_data = '';
 				let timestamp_from = '';
 				if (num === 1) {
@@ -179,7 +179,7 @@ let api = {
 							const data_out = api.officialAQIus(data_in);
 							return {
 								"data": {
-									"Official_AQI_US": data_out.AQI,
+									"AQIus": data_out.AQI,
 									"origin": data_out.origin
 									// ,
 									// "PM10who": data_in.PM10, //24 hour average
@@ -192,7 +192,7 @@ let api = {
 							}
 						})
 						.filter(function (values) {
-							return (api.checkValues(values.data.Official_AQI_US, "Official_AQI_US"));
+							return (api.checkValues(values.data.AQIus, "AQIus"));
 						})
 						.value();
 					return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});

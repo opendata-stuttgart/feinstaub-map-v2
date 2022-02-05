@@ -91,6 +91,8 @@ tr {
     z-index: 10;
     border-radius: 10px;
     font-size: 0.8em;
+    -webkit-box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
 #attribution {
@@ -103,12 +105,16 @@ tr {
     z-index: 10;
     border-radius: 10px;
     font-size: 0.85em;
+    -webkit-box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
 #countriesButtonsContainer {
     z-index: 10;
     background-color: #FDF6ED;
     border-radius: 12px;
+    -webkit-box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
 .countrySelected {
@@ -138,6 +144,7 @@ tr {
     transform: translate(-50%, -50%);
     font-size: 1.5rem;
     font-weight: bold;
+    z-index: 20;
 }
 
 #map {
@@ -164,7 +171,6 @@ tr {
     border-color: #084945;
     color: white;
 }
-
 
 #modal {
     display: none;
@@ -288,53 +294,57 @@ tr {
 
 /* legend */
 
-#legend {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 55%;
-    z-index: 5;
-    vertical-align: bottom;
-    pointer-events: none;
-}
-
 .legend {
-    position: absolute;
-    bottom: 0;
-    height: inherit;
-    display: none;
-}
-
-.legend-inner {
-    color: black;
+    position: fixed;
+    bottom: 20px;
+    height: 15em;
+    z-index: 5;
+    padding: 20px;
+    max-width: 7em;
+    transition: all 0.3s;
+    border: 1px solid #E0E0E0;
     font-size: 0.7em;
     background-color: white;
     border-radius: 8px;
-    padding: 20px;
-    position: absolute;
-    left: 15px;
-    bottom: 20px;
-    pointer-events: none;
-    height: 40%;
     display: flex;
+    margin-left:-110px;
+}
+.legend:active, .legend:focus, .legend:hover{
+    transform: translate3d(110px, 0, 0);
 }
 
-.legend-inner .gradient {
+#legend .chevron {
+    position: relative;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    height: 24px;
+    width: 24px;
+    fill: black;
+    top: 0;
+    right: -35px;
+    padding: 7px 0 0 16px;
+    background-color: white;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+#legend .gradient {
     width: 10px;
     position: relative;
 }
 
-.legend-inner .labels {
-    width: 5em;
+#legend .labels {
+    width: 5.5em;
     position: relative;
 }
 
-.legend-inner .labels .label {
+#legend .labels .label {
     position: absolute;
     transform: translateY(50%);
 }
 
-.legend-inner .labels .label:before {
+#legend .labels .label:before {
     content: '\2013   ';
 }
 
@@ -346,33 +356,6 @@ tr {
 #legend_PM25 .gradient {
     background: -webkit-linear-gradient(bottom, #00796b 0%, #00796b 8%, #f9a825 16%, #e65100 32%, #dd2c00 48%, #dd2c00 72%, #8c0084 80%);
     background: linear-gradient(to top, #00796b 0%, #00796b 8%, #f9a825 16%, #e65100 32%, #dd2c00 48%, #dd2c00 72%, #8c0084 80%);
-}
-
-#legend_Official_AQI_US {
-    display: flex;
-    padding: 8px;
-    color: black;
-    font-size: 0.7em;
-    background-color: white;
-    border-radius: 8px;
-    position: absolute;
-    left: 10px;
-    bottom: 20px;
-    pointer-events: none;
-    height: 40%;
-}
-
-#legend_Official_AQI_US .AQI_color {
-    display: inline-block;
-    width: 15px;
-    height: 15px;
-    position: relative;
-    top: 3px;
-}
-
-#legend_Official_AQI_US ul {
-    padding: 0;
-    list-style-type: none;
 }
 
 #legend_PM10eu .gradient {
@@ -413,6 +396,14 @@ tr {
 #legend_Noise .gradient {
     background: -webkit-linear-gradient(bottom, #00528f 0%, #6dbcff 20%, #aff474 40%, #f4e60b 60%, #f47a0b 80%, #c41a0a 100%);
     background: linear-gradient(to top, #00528f 0%, #6dbcff 20%, #aff474 40%, #f4e60b 60%, #f47a0b 80%, #c41a0a 100%);
+}
+
+#legend_AQIus .AQI_color {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    position: relative;
+    top: 3px;
 }
 
 /* tooltip */
@@ -468,6 +459,10 @@ leaflet map
 img.leaflet-tile {
     filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
     -webkit-filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
+}
+
+.leaflet-control-velocity.leaflet-control {
+    display: none;
 }
 
 .idsens {

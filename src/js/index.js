@@ -574,7 +574,7 @@ function ready(num) {
     }
 
     //REVOIR MAP
-    if (num === 2 && user_selected_value === "Official_AQI_US") {
+    if (num === 2 && user_selected_value === "AQIus") {
         hexagonheatmap.initialize(config.scale_options[user_selected_value]);
         hexagonheatmap.data(hmhexaPM_AQI);
     }
@@ -588,7 +588,7 @@ function ready(num) {
         hexagonheatmap.initialize(config.scale_options[user_selected_value]);
         hexagonheatmap.data(hmhexa_noise);
     }
-    d3.select("#loading_layer").style("display", "none");
+    d3.select("#loading").style("display", "none");
 }
 
 function reloadMap(val) {
@@ -604,7 +604,7 @@ function reloadMap(val) {
         hexagonheatmap.data(hmhexaPM_EU);
     } else if (val === "PM10who" || val === "PM25who") {
         hexagonheatmap.data(hmhexaPM_WHO);
-    } else if (val === "Official_AQI_US") {
+    } else if (val === "AQIus") {
         hexagonheatmap.data(hmhexaPM_AQI);
     } else if (val === "Temperature" || val === "Humidity" || val === "Pressure") {
         hexagonheatmap.data(hmhexa_t_h_p.filter(function (value) {
@@ -617,7 +617,7 @@ function reloadMap(val) {
 
 function sensorNr(data) {
     let inner_pre = "#";
-    if (user_selected_value !== "Official_AQI_US") {
+    if (user_selected_value !== "AQIus") {
         inner_pre = "(+) #";
     }
 
@@ -651,7 +651,7 @@ function sensorNr(data) {
         if (user_selected_value === "PM25who") {
             sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
         }
-        if (user_selected_value === "Official_AQI_US") {
+        if (user_selected_value === "AQIus") {
             sensors += "<td>" + i.o.data[user_selected_value] + " (" + i.o.data.origin + ")</td></tr>";
         }
         if (user_selected_value === "Temperature") {
@@ -695,10 +695,10 @@ function displayGraph(id) {
             .attr("colspan", "2")
             .html((config.panelIDs[user_selected_value][0] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][0]).replace("<SENSOR>", sens_id) + "<br/>" : "") + (config.panelIDs[user_selected_value][1] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][1]).replace("<SENSOR>", sens_id) : ""));
 
-        if (user_selected_value !== "Official_AQI_US") inner_pre = "(-) ";
+        if (user_selected_value !== "AQIus") inner_pre = "(-) ";
         d3.select("#id_" + sens).html(inner_pre + "#" + sens_desc);
     } else {
-        if (user_selected_value !== "Official_AQI_US") inner_pre = "(+) ";
+        if (user_selected_value !== "AQIus") inner_pre = "(+) ";
         d3.select("#id_" + sens).html(inner_pre + "#" + sens_desc);
         d3.select("#frame_" + sens_id).remove();
         removeInArray(openedGraph1, sens_id);

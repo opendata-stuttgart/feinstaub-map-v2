@@ -69,7 +69,7 @@ over the source code. Send us your file with the translation to "tech (at) senso
 ## URL-Parameter
 
 ### Sensor 
-valid sensor parameters PM25, PM10, Pressure, Noise, Humidity & Official_AQI_US 
+valid sensor parameters PM25, PM10, Pressure, Noise, Humidity & AQIus 
 http://127.0.0.1:8080/?sensor=Noise
 
 ### Location 

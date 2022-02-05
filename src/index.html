@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name=viewport content="width=device-width,initial-scale=1"/>
-    <script src="main.js"></script>
+    <link rel="preload" href="main.js" as="script"/>
     <link href='https://osmc1.maps.sensor.community' rel='preconnect' crossorigin/>
     <link href='https://osmc2.maps.sensor.community' rel='preconnect' crossorigin/>
     <link href='https://osmc3.maps.sensor.community' rel='preconnect' crossorigin/>
@@ -14,6 +14,7 @@
     <title>Map Sensor.Community</title>
 </head>
 <body>
+
 <div id="loading">Loading data...</div>
 <div class="topItems">
     <div id='lastUpdate'></div>
@@ -37,12 +38,16 @@
 <div id="modal">
     <div id="mainContainer">
         <ul class="layerSelect">
-            <li><a href="https://sensor.community/" target="_blank">Website <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg></a></li>
-            <li><a href="https://forum.sensor.community/" target="_blank">Forum <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg></a></li>
+            <li><a href="https://sensor.community/" target="_blank">Website
+                <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+            </a></li>
+            <li><a href="https://forum.sensor.community/" target="_blank">Forum
+                <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+            </a></li>
             <!--<li><a href="https://sensors2ref.maps.sensor.community/" target="_blank">Sensors and reference stations</a></li>-->
             <li><span id="explanation"></span></li>
         </ul>
@@ -54,7 +59,7 @@
                     <option value="Humidity"> rel. Humidity</option>
                     <option value="Pressure"> Pressure</option>
                     <option value="Noise"> Noise</option>
-                    <option value="Official_AQI_US"> Official AQI US</option>
+                    <option value="AQIus"> Official AQI US</option>
                     <option value="PM10who"> PM10 (WHO, 1 h. mean)</option>
                     <option value="PM25who"> PM2.5 (WHO, 1 h. mean)</option>
                     <option value="PM10eu"> PM10 (EU, 1 h. mean)</option>
@@ -75,8 +80,8 @@
     </div>
 </div>
 <div id="legend">
-    <div class="legend" id="legend_PM10">
-        <div class="legend-inner">
+    <div id="legend_PM10">
+        <div class="legend">
             <div class="gradient">
             </div>
             <div class="labels">
@@ -89,10 +94,11 @@
                 <div class="label" style="bottom: -2%;"><b> &micro;g/m&sup3;</b></div>
             </div>
         </div>
+        <div class="chevron">&#171;</div>
     </div>
 
-    <div class="legend" id="legend_PM25">
-        <div class="legend-inner">
+    <div id="legend_PM25">
+        <div class="legend">
             <div class="gradient">
             </div>
             <div class="labels">
@@ -103,11 +109,12 @@
                 <div class="label limit" style="bottom: 20%;"><b>25</b></div>
                 <div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
             </div>
+            <div class="chevron">&#171;</div>
         </div>
     </div>
 
-    <div class="legend" id="legend_PM10eu">
-        <div class="legend-inner">
+    <div id="legend_PM10eu">
+        <div class="legend">
             <div class="gradient">
             </div>
             <div class="labels">
@@ -119,11 +126,12 @@
                 <div class="label" style="bottom: 20%;"><b>20</b></div>
                 <div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
             </div>
+            <div class="chevron">&#171;</div>
         </div>
     </div>
 
-    <div class="legend" id="legend_PM25eu">
-        <div class="legend-inner">
+    <div id="legend_PM25eu">
+        <div class="legend">
             <div class="gradient">
             </div>
             <div class="labels">
@@ -135,50 +143,56 @@
                 <div class="label" style="bottom: 20%;"><b>10</b></div>
                 <div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
             </div>
+            <div class="chevron">&#171;</div>
         </div>
     </div>
 
-    <div class="legend" id="legend_PM10who">
-        <div class="legend-inner">
+    <div id="legend_PM10who">
+        <div class="legend">
             <div class="gradient">
             </div>
             <div class="labels">
                 <div class="label" style="bottom: 50%;"><b>45</b></div>
                 <div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
             </div>
+            <div class="chevron">&#171;</div>
         </div>
     </div>
 
-    <div class="legend" id="legend_PM25who">
-        <div class="legend-inner">
+    <div id="legend_PM25who">
+        <div class="legend">
             <div class="gradient">
             </div>
             <div class="labels">
                 <div class="label" style="bottom: 50%;"><b>15</b></div>
                 <div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
             </div>
+            <div class="chevron">&#171;</div>
         </div>
     </div>
 
-    <div class="legend" id="legend_Official_AQI_US">
-        <ul>
-            <li class="tooltip"><span class="AQI_color" style="background-color:#00E400"></span><span
-                    class="tooltip-text" id="AQI_Good"></span></li>
-            <li class="tooltip"><span class="AQI_color" style="background-color:#FFFF00"></span><span
-                    class="tooltip-text" id="AQI_Moderate"></span></li>
-            <li class="tooltip"><span class="AQI_color" style="background-color:#FF7E00"></span><span
-                    class="tooltip-text" id="AQI_Unhealthy_Sensitive"></span></li>
-            <li class="tooltip"><span class="AQI_color" style="background-color:#FF0000"></span><span
-                    class="tooltip-text" id="AQI_Unhealthy"></span></li>
-            <li class="tooltip"><span class="AQI_color" style="background-color:#8F3F97"></span><span
-                    class="tooltip-text" id="AQI_Very_Unhealthy"></span></li>
-            <li class="tooltip"><span class="AQI_color" style="background-color:#7E0023"></span><span
-                    class="tooltip-text" id="AQI_Hazardous"></span></li>
-        </ul>
+    <div id="legend_AQIus">
+        <div class="legend">
+            <div class="labels">
+                <div class="tooltip"><span class="AQI_color" style="background-color:#00E400"></span><span
+                        class="tooltip-text" id="AQI_Good"></span></div>
+                <div class="tooltip"><span class="AQI_color" style="background-color:#FFFF00"></span><span
+                        class="tooltip-text" id="AQI_Moderate"></span></div>
+                <div class="tooltip"><span class="AQI_color" style="background-color:#FF7E00"></span><span
+                        class="tooltip-text" id="AQI_Unhealthy_Sensitive"></span></div>
+                <div class="tooltip"><span class="AQI_color" style="background-color:#FF0000"></span><span
+                        class="tooltip-text" id="AQI_Unhealthy"></span></div>
+                <div class="tooltip"><span class="AQI_color" style="background-color:#8F3F97"></span><span
+                        class="tooltip-text" id="AQI_Very_Unhealthy"></span></div>
+                <div class="tooltip"><span class="AQI_color" style="background-color:#7E0023"></span><span
+                        class="tooltip-text" id="AQI_Hazardous"></span></div>
+            </div>
+            <div class="chevron">&#171;</div>
+        </div>
     </div>
 
-    <div class="legend" id="legend_Temperature">
-        <div class="legend-inner">
+    <div id="legend_Temperature">
+        <div class="legend">
             <div class="gradient">
                 <div class="limit">
                 </div>
@@ -189,11 +203,12 @@
                 <div class="label" style="bottom: 33%;"><b>0</b></div>
                 <div class="label" style="bottom: 1%;"><b>-20 &deg;</b></div>
             </div>
+            <div class="chevron">&#171;</div>
         </div>
     </div>
 
-    <div class="legend" id="legend_Humidity">
-        <div class="legend-inner">
+    <div id="legend_Humidity">
+        <div class="legend">
             <div class="gradient">
                 <div class="limit">
                 </div>
@@ -206,11 +221,12 @@
                 <div class="label" style="bottom: 20%;"><b>20</b></div>
                 <div class="label" style="bottom: 1%;"><b>0 &#37;</b></div>
             </div>
+            <div class="chevron">&#171;</div>
         </div>
     </div>
 
-    <div class="legend" id="legend_Pressure">
-        <div class="legend-inner">
+    <div id="legend_Pressure">
+        <div class="legend">
             <div class="gradient">
                 <div class="limit">
                 </div>
@@ -222,11 +238,12 @@
                 <div class="label" style="bottom: 25%;"><b>970</b></div>
                 <div class="label" style="bottom: 1%;"><b>926 hPa</b></div>
             </div>
+            <div class="chevron">&#171;</div>
         </div>
     </div>
 
-    <div class="legend" id="legend_Noise">
-        <div class="legend-inner">
+    <div id="legend_Noise">
+        <div class="legend">
             <div class="gradient">
                 <div class="limit">
                 </div>
@@ -239,10 +256,10 @@
                 <div class="label" style="bottom: 20%;"><b>20</b></div>
                 <div class="label" style="bottom: 1%;"><b>0 dBA</b></div>
             </div>
+            <div class="chevron">&#171;</div>
         </div>
     </div>
 </div>
-
 <div id='map'></div>
 </body>
 </html>

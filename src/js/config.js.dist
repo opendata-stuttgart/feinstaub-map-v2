@@ -3,7 +3,7 @@ module.exports = {
 	"initialZoom" : 3,
 	"minZoom": 3,
 	"maxZoom": 16,
-	// phenomenon shown at start, possible values: PM10, PM25, Official_AQI_US, Temperature, Humidity, Pressure, Noise
+	// phenomenon shown at start, possible values: PM10, PM25, AQIus, Temperature, Humidity, Pressure, Noise
 	"selection": "PM25",
 	"layer_labs": "true",
 	"layer_wind": "true",
@@ -14,6 +14,7 @@ module.exports = {
 	"tiles_subdomains": ["osmc1","osmc2","osmc3"],
 	"attribution": "Map data © <a href='https://openstreetmap.org'>OpenStreetMap</a>",
 	"data_host": "https://maps.sensor.community",
+	"attribution": "<a href='https://openstreetmap.org'>OpenStreetMap</a>",
 	"titles" : {
 		"PM10": "PM10 &micro;g/m&sup3;",
 		"PM25": "PM2.5 &micro;g/m&sup3;",
@@ -21,7 +22,7 @@ module.exports = {
 		"PM25eu": "PM2.5 &micro;g/m&sup3;",
 		"PM10who": "PM10 &micro;g/m&sup3;",
 		"PM25who": "PM2.5 &micro;g/m&sup3;",
-		"Official_AQI_US": "AQI US",
+		"AQIus": "AQI US",
 		"Temperature": "Temperature °C",
 		"Humidity": "Humidity %",
 		"Pressure": "Pressure hPa",
@@ -64,7 +65,7 @@ module.exports = {
 			valueDomain: [0, 15, 75],							//REVOIR LE DEROULÉ DU GRADIENT
 			colorRange: ['#8bf3ff', '#fff148', '#ff5353']
 		},
-		"Official_AQI_US": {
+		"AQIus": {
 			valueDomain: [0, 50, 100, 150, 200, 300],
 			colorRange: ['#00E400', '#FFFF00', '#FF7E00', '#FF0000', 'rgb(143, 63, 151)', '#7E0023']
 		},
