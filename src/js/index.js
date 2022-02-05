@@ -504,7 +504,7 @@ function switchLabLayer() {
         map.getPane('markerPane').style.visibility = "hidden";
     }
     document.getElementById("modal").style.display = "none";
-    document.getElementById("menu").innerHTML = "&#9776;";
+    d3.select("#menu").html(d3.select(".select-selected").select("span").html());
 }
 
 function switchWindLayer() {
@@ -514,7 +514,7 @@ function switchWindLayer() {
         d3.selectAll(".velocity-overlay").style("visibility", "hidden");
     }
     document.getElementById("modal").style.display = "none";
-    document.getElementById("menu").innerHTML = "&#9776;";
+    d3.select("#menu").html(d3.select(".select-selected").select("span").html());
 }
 
 function switchLegend(val) {
@@ -529,7 +529,7 @@ function openSidebar() {
 }
 
 function closeSidebar() {
-    document.getElementById("menu").innerHTML = "&#9776;";
+    d3.select("#menu").html(d3.select(".select-selected").select("span").html());
     document.getElementById("modal").style.display = "none";
     d3.select("#results").remove();
 }
@@ -570,7 +570,7 @@ function ready(num) {
 
     d3.select("#lastUpdate").html(translate.tr(lang, "Last update") + " " + dateFormater(newTime));
 
-    d3.select("#currentSelection").html(d3.select(".select-selected").select("span").html());
+    d3.select("#menu").html(d3.select(".select-selected").select("span").html());
 
     if (num === 1 && (user_selected_value === "PM10" || user_selected_value === "PM25")) {
         hexagonheatmap.initialize(config.scale_options[user_selected_value]);

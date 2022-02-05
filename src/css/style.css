@@ -407,7 +407,7 @@ graph
     cursor: pointer;
     user-select: none;
     padding: 0.9em;
-    border-bottom: #13ae52 solid 1px;
+    border-bottom: #C2C2C2 solid 1px;
 }
 
 .select-selected {
@@ -548,60 +548,17 @@ img.leaflet-tile {
 /*
 Menu
 */
-.menuPosition {
+.menuButton {
     cursor: pointer;
-    position: absolute;
+    position: fixed;
     bottom: 20px;
     right: 15px;
     z-index: 25;
-}
-
-/* Dropup Button */
-.dropbtn {
     display: flex;
     align-items: center;
-    font-size: 1.25em;
+    font-size: 1em;
     background-color: #084945;
     border-style: solid;
     border-color: #084945;
     color: white;
-}
-
-/* The container <div> - needed to position the dropup content */
-.dropup {
-    position: relative;
-    display: inline-block;
-    z-index: 25;
-}
-
-/* Dropup content (Hidden by Default) */
-.dropup-content {
-    display: none;
-    position: absolute;
-    bottom: 50px;
-    background-color: #6DEFE6;
-    min-width: 140px;
-    z-index: 15;
-    border-radius: 5px;
-}
-
-/* Change color of dropup links on hover */
-.dropup-content a:hover {background-color: #6DEFE6}
-
-/* Show the dropup menu on hover */
-.dropup:hover .dropup-content {
-    display: block;
-}
-
-/* Change the background color of the dropup button when the dropup content is shown */
-.dropup:hover .dropbtn {
-    background-color: #6DEFE6;
-    color: black;
-    z-index: 25;
-}
-
-#currentSelection {
-    font-size: 0.8rem;
-    margin-right: 5px;
-    margin-top: -3px
 }
