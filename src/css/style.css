@@ -21,9 +21,24 @@ a {
     text-decoration: none;
 }
 
+button{
+    font-size: 0.8em;
+    font-weight: bold;
+    border-radius: 12px;
+    padding: 6px 12px;
+    cursor: pointer;
+    pointer-events: all;
+    background-color: #FDF6ED;
+    outline: 0 !important;
+    border-style: solid;
+    border-color: #FDF6ED;
+}
+
 ul {
     display: block;
     list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
 }
 
 li {
@@ -87,7 +102,7 @@ top items
 }
 
 #attribution {
-    background-color: #EDFDFC;
+    background-color: #FDF6ED;
     color: black;
     text-align: center;
     font-size: 0.7em;
@@ -99,29 +114,13 @@ top items
 
 #countriesButtonsContainer {
     z-index: 10;
-    background-color: #EDFDFC;
-    border-radius: 8px;
-}
-
-button{
-    font-size: 0.8em;
-    font-weight: bold;
-    border-radius: 8px;
-    padding: 6px 12px;
-    cursor: pointer;
-    pointer-events: all;
-    background-color: #EDFDFC;
-    outline: 0 !important;
-    border-style: solid;
-    border-color: #EDFDFC;
+    background-color: #FDF6ED;
+    border-radius: 12px;
 }
 
 .countrySelected {
     background-color: #084945;
     color: white;
-    -webkit-animation: linear infinite;
-    -webkit-animation-name: run;
-    -webkit-animation-duration: 2s;
 }
 
 @media only screen and (min-width: 600px) {
@@ -174,17 +173,19 @@ legend
     position: absolute;
     left: 0;
     bottom: 0;
-    height: 40%;
+    height: 55%;
     z-index: 5;
     vertical-align: bottom;
     pointer-events: none;
 }
 
+
+
 .legend {
     position: absolute;
     bottom: 0;
-    height: 100%;
-    display: inline-grid;
+    height: inherit;
+    display: none;
 }
 
 .legend-inner {
@@ -315,11 +316,9 @@ tooltip
 }
 
 .tooltip-div {
-    padding: 5px;
-    border-radius: 5px;
+    padding: 8px;
+    border-radius: 8px;
     width: auto;
-    min-width: 200px;
-    max-width: 500px;
     height: auto
 }
 
@@ -331,9 +330,9 @@ tooltip
 .tooltip-text:hover div {
     display: inline;
     position: absolute;
-    bottom: 0;
     overflow: hidden;
-    background-color: #38b5ad;
+    background-color: #FDF6ED;
+    font-size: 1.2em;
     z-index: 15;
     margin-left: 5px
 }
@@ -353,10 +352,23 @@ graph
     width: 100%;
     height: 100%;
     position: absolute;
-    top: 0;
-    left: 0;
     z-index: 10;
     background-color: white;
+}
+@media only screen and (max-width: 600px) {
+    #modal {
+        top: 0;
+        left: 0;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    #modal {;
+        width: 320px;
+        right: 15px;
+        bottom: 75px;
+        height: initial;
+    }
 }
 
 #mainContainer {
@@ -369,12 +381,21 @@ graph
     justify-content: center;
     flex-direction: column;
 }
+
+.externalLink {
+    height: 0.8em;
+    width: 0.8em;
+    margin-left: 2px;
+    rotate: -45deg;
+}
+
 .custom-select {
     color: #084945;
     font-weight: bold;
     font-size: 1rem;
     display: block;
     border-radius: 8px;
+    width: 100%;
 }
 
 .custom-select select {
@@ -402,19 +423,18 @@ graph
 }
 .layerSelect li {
     display: block;
-    line-height: 2.5em;
+    line-height: 2.2em;
 }
 
 [type="checkbox"] {
     position: relative;
-    left: 15px;
-    top: -4px;
+    top: -1px;
     z-index: 0;
     -webkit-appearance: none;
 }
 [type="checkbox"] + label::before {
-    width: 2em;
-    height: 2em;
+    width: 1.5em;
+    height: 1.5em;
     border-radius: 25px;
     border: 2px solid #084945;
     background-color: #fff;
@@ -431,22 +451,15 @@ graph
 }
 
 #explanation {
-    font-family: arial, sans-serif;
-    font-weight: bold;
     color: black;
     cursor: pointer;
-    font-size: 1.1em;
-    left: 60px;
-    position:absolute;
-    top:15px;
+    font-size: 1em;
 }
 
 #map-info {
+    display: none;
     padding: 10px;
-    font-family: arial, sans-serif;
     color: black;
-    position: relative;
-    top: 3rem;
 }
 
 /*
@@ -536,8 +549,6 @@ img.leaflet-tile {
 Menu
 */
 .menuPosition {
-    background-color: #084945;
-    color: white;
     cursor: pointer;
     position: absolute;
     bottom: 20px;
@@ -547,11 +558,13 @@ Menu
 
 /* Dropup Button */
 .dropbtn {
-    background-color: #084945;
-    color: white;
-    padding: 8px 16px;
+    display: flex;
+    align-items: center;
     font-size: 1.25em;
-    border: none;
+    background-color: #084945;
+    border-style: solid;
+    border-color: #084945;
+    color: white;
 }
 
 /* The container <div> - needed to position the dropup content */

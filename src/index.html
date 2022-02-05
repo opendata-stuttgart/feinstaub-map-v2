@@ -8,6 +8,9 @@
     <link href='https://osmc2.maps.sensor.community' rel='preconnect' crossorigin/>
     <link href='https://osmc3.maps.sensor.community' rel='preconnect' crossorigin/>
     <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="icon"
+          type="image/png"
+          href="/images/favicon-32x32.png">
     <title>Map Sensor.Community</title>
 </head>
 <body>
@@ -32,7 +35,7 @@
 
 <div class="menuPosition">
     <div class="dropup">
-        <button class="dropbtn"><span id="currentSelection"></span><span id="menu">&#9776;</span></button>
+        <button class="dropbtn"><span id="currentSelection"></span><span id="menu"></span></button>
         <div class="dropup-content">
             <!-- <div id="custom-select">-->
             <label>
@@ -58,10 +61,16 @@
 <div id="modal">
     <div id="mainContainer">
         <ul>
-            <li><a href="https://sensor.community/" target="_blank">Website</a></li>
-            <li><a href="https://forum.sensor.community/" target="_blank">Forum</a></li>
+            <li><a href="https://sensor.community/" target="_blank">Website <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg></a></li>
+            <li><a href="https://forum.sensor.community/" target="_blank">Forum <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg></a></li>
             <!--<li><a href="https://sensors2ref.maps.sensor.community/" target="_blank">Sensors and reference stations</a></li>-->
+            <li id="explanation"></li>
         </ul>
+        <div id="map-info"></div>
         <div id="custom-select" class="custom-select">
             <label>
                 <select>
@@ -85,12 +94,11 @@
             <li><input type="checkbox" id="cb_wind" checked="checked"/>
                 <label for="cb_wind" id="label_wind_layer">Wind layer</label></li>
         </ul>
-        <!-- <div id="explanation"></div>
-       <div id="map-info" style="display: none;"></div>-->
+
     </div>
 </div>
 <div id="legend">
-    <div class="legend" id="legend_PM10" style="display: none;">
+    <div class="legend" id="legend_PM10">
         <div class="legend-inner">
             <div class="gradient">
             </div>
@@ -106,7 +114,7 @@
         </div>
     </div>
 
-    <div class="legend" id="legend_PM25" style="display: none;">
+    <div class="legend" id="legend_PM25">
         <div class="legend-inner">
             <div class="gradient">
             </div>
@@ -121,7 +129,7 @@
         </div>
     </div>
 
-    <div class="legend" id="legend_PM10eu" style="display: none;">
+    <div class="legend" id="legend_PM10eu">
         <div class="legend-inner">
             <div class="gradient">
             </div>
@@ -137,7 +145,7 @@
         </div>
     </div>
 
-    <div class="legend" id="legend_PM25eu" style="display: none;">
+    <div class="legend" id="legend_PM25eu">
         <div class="legend-inner">
             <div class="gradient">
             </div>
@@ -153,7 +161,7 @@
         </div>
     </div>
 
-    <div class="legend" id="legend_PM10who" style="display: none;">
+    <div class="legend" id="legend_PM10who">
         <div class="legend-inner">
             <div class="gradient">
             </div>
@@ -164,7 +172,7 @@
         </div>
     </div>
 
-    <div class="legend" id="legend_PM25who" style="display: none;">
+    <div class="legend" id="legend_PM25who">
         <div class="legend-inner">
             <div class="gradient">
             </div>
@@ -175,7 +183,7 @@
         </div>
     </div>
 
-    <div class="legend" id="legend_Official_AQI_US" style="display: none;">
+    <div class="legend" id="legend_Official_AQI_US">
         <ul>
             <li class="tooltip"><span class="AQI_color" style="background-color:#00E400"></span><span
                     class="tooltip-text" id="AQI_Good"></span></li>
@@ -192,7 +200,7 @@
         </ul>
     </div>
 
-    <div class="legend" id="legend_Temperature" style="display: none;">
+    <div class="legend" id="legend_Temperature">
         <div class="legend-inner">
             <div class="gradient">
                 <div class="limit">
@@ -207,7 +215,7 @@
         </div>
     </div>
 
-    <div class="legend" id="legend_Humidity" style="display: none;">
+    <div class="legend" id="legend_Humidity">
         <div class="legend-inner">
             <div class="gradient">
                 <div class="limit">
@@ -224,7 +232,7 @@
         </div>
     </div>
 
-    <div class="legend" id="legend_Pressure" style="display: none;">
+    <div class="legend" id="legend_Pressure">
         <div class="legend-inner">
             <div class="gradient">
                 <div class="limit">
@@ -240,7 +248,7 @@
         </div>
     </div>
 
-    <div class="legend" id="legend_Noise" style="display: none;">
+    <div class="legend" id="legend_Noise">
         <div class="legend-inner">
             <div class="gradient">
                 <div class="limit">

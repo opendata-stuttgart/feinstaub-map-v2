@@ -1,11 +1,11 @@
 // import leaflet
 import leaflet from 'leaflet';
 import hash from 'leaflet-hash';
-import * as GeoSearch from 'leaflet-geosearch';
-import 'leaflet.locatecontrol';
+// import * as GeoSearch from 'leaflet-geosearch';
+// import 'leaflet.locatecontrol';
+// import 'leaflet-geosearch/dist/geosearch.css';
+// import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 import 'leaflet/dist/leaflet.css';
-import 'leaflet-geosearch/dist/geosearch.css';
-import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 
 // d3 libraries
 import * as d3_Hexbin from "d3-hexbin";
@@ -16,7 +16,6 @@ import {geoPath, geoTransform} from 'd3-geo';
 import {timeMinute} from 'd3-time';
 import {timeFormatLocale, timeParse} from 'd3-time-format';
 import {median} from 'd3-array';
-
 import 'whatwg-fetch';
 
 const d3 = Object.assign({}, d3_Selection, d3_Hexbin);
@@ -30,8 +29,7 @@ import * as places from './places.js';
 import * as zooms from './zooms.js';
 import * as translate from './translate.js';
 
-import '../images/lab_marker.png';
-import '../images/lab_marker.svg';
+import './static-files'
 import '../css/style.css';
 
 // declare variables
@@ -39,11 +37,13 @@ let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise, 
 
 // save browser lanuage for translation
 const lang = translate.getFirstBrowserLanguage().substring(0, 2);
-
 let openedGraph1 = [];
 let timestamp_data = '';			// needs to be global to work over all 4 data streams
 let timestamp_from = '';			// needs to be global to work over all 4 data streams
 let clicked = null;
+let user_selected_value = config.selection;
+let coordsCenter = config.initialView;
+let zoomLevel = config.initialZoom;
 
 const locale = timeFormatLocale({
     "dateTime": "%Y.%m.%d %H:%M:%S",
@@ -56,7 +56,7 @@ const locale = timeFormatLocale({
     "shortMonths": ["Jan.", "Feb.", "Mar.", "Apr.", "Mai", "Jun.", "Jul.", "Aug.", "Sep.", "Okt.", "Nov.", "Dez."]
 });
 
-const div = d3.select("#sidebar").append("div").attr("id", "table").style("display", "none");
+const div = d3.select("#modal").append("div").attr("id", "table").style("display", "none");
 
 const map = L.map("map", {preferCanvas: true, zoomControl: false, controls:false}).setView(config.initialView, config.initialZoom);
 
@@ -78,20 +78,15 @@ new L.Hash(map);
     }
 })();
 
-// layers
+d3.select("#loading").html(translate.tr(lang, d3.select("#loading").html()));
+
+// set default values for wind and labs layers
 (config.layer_wind === "false") ? config.layer_wind = 0 : config.layer_wind = 1;
 (config.layer_labs === "false") ? config.layer_labs = 0 : config.layer_labs = 1;
-(config.layer_euStations === "false") ? config.layer_eustations = 1 : config.layer_eustations = 0;
-
-d3.select("#loading").html(translate.tr(lang, d3.select("#loading").html()));
 
 // Query will overwrite default sensor selection. Query Parameter is PM25, PM10, Temperature, Humidity, Pressure or Noise. Query is case sensitive
 config.selection = (config.sensor !== undefined) ? config.sensor : "PM25";
 d3.select("#custom-select").select("select").property("value", config.selection);
-
-let user_selected_value = config.selection;
-let coordsCenter = config.initialView;
-let zoomLevel = config.initialZoom;
 
 // read zoom level and coordinates query parameter from URL
 if (location.hash) {
@@ -328,10 +323,10 @@ window.onload = function () {
     // enable elements
     // d3.select('#legend_PM10').style("display", "block");
     d3.select('#explanation').html(translate.tr(lang, 'Show explanation'));
-    d3.select('#map-info').html(translate.tr(lang, "<p>The hexagons represent the median of the current values of the sensors which are contained in the area, according to the option selected (PM10, PM2.5, temperature, relative humidity, pressure, AQI). You can refer to the scale on the left side of the map.</p> \
-<p>By clicking on a hexagon, you can display a list of all the corresponding sensors as a table. The first column lists the sensor-IDs. In the first line, you can see the amount of sensor in the area and the median value.</p> \
-<p>By clicking on the plus symbol next to a sensor ID, you can display two graphics: the individual measurements for the last 24 hours and the 24 hours floating mean for the last seven days. For technical reasons, the first of the 8 days displayed on the graphic has to stay empty.\
-The values are refreshed every 5 minutes in order to fit with the measurement frequency of the Airrohr sensors.</p> \
+    d3.select('#map-info').html(translate.tr(lang, "<p>Hexagons represent the median of the current values of the sensors which are contained in the area, according to the option selected (PM10, PM2.5, temperature, relative humidity, pressure, AQI). You can refer to the scale on the left side of the map.</p> \
+<p>Clicking on a hexagon will display a list of all the corresponding sensors as a table. In the top, you can see the amount of sensor in the area and the aggregated median value.</p> \
+<p>Clicking on the plus symbol will display two graphics: the individual measurements for the last 24 hours and the 24 hours floating mean for the last seven days. For technical reasons, the first of the 8 days displayed on the graphic has to stay empty.\
+The values are refreshed every 5 minutes to fit with the measurement frequency of the Airrohr sensors.</p> \
 <p>The Air Quality Index (AQI) is calculated according to the recommandations of the United States Environmental Protection Agency. Further information is available on the official page.(<a href='https://www.airnow.gov/aqi/aqi-basics/'>Link</a>). Hover over the AQI scale to display the levels of health concern.</p>"));
 
     d3.select("#menu").on("click", toggleSidebar);
@@ -373,17 +368,13 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
         custom_select.select("#select-item-Noise").select("span").attr("id", "noise_option");
     });
 
-    // console.log(d3.select(".select-items").selectAll("div"));
-
     d3.select(".select-items").selectAll("div").each(function () {
         if (this.getAttribute('value') == custom_select.select("select").select("option:checked").node().value) {
             this.setAttribute("class", "select-selected");
         }
     });
 
-    // console.log(custom_select.select("select").select("option:checked").node().value);
-
-    custom_select.style("display", "inline-block");
+    // custom_select.style("display", "inline-block");
 
     switchLegend(user_selected_value);
 
@@ -475,17 +466,11 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
     L.control.locate({position: 'topleft'}).addTo(map);*/
 
     // Load lab and windlayer, init checkboxes
-    if (config.layer_labs) {
-        d3.select("#cb_labs").property("checked", true);
-    } else {
-        d3.select("#cb_labs").property("checked", false);
-    }
+    (config.layer_labs) ? d3.select("#cb_labs").property("checked", true) : d3.select("#cb_labs").property("checked", false);
 
-    if (config.layer_wind) {
-        d3.select("#cb_wind").property("checked", true);
-    } else {
-        d3.select("#cb_wind").property("checked", false);
-    }
+
+    (config.layer_wind) ? d3.select("#cb_wind").property("checked", true)
+    : d3.select("#cb_wind").property("checked", false);
 
     labs.getData(config.data_host + "/local-labs/labs.json", map);
     wind.getData(config.data_host + "/data/v1/wind.json", map, switchWindLayer);
@@ -498,6 +483,18 @@ The values are refreshed every 5 minutes in order to fit with the measurement fr
     d3.select("#cb_labs").on("change", switchLabLayer);
     d3.select("#cb_wind").on("change", switchWindLayer);
 
+}
+
+function data_median(data) {
+    function sort_num(a, b) {
+        let c = a - b;
+        return (c < 0 ? -1 : (c = 0 ? 0 : 1));
+    }
+
+    let d_temp = data.filter(d => !d.o.indoor)
+        .map(o => o.o.data[user_selected_value])
+        .sort(sort_num);
+    return median(d_temp);
 }
 
 function switchLabLayer() {
@@ -520,20 +517,8 @@ function switchWindLayer() {
     document.getElementById("menu").innerHTML = "&#9776;";
 }
 
-function data_median(data) {
-    function sort_num(a, b) {
-        let c = a - b;
-        return (c < 0 ? -1 : (c = 0 ? 0 : 1));
-    }
-
-    let d_temp = data.filter(d => !d.o.indoor)
-        .map(o => o.o.data[user_selected_value])
-        .sort(sort_num);
-    return median(d_temp);
-}
-
 function switchLegend(val) {
-    d3.select('#legendcontainer').selectAll("[id^=legend_]").style("display", "none");
+    d3.select('#legend').selectAll("[id^=legend_]").style("display", "none");
     d3.select('#legend_' + val).style("display", "block");
 }
 
@@ -758,7 +743,6 @@ function switchTo(element) {
 }
 
 function countrySelector() {
-    console.log(this);
     d3.select(".countrySelected").attr('class', 'countryButton');
     d3.select(this).attr('class', 'countrySelected')
 
