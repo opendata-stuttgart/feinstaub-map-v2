@@ -420,7 +420,7 @@ module.exports = {
 		"uk": "Вітер"
 	},
 	"Hide explanation": {
-		"de": "Erklärung ausblenden",
+		"de": "Erläuterung",
 		"bg": "Скриване на обяснението",
 		"ru": "Скрыть пояснения",
 		"fr": "Cacher les explications",
@@ -446,7 +446,7 @@ module.exports = {
 		"uk": "Приховати пояснення"
 	},
 	"Show explanation": {
-		"de": "Erklärung einblenden",
+		"de": "Ausblenden",
 		"bg": "Показване на обяснението",
 		"ru": "Показать пояснения",
 		"fr": "Montrer les explications",

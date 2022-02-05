@@ -1,6 +1,4 @@
-/*
-general tags
- */
+/* general tags */
 
 html, body {
     position: relative;
@@ -13,7 +11,7 @@ body {
     margin: 0;
     padding: 8px;
     box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 a {
@@ -35,18 +33,14 @@ button{
 }
 
 ul {
-    display: block;
     list-style-type: none;
     padding-left: 0;
-    margin-left: 0;
 }
 
 li {
-    display: list-item;
     width: 100%;
     pointer-events: auto;
 }
-
 
 table {
     border-collapse: collapse;
@@ -54,7 +48,7 @@ table {
 }
 
 td {
-    border: 1px solid #404040;
+    border: 1px solid #858585;
     height: 1.5em;
     text-align: center;
     padding: 2px 0;
@@ -69,14 +63,12 @@ th {
 }
 
 tr {
-    border: 1px solid #404040;
+    border: 1px solid #858585;
     font-weight: lighter;
     padding: 2px 0;
 }
 
-/*
-top items
- */
+/* top items */
 
 .topItems {
     display: flex;
@@ -90,26 +82,27 @@ top items
 }
 
 #lastUpdate {
-    background-color: #084743;
-    color: white;
+    background-color: #FDF6ED;
+    font-weight: bold;
     text-align: center;
-    font-size: 0.9em;
     height: 1.3em;
-    width: 260px;
+    width: 240px;
     padding: 7px 10px;
     z-index: 10;
-    border-radius: 8px;
+    border-radius: 10px;
+    font-size: 0.8em;
 }
 
 #attribution {
     background-color: #FDF6ED;
-    color: black;
     text-align: center;
-    font-size: 0.7em;
+    height: 1.4em;
     width: 300px;
-    padding: 7px 5px;
+    letter-spacing: -0.02em;
+    padding: 4px 8px;
     z-index: 10;
-    border-radius: 8px;
+    border-radius: 10px;
+    font-size: 0.85em;
 }
 
 #countriesButtonsContainer {
@@ -127,13 +120,6 @@ top items
     .topItems {
         justify-content: space-between;
     }
-    #attribution {
-        font-size: 0.5em;
-        width: 260px;
-        padding: 7px 10px;
-        z-index: 10;
-        border-radius: 8px;
-    }
 }
 
 @media only screen and (max-width: 600px) {
@@ -142,9 +128,7 @@ top items
     }
 }
 
-/*
-loading layer
- */
+/* loading layer */
 #loading {
     margin: 0;
     position: absolute;
@@ -165,9 +149,144 @@ loading layer
     z-index: 0;
 }
 
-/*
-legend
- */
+/* Menu */
+.menuButton {
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 15px;
+    z-index: 25;
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+    background-color: #084945;
+    border-style: solid;
+    border-color: #084945;
+    color: white;
+}
+
+
+#modal {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    overflow-y: auto;
+}
+@media only screen and (max-width: 600px) {
+    #modal {
+        top: 0;
+        left: 0;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    #modal {;
+        width: 320px;
+        right: 15px;
+        bottom: 75px;
+        height: initial;
+    }
+}
+
+#mainContainer {
+    margin: auto;
+    padding: 0.8em;
+    position: sticky;
+    z-index: 15;
+    display: block;
+}
+
+@media only screen and (min-width: 600px) {
+    #modal {
+        border-radius: 10px;
+    }
+}
+
+.externalLink {
+    height: 0.8em;
+    width: 0.8em;
+    margin-left: 2px;
+    rotate: -45deg;
+}
+
+.custom-select {
+    color: #084945;
+    font-weight: bold;
+    font-size: 1rem;
+    display: block;
+    width: 100%;
+}
+
+.custom-select select {
+    display: none; /*hide original SELECT element:*/
+}
+
+/*style the items (options), including the selected item:*/
+.select-items div {
+    cursor: pointer;
+    user-select: none;
+    padding: 0.8em;
+    border-bottom: #E0E0E0 solid 1px;
+}
+
+.select-selected {
+    background-color: #084945;
+    color: white;
+}
+
+.layerSelect{
+    font-size: 1rem;
+    background-color: #EDFDFC;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-evenly;
+    row-gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.layerSelect li {
+    line-height: 2em;
+    margin-left: 5px;
+}
+
+.layerSelect li [type="checkbox"] {
+    position: relative;
+    top: -1px;
+    z-index: 0;
+    -webkit-appearance: none;
+}
+.layerSelect li [type="checkbox"] + label::before {
+    width: 1em;
+    height: 1em;
+    border-radius: 25px;
+    border: 2px solid #084945;
+    background-color: #fff;
+    display: inline-block;
+    content: "";
+    margin-right: 5px;
+    z-index: 5;
+    position: relative;
+    margin-top: 2px
+}
+.layerSelect li [type="checkbox"]:checked+label::before {
+    box-shadow: inset 0 0 0 3px #fff;
+    background-color: #084945;
+}
+
+#explanation {
+    cursor: pointer;
+}
+
+#map-info {
+    display: none;
+    font-size: 0.9em;
+}
+
+/* legend */
 
 #legend {
     position: absolute;
@@ -178,8 +297,6 @@ legend
     vertical-align: bottom;
     pointer-events: none;
 }
-
-
 
 .legend {
     position: absolute;
@@ -231,19 +348,18 @@ legend
     background: linear-gradient(to top, #00796b 0%, #00796b 8%, #f9a825 16%, #e65100 32%, #dd2c00 48%, #dd2c00 72%, #8c0084 80%);
 }
 
-
 #legend_Official_AQI_US {
+    display: flex;
     padding: 8px;
     color: black;
     font-size: 0.7em;
     background-color: white;
     border-radius: 8px;
     position: absolute;
-    left: 15px;
+    left: 10px;
     bottom: 20px;
     pointer-events: none;
     height: 40%;
-    display: flex;
 }
 
 #legend_Official_AQI_US .AQI_color {
@@ -256,7 +372,6 @@ legend
 
 #legend_Official_AQI_US ul {
     padding: 0;
-    margin: 5px 10px;
     list-style-type: none;
 }
 
@@ -270,14 +385,10 @@ legend
     background: linear-gradient(to top, #50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 87%);
 }
 
-/* REVOIR LE DEROULE DU GRADIENT */
-
 #legend_PM10who .gradient {
     background: -webkit-linear-gradient(bottom, #8bf3ff 0, #fff148 50%, #ff5353 100%);
     background: linear-gradient(to top, #8bf3ff 0%, #fff148 50%, #ff5353 100%);
 }
-
-/* REVOIR LE DEROULE DU GRADIENT */
 
 #legend_PM25who .gradient {
     background: -webkit-linear-gradient(bottom, #8bf3ff 0, #fff148 50%, #ff5353 100%);
@@ -304,10 +415,7 @@ legend
     background: linear-gradient(to top, #00528f 0%, #6dbcff 20%, #aff474 40%, #f4e60b 60%, #f47a0b 80%, #c41a0a 100%);
 }
 
-
-/*
-tooltip
- */
+/* tooltip */
 
 .tooltip {
     text-decoration: none;
@@ -334,11 +442,11 @@ tooltip
     background-color: #FDF6ED;
     font-size: 1.2em;
     z-index: 15;
-    margin-left: 5px
+    margin-left: 5px;
+    bottom: 0;
 }
-/*
-graph
- */
+
+/* graph */
 
 #table {
     text-align: center;
@@ -346,120 +454,6 @@ graph
     margin-top: 10px;
     pointer-events: all;
     max-height: 90vh;
-}
-
-#modal {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 10;
-    background-color: white;
-}
-@media only screen and (max-width: 600px) {
-    #modal {
-        top: 0;
-        left: 0;
-    }
-}
-
-@media only screen and (min-width: 600px) {
-    #modal {;
-        width: 320px;
-        right: 15px;
-        bottom: 75px;
-        height: initial;
-    }
-}
-
-#mainContainer {
-    margin: auto;
-    padding: 20px;
-    position: sticky;
-    z-index: 15;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    flex-direction: column;
-}
-
-.externalLink {
-    height: 0.8em;
-    width: 0.8em;
-    margin-left: 2px;
-    rotate: -45deg;
-}
-
-.custom-select {
-    color: #084945;
-    font-weight: bold;
-    font-size: 1rem;
-    display: block;
-    border-radius: 8px;
-    width: 100%;
-}
-
-.custom-select select {
-    display: none; /*hide original SELECT element:*/
-}
-
-/*style the items (options), including the selected item:*/
-.select-items div {
-    cursor: pointer;
-    user-select: none;
-    padding: 0.9em;
-    border-bottom: #C2C2C2 solid 1px;
-}
-
-.select-selected {
-    background-color: #084945;
-    color: white;
-}
-
-.layerSelect {
-    font-weight: bold;
-    font-size: 1.1rem;
-    background-color: #EDFDFC;
-    border-radius: 8px;
-}
-.layerSelect li {
-    display: block;
-    line-height: 2.2em;
-}
-
-[type="checkbox"] {
-    position: relative;
-    top: -1px;
-    z-index: 0;
-    -webkit-appearance: none;
-}
-[type="checkbox"] + label::before {
-    width: 1.5em;
-    height: 1.5em;
-    border-radius: 25px;
-    border: 2px solid #084945;
-    background-color: #fff;
-    display: block;
-    content: "";
-    float: left;
-    margin-right: 5px;
-    z-index: 5;
-    position: relative;
-}
-[type="checkbox"]:checked+label::before {
-    box-shadow: inset 0 0 0 3px #fff;
-    background-color: #084945;
-}
-
-#explanation {
-    color: black;
-    cursor: pointer;
-    font-size: 1em;
-}
-
-#map-info {
-    display: none;
-    padding: 10px;
-    color: black;
 }
 
 /*
@@ -543,22 +537,4 @@ img.leaflet-tile {
     text-align: left;
     vertical-align: middle;
     border: none;
-}
-
-/*
-Menu
-*/
-.menuButton {
-    cursor: pointer;
-    position: fixed;
-    bottom: 20px;
-    right: 15px;
-    z-index: 25;
-    display: flex;
-    align-items: center;
-    font-size: 1em;
-    background-color: #084945;
-    border-style: solid;
-    border-color: #084945;
-    color: white;
 }

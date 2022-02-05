@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name=viewport content="width=device-width,initial-scale=1"/>
-    <link rel="preload" href="main.js" as="script"/>
+    <script src="main.js"></script>
     <link href='https://osmc1.maps.sensor.community' rel='preconnect' crossorigin/>
     <link href='https://osmc2.maps.sensor.community' rel='preconnect' crossorigin/>
     <link href='https://osmc3.maps.sensor.community' rel='preconnect' crossorigin/>
@@ -28,8 +28,7 @@
             <button id="oceania" value="oceania"></button>
         </div>
     </div>
-    <div id='attribution'><strong style="font-size:110%;">Measurements <a href="https://sensor.community/" target="_blank">Sensor.Community</a> contributors</strong><br>
-        Map: <a href="https://leafletjs.com" target="_blank">Leaflet</a> & <a href="https://openstreetmap.org" target="_blank">OpenStreetMap</a></div>
+    <div id='attribution'>Measurements <a href="https://sensor.community/" target="_blank">Sensor.Community</a> contributors</div>
 
 </div>
 
@@ -37,7 +36,7 @@
 
 <div id="modal">
     <div id="mainContainer">
-        <ul>
+        <ul class="layerSelect">
             <li><a href="https://sensor.community/" target="_blank">Website <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg></a></li>
@@ -45,7 +44,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg></a></li>
             <!--<li><a href="https://sensors2ref.maps.sensor.community/" target="_blank">Sensors and reference stations</a></li>-->
-            <li id="explanation"></li>
+            <li><span id="explanation"></span></li>
         </ul>
         <div id="map-info"></div>
         <div id="custom-select" class="custom-select">
@@ -55,6 +54,7 @@
                     <option value="Humidity"> rel. Humidity</option>
                     <option value="Pressure"> Pressure</option>
                     <option value="Noise"> Noise</option>
+                    <option value="Official_AQI_US"> Official AQI US</option>
                     <option value="PM10who"> PM10 (WHO, 1 h. mean)</option>
                     <option value="PM25who"> PM2.5 (WHO, 1 h. mean)</option>
                     <option value="PM10eu"> PM10 (EU, 1 h. mean)</option>

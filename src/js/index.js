@@ -321,13 +321,11 @@ window.onload = function () {
     };
 
     // enable elements
-    // d3.select('#legend_PM10').style("display", "block");
-    d3.select('#explanation').html(translate.tr(lang, 'Show explanation'));
-    d3.select('#map-info').html(translate.tr(lang, "<p>Hexagons represent the median of the current values of the sensors which are contained in the area, according to the option selected (PM10, PM2.5, temperature, relative humidity, pressure, AQI). You can refer to the scale on the left side of the map.</p> \
-<p>Clicking on a hexagon will display a list of all the corresponding sensors as a table. In the top, you can see the amount of sensor in the area and the aggregated median value.</p> \
-<p>Clicking on the plus symbol will display two graphics: the individual measurements for the last 24 hours and the 24 hours floating mean for the last seven days. For technical reasons, the first of the 8 days displayed on the graphic has to stay empty.\
-The values are refreshed every 5 minutes to fit with the measurement frequency of the Airrohr sensors.</p> \
-<p>The Air Quality Index (AQI) is calculated according to the recommandations of the United States Environmental Protection Agency. Further information is available on the official page.(<a href='https://www.airnow.gov/aqi/aqi-basics/'>Link</a>). Hover over the AQI scale to display the levels of health concern.</p>"));
+    d3.select('#explanation').html(translate.tr(lang, 'Explanation'));
+    d3.select('#map-info').html(translate.tr(lang, "<p>The hexagons represent the median of the current sensor values included in this area, depending on the selected option (PM2.5, temperature,...).</p> \
+<p>Clicking on a hexagon will display a list of the corresponding sensors as a table. The first row will show you the amount of sensor and the median value.</p> \
+<p>Clicking on the plus symbol will display <i>individual measurements of the last 24 hours</i> & <i>24 hours moving average for the last seven days</i>. For technical reasons, the first of the 8 days displayed on the graphic has to stay empty.</p> \
+<p>Map values are <strong>refreshed every 5 minutes</strong> to fit with the measurement frequency of the multiple airRohr sensors.</p>"));
 
     d3.select("#menu").on("click", toggleSidebar);
     d3.select("#explanation").on("click", toggleExplanation);
@@ -393,7 +391,6 @@ The values are refreshed every 5 minutes to fit with the measurement frequency o
             ready(1);
             api.getData(config.data_host + "/data/v2/data.24h.json", 5).then(function (result) {
                 hmhexaPM_WHO = result.cells;
-                // console.log(hmhexaPM_WHO);
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
@@ -402,7 +399,6 @@ The values are refreshed every 5 minutes to fit with the measurement frequency o
             });
             api.getData(config.data_host + "/data/v2/data.24h.json", 6).then(function (result) {
                 hmhexaPM_EU = result.cells;
-                // console.log(hmhexaPM_EU);
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
@@ -411,7 +407,6 @@ The values are refreshed every 5 minutes to fit with the measurement frequency o
             });
             api.getData(config.data_host + "/data/v2/data.24h.json", 2).then(function (result) {
                 hmhexaPM_AQI = result.cells;
-                // console.log(hmhexaPM_AQI);
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
@@ -539,23 +534,16 @@ function toggleSidebar() {
         closeSidebar();
     } else {
         openSidebar();
-        document.getElementById("mainContainer").style.display = "block";
-        document.getElementById("explanation").style.display = "block";
     }
 }
 
 function toggleExplanation() {
     const x = document.getElementById("map-info");
-    const y = document.getElementById("mainContainer");
-
-    if (x.style.display === "none") {
-        x.style.display = "block";
-        y.style.display = "none";
-        d3.select("#explanation").html(translate.tr(lang, "Hide explanation"));
-
-    } else {
+    if (x.style.display === "block") {
         x.style.display = "none";
-        y.style.display = "block";
+        d3.select("#explanation").html(translate.tr(lang, "Hide explanation"));
+    } else {
+        x.style.display = "block";
         d3.select("#explanation").html(translate.tr(lang, "Show explanation"));
     }
 }
