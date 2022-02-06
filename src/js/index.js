@@ -322,9 +322,9 @@ window.onload = function () {
 
     // enable elements
     d3.select('#explanation').html(translate.tr(lang, 'Explanation'));
-    d3.select('#map-info').html(translate.tr(lang, "<p>The hexagons represent the median of the current sensor values included in this area, depending on the selected option (PM2.5, temperature,...).</p> \
-<p>Clicking on a hexagon will display a list of the corresponding sensors as a table. The first row will show you the amount of sensor and the median value.</p> \
-<p>Clicking on the plus symbol will display <i>individual measurements of the last 24 hours</i> & <i>24 hours moving average for the last seven days</i>. For technical reasons, the first of the 8 days displayed on the graphic has to stay empty.</p> \
+    d3.select('#map-info').html(translate.tr(lang, "<p>The hexagons represent the median of the current sensor values included in this area, depending on you selected option (PM2.5, temperature,...).</p> \
+<p>A hexagon will display a list of the corresponding sensors as a table. The first row will show you the amount of sensor and the median value.</p> \
+<p>The plus symbol will display <i>individual measurements of the last 24 hours</i> and a <i>24 hours moving average for the last seven days</i>. </br> Due to technical reasons, the first day is blank.</p> \
 <p>Map values are <strong>refreshed every 5 minutes</strong> to fit with the measurement frequency of the multiple airRohr sensors.</p>"));
 
     d3.select("#menu").on("click", toggleSidebar);
@@ -344,7 +344,7 @@ window.onload = function () {
     d3.select("#africa").html(translate.tr(lang, "Africa"));
     d3.select("#oceania").html(translate.tr(lang, "Oceania"));
 
-    d3.selectAll(".countriesButtons").selectAll("button").on("click", countrySelector);
+    d3.selectAll(".selectCountry").selectAll("button").on("click", countrySelector);
 
     d3.select("#website").html(translate.tr(lang, "Website"));
     d3.select("#forum").html(translate.tr(lang, "Forum"));

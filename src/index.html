@@ -18,8 +18,8 @@
 <div id="loading">Loading data...</div>
 <div class="topItems">
     <div id='lastUpdate'></div>
-    <div id="countriesButtonsContainer">
-        <div class="countriesButtons">
+    <div id="countries">
+        <div class="selectCountry">
             <button class="countrySelected" id="world" value="world"></button>
             <button id="europe" value="europe"></button>
             <button id="northamerica" value="northamerica"></button>
@@ -37,6 +37,8 @@
 
 <div id="modal">
     <div id="mainContainer">
+        <div id="map-info"></div>
+
         <ul class="layerSelect">
             <li><a href="https://sensor.community/" target="_blank">Website
                 <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -51,7 +53,6 @@
             <!--<li><a href="https://sensors2ref.maps.sensor.community/" target="_blank">Sensors and reference stations</a></li>-->
             <li><span id="explanation"></span></li>
         </ul>
-        <div id="map-info"></div>
         <div id="custom-select" class="custom-select">
             <label>
                 <select>

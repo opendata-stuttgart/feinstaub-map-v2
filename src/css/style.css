@@ -20,8 +20,7 @@ a {
 }
 
 button{
-    font-size: 0.8em;
-    font-weight: bold;
+    font-size: 0.75em;
     border-radius: 12px;
     padding: 6px 12px;
     cursor: pointer;
@@ -79,11 +78,11 @@ tr {
     z-index: 10;
     width: 100%;
     row-gap: 0.5em;
+    font-weight: bold;
 }
 
 #lastUpdate {
     background-color: #FDF6ED;
-    font-weight: bold;
     text-align: center;
     height: 1.3em;
     width: 240px;
@@ -91,8 +90,8 @@ tr {
     z-index: 10;
     border-radius: 10px;
     font-size: 0.8em;
-    -webkit-box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
 }
 
 #attribution {
@@ -101,35 +100,36 @@ tr {
     height: 1.4em;
     width: 300px;
     letter-spacing: -0.02em;
-    padding: 4px 8px;
+    padding: 7px 2px;
     z-index: 10;
     border-radius: 10px;
-    font-size: 0.85em;
-    -webkit-box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    font-size: 0.8em;
+    -webkit-box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
 }
 
-#countriesButtonsContainer {
+#countries {
     z-index: 10;
     background-color: #FDF6ED;
     border-radius: 12px;
-    -webkit-box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: -3px 0px 5px 0px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
 }
 
 .countrySelected {
     background-color: #084945;
     color: white;
+    font-weight: bold;
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 768px) {
     .topItems {
         justify-content: space-between;
     }
 }
 
-@media only screen and (max-width: 600px) {
-    #countriesButtonsContainer {
+@media only screen and (max-width: 768px) {
+    #countries {
         display: none;
     }
 }
@@ -151,8 +151,8 @@ tr {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     z-index: 0;
 }
 
@@ -161,7 +161,7 @@ tr {
     cursor: pointer;
     position: fixed;
     bottom: 20px;
-    right: 15px;
+    right: 10px;
     z-index: 25;
     display: flex;
     align-items: center;
@@ -174,38 +174,40 @@ tr {
 
 #modal {
     display: none;
-    width: 100%;
-    height: 100%;
+    width: 99.5vw;
+    height: 99.5vh;
     position: absolute;
     z-index: 10;
     background-color: white;
     overflow-y: auto;
 }
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 768px) {
     #modal {
         top: 0;
         left: 0;
+        border: 1px solid #C2C2C2;
+
     }
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 768px) {
     #modal {;
-        width: 320px;
+        width: 340px;
         right: 15px;
-        bottom: 75px;
+        bottom: 60px;
         height: initial;
+        overflow-y: auto;
     }
 }
 
 #mainContainer {
     margin: auto;
     padding: 0.8em;
-    position: sticky;
     z-index: 15;
     display: block;
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 768px) {
     #modal {
         border-radius: 10px;
     }
@@ -243,8 +245,8 @@ tr {
     color: white;
 }
 
-.layerSelect{
-    font-size: 1rem;
+.layerSelect {
+    font-size: 1em;
     background-color: #EDFDFC;
     border-radius: 12px;
     display: flex;
@@ -289,7 +291,20 @@ tr {
 
 #map-info {
     display: none;
-    font-size: 0.9em;
+}
+
+@media only screen and (min-width: 768px) {
+    .layerSelect, .select-items {
+        font-size: 0.9em;
+    }
+    .select-items li {
+        line-height: 1.9em;
+    }
+    #map-info {
+        display: none;
+        font-size: 0.85em;
+        overflow-y: auto;
+    }
 }
 
 /* legend */
@@ -307,10 +322,6 @@ tr {
     background-color: white;
     border-radius: 8px;
     display: flex;
-    margin-left:-110px;
-}
-.legend:active, .legend:focus, .legend:hover{
-    transform: translate3d(110px, 0, 0);
 }
 
 #legend .chevron {
@@ -327,6 +338,28 @@ tr {
     background-color: white;
     font-weight: bold;
     border-radius: 8px;
+}
+
+@media only screen and (max-width: 768px) {
+    .legend {
+        margin-left:-110px;
+    }
+    .legend:active, .legend:focus, .legend:hover{
+        transform: translate3d(110px, 0, 0);
+    }
+
+}
+
+@media only screen and (min-width: 768px) {
+    .layerSelect, .select-items {
+        font-size: 0.9em;
+    }
+    .select-items li {
+        line-height: 1.9em;
+    }
+    #legend .chevron {
+        display: none;
+    }
 }
 
 #legend .gradient {
