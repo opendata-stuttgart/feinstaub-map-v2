@@ -647,7 +647,7 @@ function sensorNr(data) {
     });
     textefin += sensors;
     textefin += "</table>";
-    d3.select("#modal").append("div").attr("id", "table").html(textefin)
+    d3.select("#table").attr("id", "table").html(textefin)
     d3.selectAll(".idsens").on("click", function () {
         displayGraph(d3.select(this).attr("id"));
     });

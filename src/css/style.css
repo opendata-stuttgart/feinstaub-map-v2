@@ -167,18 +167,17 @@ tr {
 
 #modal {
     display: none;
-    width: 99.5vw;
-    height: 99.5vh;
+    width: 100vw;
+    height: 100vh;
     position: absolute;
-    z-index: 10;
+    z-index: 20;
     background-color: white;
     overflow-y: auto;
 }
 @media only screen and (max-width: 768px) {
     #modal {
         top: 0;
-        left: 0;
-    }
+        left: 0;}
 }
 
 @media only screen and (min-width: 768px) {
@@ -187,22 +186,17 @@ tr {
         right: 15px;
         bottom: 65px;
         height: initial;
+        max-height: calc(100vh - 10em);
         overflow-y: auto;
         border: 1px solid #C2C2C2;
+        border-radius: 10px;
     }
 }
 
 #mainContainer {
     margin: auto;
     padding: 0.8em;
-    z-index: 15;
-    display: block;
-}
-
-@media only screen and (min-width: 768px) {
-    #modal {
-        border-radius: 10px;
-    }
+    bottom: 0;
 }
 
 .externalLink {
