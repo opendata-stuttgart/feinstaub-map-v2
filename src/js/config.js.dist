@@ -12,7 +12,6 @@ module.exports = {
 	"tiles_server": "https://{s}.maps.sensor.community",
 	"tiles_path": "/{z}/{x}/{y}.png",
 	"tiles_subdomains": ["osmc1","osmc2","osmc3"],
-	"attribution": "Map data © <a href='https://openstreetmap.org'>OpenStreetMap</a>",
 	"data_host": "https://maps.sensor.community",
 	"attribution": "<a href='https://openstreetmap.org'>OpenStreetMap</a>",
 	"titles" : {
@@ -33,8 +32,8 @@ module.exports = {
 		"PM25": [2, 1],
 		"PM10eu": [2, 1],
 		"PM25eu": [2, 1],
-		"PM10who": [2, 1], //WHICH PANELS?
-		"PM25who": [2, 1], //WHICH PANELS?
+		"PM10who": [2, 1],
+		"PM25who": [2, 1],
 		"Temperature": [4, 3],
 		"Humidity": [6, 5],
 		"Pressure": [8, 7],
@@ -58,11 +57,11 @@ module.exports = {
 			colorRange: ['#50F0E6', '#50CCAA', '#F0E641', '#FF5050', '#960032', '#7D2181']
 		},
 		"PM10who": {
-			valueDomain: [0, 45, 150],							//REVOIR LE DEROULÉ DU GRADIENT
+            valueDomain: [0, 45, 150],
 			colorRange: ['#8bf3ff', '#fff148', '#ff5353']
 		},
 		"PM25who": {
-			valueDomain: [0, 15, 75],							//REVOIR LE DEROULÉ DU GRADIENT
+			valueDomain: [0, 15, 75],
 			colorRange: ['#8bf3ff', '#fff148', '#ff5353']
 		},
 		"AQIus": {

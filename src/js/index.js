@@ -1,10 +1,6 @@
 // import leaflet
 import leaflet from 'leaflet';
 import hash from 'leaflet-hash';
-// import * as GeoSearch from 'leaflet-geosearch';
-// import 'leaflet.locatecontrol';
-// import 'leaflet-geosearch/dist/geosearch.css';
-// import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 import 'leaflet/dist/leaflet.css';
 
 // d3 libraries
@@ -233,7 +229,6 @@ window.onload = function () {
 
         _zoomChange: function () {
             let mapZoom = map.getZoom();
-            let MapCenter = map.getCenter();
             this._disableLeafletRounding();
             let newZoom = this._undef(mapZoom) ? this.map._zoom : mapZoom;
             this._zoomDiff = newZoom - this._zoom;
@@ -620,7 +615,6 @@ function sensorNr(data) {
     if (user_selected_value !== "AQIus") {
         inner_pre = "(+) #";
     }
-
     openSidebar();
 
     document.getElementById("mainContainer").style.display = "none";

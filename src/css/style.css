@@ -1,17 +1,16 @@
 /* general tags */
 
-html, body {
+html {
     position: relative;
     width: 100%;
     height: 100%;
 }
 
 body {
-    color: #333;
     margin: 0;
     padding: 8px;
     box-sizing: border-box;
-    font-family: -apple-system, Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, Roboto, Ubuntu, "Helvetica Neue", sans-serif;
 }
 
 a {
@@ -24,11 +23,8 @@ button{
     border-radius: 12px;
     padding: 6px 12px;
     cursor: pointer;
-    pointer-events: all;
     background-color: #FDF6ED;
-    outline: 0 !important;
-    border-style: solid;
-    border-color: #FDF6ED;
+    border: solid #FDF6ED;
 }
 
 ul {
@@ -81,39 +77,32 @@ tr {
     font-weight: bold;
 }
 
-#lastUpdate {
+.infoBubble {
     background-color: #FDF6ED;
+    padding: 6px 12px;
+    cursor: pointer;
+    pointer-events: all;
+    outline: 0 !important;
     text-align: center;
     height: 1.3em;
     width: 240px;
-    padding: 7px 10px;
     z-index: 10;
     border-radius: 10px;
     font-size: 0.8em;
-    -webkit-box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
-    box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
+    border: 1px solid #C2C2C2;
 }
 
 #attribution {
-    background-color: #FDF6ED;
-    text-align: center;
     height: 1.4em;
     width: 300px;
     letter-spacing: -0.02em;
-    padding: 7px 2px;
-    z-index: 10;
-    border-radius: 10px;
-    font-size: 0.8em;
-    -webkit-box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
-    box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
 }
 
 #countries {
     z-index: 10;
     background-color: #FDF6ED;
     border-radius: 12px;
-    -webkit-box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
-    box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.2);
+    border: 1px solid #C2C2C2;
 }
 
 .countrySelected {
@@ -151,8 +140,8 @@ tr {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     z-index: 0;
 }
 
@@ -186,7 +175,6 @@ tr {
         top: 0;
         left: 0;
         border: 1px solid #C2C2C2;
-
     }
 }
 
@@ -308,7 +296,6 @@ tr {
 }
 
 /* legend */
-
 .legend {
     position: fixed;
     bottom: 20px;
@@ -317,7 +304,7 @@ tr {
     padding: 20px;
     max-width: 7em;
     transition: all 0.3s;
-    border: 1px solid #E0E0E0;
+    border: 1px solid #C2C2C2;
     font-size: 0.7em;
     background-color: white;
     border-radius: 8px;
@@ -326,17 +313,12 @@ tr {
 
 #legend .chevron {
     position: relative;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
     height: 24px;
     width: 24px;
-    fill: black;
     top: 0;
     right: -35px;
     padding: 7px 0 0 16px;
     background-color: white;
-    font-weight: bold;
     border-radius: 8px;
 }
 
@@ -347,7 +329,6 @@ tr {
     .legend:active, .legend:focus, .legend:hover{
         transform: translate3d(110px, 0, 0);
     }
-
 }
 
 @media only screen and (min-width: 768px) {
@@ -439,10 +420,8 @@ tr {
     top: 3px;
 }
 
-/* tooltip */
-
+/* legend AQI tooltip */
 .tooltip {
-    text-decoration: none;
     position: relative;
     cursor: pointer;
 }
@@ -450,8 +429,6 @@ tr {
 .tooltip-div {
     padding: 8px;
     border-radius: 8px;
-    width: auto;
-    height: auto
 }
 
 .tooltip-text div {
@@ -471,7 +448,6 @@ tr {
 }
 
 /* graph */
-
 #table {
     text-align: center;
     padding: 8px;
@@ -480,10 +456,7 @@ tr {
     max-height: 90vh;
 }
 
-/*
-leaflet map
- */
-
+/* leaflet map */
 .leaflet-pane > svg .d3-overlay path {
     cursor: help;
     pointer-events: all;
@@ -505,64 +478,38 @@ img.leaflet-tile {
 .hexbin-hexagon {
     stroke-width: 0;
 }
-
-.labs_facebook:before {
+/* labs popup */
+.labsSocialIcon:before {
     display: inline-block;
     padding-right: 5px;
-    content: url("../images/facebook.svg");
     width: 15px;
     vertical-align: middle;
+}
+.labs_facebook:before {
+    content: url("../images/facebook.svg");
 }
 .labs_twitter:before {
-    display: inline-block;
-    padding-right: 5px;
     content: url("../images/twitter.svg");
-    width: 15px;
-    vertical-align: middle;
 }
 .labs_github:before {
-    display: inline-block;
-    padding-right: 5px;
     content: url("../images/github.svg");
-    width: 15px;
-    vertical-align: middle;
 }
 .labs_gitlab:before {
-    display: inline-block;
-    padding-right: 5px;
     content: url("../images/gitlab.svg");
-    width: 15px;
-    vertical-align: middle;
 }
 .labs_mastodon:before {
-    display: inline-block;
-    padding-right: 5px;
     content: url("../images/mastodon.svg");
-    width: 15px;
-    vertical-align: middle;
 }
 .labs_meetup:before {
-    display: inline-block;
-    padding-right: 5px;
     content: url("../images/meetup.svg");
-    width: 15px;
-    vertical-align: middle;
 }
 .labs_telegram:before {
-    display: inline-block;
-    padding-right: 5px;
     content: url("../images/telegram.svg");
-    width: 15px;
-    vertical-align: middle;
 }
 
-.labs_sociallinks {
+.labs_sociallinks, .labs_sociallinks td, .labs_sociallinks tr {
     border: none;
     width: auto;
-}
-
-.labs_sociallinks td, .labs_sociallinks tr {
     text-align: left;
     vertical-align: middle;
-    border: none;
 }
