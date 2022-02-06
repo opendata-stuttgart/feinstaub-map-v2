@@ -52,8 +52,6 @@ const locale = timeFormatLocale({
     "shortMonths": ["Jan.", "Feb.", "Mar.", "Apr.", "Mai", "Jun.", "Jul.", "Aug.", "Sep.", "Okt.", "Nov.", "Dez."]
 });
 
-const div = d3.select("#modal").append("div").attr("id", "table").style("display", "none");
-
 const map = L.map("map", {preferCanvas: true, zoomControl: false, controls:false}).setView(config.initialView, config.initialZoom);
 
 config.tiles = config.tiles_server + config.tiles_path;
@@ -322,7 +320,7 @@ window.onload = function () {
 <p>The plus symbol will display <i>individual measurements of the last 24 hours</i> and a <i>24 hours moving average for the last seven days</i>. </br> Due to technical reasons, the first day is blank.</p> \
 <p>Map values are <strong>refreshed every 5 minutes</strong> to fit with the measurement frequency of the multiple airRohr sensors.</p>"));
 
-    d3.select("#menu").on("click", toggleSidebar);
+    d3.select("#menu").on("click", toggleMenu);
     d3.select("#explanation").on("click", toggleExplanation);
     d3.select("#AQI_Good").html(" " + translate.tr(lang, "Good<div class='tooltip-div'>Air quality is considered satisfactory, and air pollution poses little or no risk.</div>"));
     d3.select("#AQI_Moderate").html(" " + translate.tr(lang, "Moderate<div class='tooltip-div'>Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution.</div>"));
@@ -367,15 +365,13 @@ window.onload = function () {
         }
     });
 
-    // custom_select.style("display", "inline-block");
-
     switchLegend(user_selected_value);
 
     map.setView(coordsCenter, zoomLevel);
     map.clicked = 0;
     hexagonheatmap = L.hexbinLayer(config.scale_options[user_selected_value]).addTo(map);
 
-//	REVOIR ORDRE DANS FONCTION READY
+    //retrieve data from api
     function retrieveData() {
         api.getData(config.data_host + "/data/v2/data.dust.min.json", 1).then(function (result) {
             hmhexaPM_aktuell = result.cells;
@@ -427,7 +423,6 @@ window.onload = function () {
         });
     }
 
-    //retrieve data from api
     retrieveData();
 
     // refresh data
@@ -448,16 +443,8 @@ window.onload = function () {
         clicked += 1;
     });
 
-    // add searchbox
-    /*new GeoSearch.GeoSearchControl({
-        style: 'button', position: 'topleft', showMarker: false, autoClose: true, provider: new GeoSearch.OpenStreetMapProvider(),
-    }).addTo(map);
-
-    L.control.locate({position: 'topleft'}).addTo(map);*/
-
     // Load lab and windlayer, init checkboxes
     (config.layer_labs) ? d3.select("#cb_labs").property("checked", true) : d3.select("#cb_labs").property("checked", false);
-
 
     (config.layer_wind) ? d3.select("#cb_wind").property("checked", true)
     : d3.select("#cb_wind").property("checked", false);
@@ -472,7 +459,6 @@ window.onload = function () {
     switchWindLayer();
     d3.select("#cb_labs").on("change", switchLabLayer);
     d3.select("#cb_wind").on("change", switchWindLayer);
-
 }
 
 function data_median(data) {
@@ -512,35 +498,36 @@ function switchLegend(val) {
     d3.select('#legend_' + val).style("display", "block");
 }
 
-/*  Menu and Dropdown */
-function openSidebar() {
+function openMenu() {
     document.getElementById("menu").innerHTML = "&#10006;";
     document.getElementById("modal").style.display = "block";
+    document.getElementById("mainContainer").style.display = "block";
 }
 
-function closeSidebar() {
+function closeMenu() {
     d3.select("#menu").html(d3.select(".select-selected").select("span").html());
     document.getElementById("modal").style.display = "none";
-    d3.select("#results").remove();
+    document.getElementById("mainContainer").style.display = "none";
+    d3.select("#results").remove()
+    closeExplanation()
 }
 
-function toggleSidebar() {
-    if (document.getElementById("modal").style.display === "block") {
-        closeSidebar();
-    } else {
-        openSidebar();
-    }
+function toggleMenu() {
+    (document.getElementById("modal").style.display === "block") ? closeMenu() : openMenu();
+}
+
+function openExplanation() {
+    document.getElementById("map-info").style.display = "block";
+    d3.select("#explanation").html(translate.tr(lang, "Hide explanation"));
+}
+
+function closeExplanation() {
+    document.getElementById("map-info").style.display = "none";
+    d3.select("#explanation").html(translate.tr(lang, "Show explanation"));
 }
 
 function toggleExplanation() {
-    const x = document.getElementById("map-info");
-    if (x.style.display === "block") {
-        x.style.display = "none";
-        d3.select("#explanation").html(translate.tr(lang, "Hide explanation"));
-    } else {
-        x.style.display = "block";
-        d3.select("#explanation").html(translate.tr(lang, "Show explanation"));
-    }
+    (document.getElementById("map-info").style.display === "block") ? closeExplanation() : openExplanation();
 }
 
 function ready(num) {
@@ -567,8 +554,6 @@ function ready(num) {
         hexagonheatmap.initialize(config.scale_options[user_selected_value]);
         hexagonheatmap.data(hmhexaPM_WHO);
     }
-
-    //REVOIR MAP
     if (num === 2 && user_selected_value === "AQIus") {
         hexagonheatmap.initialize(config.scale_options[user_selected_value]);
         hexagonheatmap.data(hmhexaPM_AQI);
@@ -589,7 +574,7 @@ function ready(num) {
 function reloadMap(val) {
     d3.selectAll('path.hexbin-hexagon').remove();
     d3.select("#currentSelection").html(d3.select(".select-selected").select("span").html());
-    closeSidebar();
+    closeMenu();
     switchLegend(val);
 
     hexagonheatmap.initialize(config.scale_options[val]);
@@ -615,11 +600,9 @@ function sensorNr(data) {
     if (user_selected_value !== "AQIus") {
         inner_pre = "(+) #";
     }
-    openSidebar();
 
+    openMenu()
     document.getElementById("mainContainer").style.display = "none";
-    document.getElementById("explanation").style.display = "none";
-
     let textefin = "<table id='results' style='width:95%;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, config.titles[user_selected_value]) + "</th></tr>";
     if (data.length > 1) {
         textefin += "<tr><td class='idsens'>Median " + data.length + " Sens.</td><td>" + (isNaN(parseInt(data_median(data))) ? "-" : parseInt(data_median(data))) + "</td></tr>";
@@ -664,15 +647,13 @@ function sensorNr(data) {
     });
     textefin += sensors;
     textefin += "</table>";
-    div.transition().duration(200).style("display", "block");
-    div.html(textefin).style("padding", "10px");
+    d3.select("#modal").append("div").attr("id", "table").html(textefin)
     d3.selectAll(".idsens").on("click", function () {
         displayGraph(d3.select(this).attr("id"));
     });
 }
 
 function displayGraph(id) {
-
     let inner_pre = "";
     const panel_str = "<iframe src='https://maps.sensor.community/grafana/d-solo/000000004/single-sensor-view?orgId=1&panelId=<PANELID>&var-node=<SENSOR>' frameborder='0' height='300px' width='100%'></iframe>";
     const sens = id.substr(3);
@@ -729,5 +710,5 @@ function countrySelector() {
     d3.select(this).attr('class', 'countrySelected')
 
     map.setView(places[this.value], zooms[this.value]);
-    closeSidebar();
+    closeMenu();
 }

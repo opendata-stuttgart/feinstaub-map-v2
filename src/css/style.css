@@ -1,5 +1,4 @@
 /* general tags */
-
 html {
     position: relative;
     width: 100%;
@@ -39,8 +38,13 @@ li {
 
 table {
     border-collapse: collapse;
-    margin: auto;
+    text-align: center;
+    padding: 8px;
+    margin: 10px;
+    pointer-events: all;
+    max-height: 90vh;
 }
+
 
 td {
     border: 1px solid #858585;
@@ -174,7 +178,6 @@ tr {
     #modal {
         top: 0;
         left: 0;
-        border: 1px solid #C2C2C2;
     }
 }
 
@@ -182,9 +185,10 @@ tr {
     #modal {;
         width: 340px;
         right: 15px;
-        bottom: 60px;
+        bottom: 65px;
         height: initial;
         overflow-y: auto;
+        border: 1px solid #C2C2C2;
     }
 }
 
@@ -445,15 +449,6 @@ tr {
     z-index: 15;
     margin-left: 5px;
     bottom: 0;
-}
-
-/* graph */
-#table {
-    text-align: center;
-    padding: 8px;
-    margin-top: 10px;
-    pointer-events: all;
-    max-height: 90vh;
 }
 
 /* leaflet map */
