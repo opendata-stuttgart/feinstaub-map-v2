@@ -1,6 +1,5 @@
 // copy images
-import '../images/lab_marker.png';
-import '../images/lab_marker.svg';
+ import '../images/lab_marker.svg';
 
 // copy favicons
 import '../images/android-chrome-192x192.png';
