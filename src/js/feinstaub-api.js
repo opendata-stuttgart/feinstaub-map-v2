@@ -13,7 +13,6 @@ let api = {
 		"HPM": true,
 		"SPS30": true,
 	},
-
 	thp_sensors: {
 		"DHT11": true,
 		"DHT22": true,
@@ -30,11 +29,9 @@ let api = {
 		"SHT35": true,
 		"SHT85": true,
 	},
-	
 	noise_sensors: {
 		"DNMS (Laerm)": true,
 	},
-
 	checkValues(obj, sel) {
 		let result = false;
 		if (obj !== undefined && typeof (obj) === 'number' && !isNaN(obj)) {
@@ -56,9 +53,7 @@ let api = {
 		}
 		return result;
 	},
-
 	officialAQIus(data) {
-
 		function aqius(val, type) {
 			let index;
 
@@ -117,7 +112,7 @@ let api = {
 	/* fetches from /now, ignores non-finedust sensors
 	now returns data from last 5 minutes, so we group all data by sensorId
 	 and compute a mean to get distinct values per sensor */
-	getData: async function (URL, num) {
+	getData: async function (URL, vizType) {
 
 		function getRightValue(array, type) {
 			let value;
@@ -132,10 +127,9 @@ let api = {
 		return fetch(URL)
 			.then((resp) => resp.json())
 			.then((json) => {
-				console.log('successful retrieved data');
 				let timestamp_data = '';
 				let timestamp_from = '';
-				if (num === 1) {
+				if (vizType === "pmDefault") {
 					let cells = _.chain(json)
 						.filter((sensor) =>
 							typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined"
@@ -161,7 +155,7 @@ let api = {
 						})
 						.value();
 					return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-				} else if (num === 2) {
+				} else if (vizType === "aqi") {
 					let cells = _.chain(json)
 						.filter((sensor) =>
 							typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined"
@@ -196,7 +190,7 @@ let api = {
 						})
 						.value();
 					return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-				} else if (num === 3) {
+				} else if (vizType === "tempHumPress") {
 					let cells = _.chain(json)
 						.filter((sensor) =>
 							typeof api.thp_sensors[sensor.sensor.sensor_type.name] != "undefined"
@@ -221,7 +215,7 @@ let api = {
 						})
 						.value();
 					return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-				} else if (num === 4) {
+				} else if (vizType === "noise") {
 					let cells = _.chain(json)
 						.filter((sensor) =>
 							typeof api.noise_sensors[sensor.sensor.sensor_type.name] != "undefined"
@@ -244,7 +238,7 @@ let api = {
 						})
 						.value();
 					return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-				} else if (num === 5) {
+				} else if (vizType === "pmWHO") {
 					let cells = _.chain(json)
 						.filter((sensor) =>
 							typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined"
@@ -274,7 +268,7 @@ let api = {
 						})
 						.value();
 					return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-				} else if (num === 6) {
+				} else if (vizType === "pmEU") {
 					let cells = _.chain(json)
 						.filter((sensor) =>
 							typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined"

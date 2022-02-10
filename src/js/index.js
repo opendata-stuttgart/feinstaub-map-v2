@@ -372,55 +372,314 @@ window.onload = function () {
     hexagonheatmap = L.hexbinLayer(config.scale_options[user_selected_value]).addTo(map);
 
     //retrieve data from api
+    // pmDefault = PM10 PM25 5 min
+    // aqi = AQI US
+    // tempHumPress = Temperature Humidity Pressure
+    // noise = Noise
+    // pmWHO = PM10who PM25who
+    // pmEU = PM10eu PM25eu
     function retrieveData() {
-        api.getData(config.data_host + "/data/v2/data.dust.min.json", 1).then(function (result) {
+        api.getData(config.data_host + "/data/v2/data.dust.min.json", 'pmDefault').then(function (result) {
             hmhexaPM_aktuell = result.cells;
             if (result.timestamp > timestamp_data) {
                 timestamp_data = result.timestamp;
                 timestamp_from = result.timestamp_from;
             }
-            ready(1);
-            api.getData(config.data_host + "/data/v2/data.24h.json", 5).then(function (result) {
+            ready("pmDefault");
+            // Todo: merge all /data/v2/data.24.json into one request
+            api.getData(config.data_host + "/data/v2/data.24h.json", 'pmWHO').then(function (result) {
                 hmhexaPM_WHO = result.cells;
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
                 }
-                ready(5);
+                ready("pmWHO");
             });
-            api.getData(config.data_host + "/data/v2/data.24h.json", 6).then(function (result) {
+            api.getData(config.data_host + "/data/v2/data.24h.json", 'pmEU').then(function (result) {
                 hmhexaPM_EU = result.cells;
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
                 }
-                ready(6);
+                ready("pmEU");
             });
-            api.getData(config.data_host + "/data/v2/data.24h.json", 2).then(function (result) {
+            api.getData(config.data_host + "/data/v2/data.24h.json", 'aqi').then(function (result) {
                 hmhexaPM_AQI = result.cells;
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
                 }
-                ready(2);
+                ready("aqi");
             });
-            api.getData(config.data_host + "/data/v2/data.temp.min.json", 3).then(function (result) {
+            api.getData(config.data_host + "/data/v2/data.temp.min.json", 'tempHumPress').then(function (result) {
                 hmhexa_t_h_p = result.cells;
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
                 }
-                ready(3);
+                ready("tempHumPress");
             });
-            api.getData(config.data_host + "/data/v1/data.noise.json", 4).then(function (result) {
+            api.getData(config.data_host + "/data/v1/data.noise.json", 'noise').then(function (result) {
                 hmhexa_noise = result.cells;
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
                 }
-                ready(4);
+                ready("noise");
             });
         });
+    }
+
+    function data_median(data) {
+        function sort_num(a, b) {
+            let c = a - b;
+            return (c < 0 ? -1 : (c = 0 ? 0 : 1));
+        }
+
+        let d_temp = data.filter(d => !d.o.indoor)
+            .map(o => o.o.data[user_selected_value])
+            .sort(sort_num);
+        return median(d_temp);
+    }
+
+    function switchLabLayer() {
+        if (d3.select("#cb_labs").property("checked")) {
+            map.getPane('markerPane').style.visibility = "visible";
+        } else {
+            map.getPane('markerPane').style.visibility = "hidden";
+        }
+        document.getElementById("modal").style.display = "none";
+        d3.select("#menu").html(d3.select(".select-selected").select("span").html());
+    }
+
+    function switchWindLayer() {
+        if (d3.select("#cb_wind").property("checked")) {
+            d3.selectAll(".velocity-overlay").style("visibility", "visible");
+        } else {
+            d3.selectAll(".velocity-overlay").style("visibility", "hidden");
+        }
+        document.getElementById("modal").style.display = "none";
+        d3.select("#menu").html(d3.select(".select-selected").select("span").html());
+    }
+
+    function switchLegend(val) {
+        d3.select('#legend').selectAll("[id^=legend_]").style("display", "none");
+        d3.select('#legend_' + val).style("display", "block");
+    }
+
+    function openMenu() {
+        document.getElementById("menu").innerHTML = "&#10006;";
+        document.getElementById("modal").style.display = "block";
+        document.getElementById("mainContainer").style.display = "block";
+    }
+
+    function closeMenu() {
+        d3.select("#menu").html(d3.select(".select-selected").select("span").html());
+        document.getElementById("modal").style.display = "none";
+        document.getElementById("mainContainer").style.display = "none";
+        d3.select("#results").remove()
+        closeExplanation()
+    }
+
+    function toggleMenu() {
+        (document.getElementById("modal").style.display === "block") ? closeMenu() : openMenu();
+    }
+
+    function openExplanation() {
+        document.getElementById("map-info").style.display = "block";
+        d3.select("#explanation").html(translate.tr(lang, "Hide explanation"));
+    }
+
+    function closeExplanation() {
+        document.getElementById("map-info").style.display = "none";
+        d3.select("#explanation").html(translate.tr(lang, "Show explanation"));
+    }
+
+    function toggleExplanation() {
+        (document.getElementById("map-info").style.display === "block") ? closeExplanation() : openExplanation();
+    }
+
+    function ready(vizType) {
+        const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
+        const timestamp = dateParser(timestamp_data);
+        const localTime = new Date();
+        const timeOffset = localTime.getTimezoneOffset();
+        const newTime = timeMinute.offset(timestamp, -(timeOffset));
+        const dateFormater = locale.format("%d.%m.%Y %H:%M");
+
+        d3.select("#lastUpdate").html(translate.tr(lang, "Last update") + " " + dateFormater(newTime));
+
+        d3.select("#menu").html(d3.select(".select-selected").select("span").html());
+
+        if (vizType === "pmDefault" && (user_selected_value === "PM10" || user_selected_value === "PM25")) {
+            hexagonheatmap.initialize(config.scale_options[user_selected_value]);
+            hexagonheatmap.data(hmhexaPM_aktuell);
+        }
+        if (vizType === "pmEU" && (user_selected_value === "PM10eu" || user_selected_value === "PM25eu")) {
+            hexagonheatmap.initialize(config.scale_options[user_selected_value]);
+            hexagonheatmap.data(hmhexaPM_aktuell);
+        }
+        if (vizType === "pmWHO" && (user_selected_value === "PM10who" || user_selected_value === "PM25who")) {
+            hexagonheatmap.initialize(config.scale_options[user_selected_value]);
+            hexagonheatmap.data(hmhexaPM_WHO);
+        }
+        if (vizType === "aqi" && user_selected_value === "AQIus") {
+            hexagonheatmap.initialize(config.scale_options[user_selected_value]);
+            hexagonheatmap.data(hmhexaPM_AQI);
+        }
+        if (vizType === "TempHumPress" && (user_selected_value === "Temperature" || user_selected_value === "Humidity" || user_selected_value === "Pressure")) {
+            hexagonheatmap.initialize(config.scale_options[user_selected_value]);
+            hexagonheatmap.data(hmhexa_t_h_p.filter(function (value) {
+                return api.checkValues(value.data[user_selected_value], user_selected_value);
+            }));
+        }
+        if (vizType === "Noise" && user_selected_value === "Noise") {
+            hexagonheatmap.initialize(config.scale_options[user_selected_value]);
+            hexagonheatmap.data(hmhexa_noise);
+        }
+        d3.select("#loading").style("display", "none");
+    }
+
+    function reloadMap(val) {
+        d3.selectAll('path.hexbin-hexagon').remove();
+        d3.select("#currentSelection").html(d3.select(".select-selected").select("span").html());
+        closeMenu();
+        switchLegend(val);
+
+        hexagonheatmap.initialize(config.scale_options[val]);
+        if (val === "PM10" || val === "PM25") {
+            hexagonheatmap.data(hmhexaPM_aktuell);
+        } else if (val === "PM10eu" || val === "PM25eu") {
+            hexagonheatmap.data(hmhexaPM_EU);
+        } else if (val === "PM10who" || val === "PM25who") {
+            hexagonheatmap.data(hmhexaPM_WHO);
+        } else if (val === "AQIus") {
+            hexagonheatmap.data(hmhexaPM_AQI);
+        } else if (val === "Temperature" || val === "Humidity" || val === "Pressure") {
+            hexagonheatmap.data(hmhexa_t_h_p.filter(function (value) {
+                return api.checkValues(value.data[user_selected_value], user_selected_value);
+            }));
+        } else if (val === "Noise") {
+            hexagonheatmap.data(hmhexa_noise);
+        }
+    }
+
+    function sensorNr(data) {
+        let inner_pre = "#";
+        if (user_selected_value !== "AQIus") {
+            inner_pre = "(+) #";
+        }
+
+        openMenu()
+        document.getElementById("mainContainer").style.display = "none";
+        let textefin = "<table id='results' style='width:95%;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, config.titles[user_selected_value]) + "</th></tr>";
+        if (data.length > 1) {
+            textefin += "<tr><td class='idsens'>Median " + data.length + " Sens.</td><td>" + (isNaN(parseInt(data_median(data))) ? "-" : parseInt(data_median(data))) + "</td></tr>";
+        }
+        let sensors = '';
+        data.forEach(function (i) {
+            sensors += "<tr><td class='idsens' id='id_" + i.o.id + (i.o.indoor ? "_indoor" : "") + "'>" + inner_pre + i.o.id + (i.o.indoor ? " (indoor)" : "") + "</td>";
+            if (user_selected_value === "PM10") {
+                sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+            }
+            if (user_selected_value === "PM25") {
+                sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+            }
+            if (user_selected_value === "PM10eu") {
+                sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+            }
+            if (user_selected_value === "PM25eu") {
+                sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+            }
+            if (user_selected_value === "PM10who") {
+                sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+            }
+            if (user_selected_value === "PM25who") {
+                sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+            }
+            if (user_selected_value === "AQIus") {
+                sensors += "<td>" + i.o.data[user_selected_value] + " (" + i.o.data.origin + ")</td></tr>";
+            }
+            if (user_selected_value === "Temperature") {
+                sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+            }
+            if (user_selected_value === "Humidity") {
+                sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+            }
+            if (user_selected_value === "Pressure") {
+                sensors += "<td>" + i.o.data[user_selected_value].toFixed(1) + "</td></tr>";
+            }
+            if (user_selected_value === "Noise") {
+                sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
+            }
+            sensors += "<tr id='graph_" + i.o.id + "'></tr>";
+        });
+        textefin += sensors;
+        textefin += "</table>";
+        d3.select("#table").attr("id", "table").html(textefin)
+        d3.selectAll(".idsens").on("click", function () {
+            displayGraph(d3.select(this).attr("id"));
+        });
+    }
+
+    function displayGraph(id) {
+        let inner_pre = "";
+        const panel_str = "<iframe src='https://maps.sensor.community/grafana/d-solo/000000004/single-sensor-view?orgId=1&panelId=<PANELID>&var-node=<SENSOR>' frameborder='0' height='300px' width='100%'></iframe>";
+        const sens = id.substr(3);
+        const sens_id = sens.replace("_indoor", "");
+        const sens_desc = sens.replace("_indoor", " (indoor)");
+
+        if (!openedGraph1.includes(sens_id)) {
+            openedGraph1.push(sens_id);
+
+            const iddiv = "#graph_" + sens_id;
+
+            d3.select(iddiv).append("td")
+                .attr("id", "frame_" + sens_id)
+                .attr("colspan", "2")
+                .html((config.panelIDs[user_selected_value][0] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][0]).replace("<SENSOR>", sens_id) + "<br/>" : "") + (config.panelIDs[user_selected_value][1] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][1]).replace("<SENSOR>", sens_id) : ""));
+
+            if (user_selected_value !== "AQIus") inner_pre = "(-) ";
+            d3.select("#id_" + sens).html(inner_pre + "#" + sens_desc);
+        } else {
+            if (user_selected_value !== "AQIus") inner_pre = "(+) ";
+            d3.select("#id_" + sens).html(inner_pre + "#" + sens_desc);
+            d3.select("#frame_" + sens_id).remove();
+            removeInArray(openedGraph1, sens_id);
+        }
+    }
+
+    function removeInArray(array) {
+        let what, a = arguments, L = a.length, ax;
+        while (L > 1 && array.length) {
+            what = a[--L];
+            while ((ax = array.indexOf(what)) !== -1) {
+                array.splice(ax, 1);
+            }
+        }
+        return array;
+    }
+
+    function switchTo(element) {
+        const custom_select = d3.select("#custom-select");
+        custom_select.select("select").property("value", element.id.substring(12));
+        user_selected_value = element.id.substring(12);
+        if (user_selected_value === "Noise") {
+            custom_select.select(".select-selected").select("span").attr("id", "noise_option");
+        } else {
+            custom_select.select(".select-selected").select("span").attr("id", null);
+        }
+        custom_select.select(".select-selected").attr("class", null);
+        element.setAttribute("class", "select-selected");
+        reloadMap(user_selected_value);
+    }
+
+    function countrySelector() {
+        d3.select(".countrySelected").attr('class', 'countryButton');
+        d3.select(this).attr('class', 'countrySelected')
+
+        map.setView(places[this.value], zooms[this.value]);
+        closeMenu();
     }
 
     retrieveData();
@@ -459,256 +718,4 @@ window.onload = function () {
     switchWindLayer();
     d3.select("#cb_labs").on("change", switchLabLayer);
     d3.select("#cb_wind").on("change", switchWindLayer);
-}
-
-function data_median(data) {
-    function sort_num(a, b) {
-        let c = a - b;
-        return (c < 0 ? -1 : (c = 0 ? 0 : 1));
-    }
-
-    let d_temp = data.filter(d => !d.o.indoor)
-        .map(o => o.o.data[user_selected_value])
-        .sort(sort_num);
-    return median(d_temp);
-}
-
-function switchLabLayer() {
-    if (d3.select("#cb_labs").property("checked")) {
-        map.getPane('markerPane').style.visibility = "visible";
-    } else {
-        map.getPane('markerPane').style.visibility = "hidden";
-    }
-    document.getElementById("modal").style.display = "none";
-    d3.select("#menu").html(d3.select(".select-selected").select("span").html());
-}
-
-function switchWindLayer() {
-    if (d3.select("#cb_wind").property("checked")) {
-        d3.selectAll(".velocity-overlay").style("visibility", "visible");
-    } else {
-        d3.selectAll(".velocity-overlay").style("visibility", "hidden");
-    }
-    document.getElementById("modal").style.display = "none";
-    d3.select("#menu").html(d3.select(".select-selected").select("span").html());
-}
-
-function switchLegend(val) {
-    d3.select('#legend').selectAll("[id^=legend_]").style("display", "none");
-    d3.select('#legend_' + val).style("display", "block");
-}
-
-function openMenu() {
-    document.getElementById("menu").innerHTML = "&#10006;";
-    document.getElementById("modal").style.display = "block";
-    document.getElementById("mainContainer").style.display = "block";
-}
-
-function closeMenu() {
-    d3.select("#menu").html(d3.select(".select-selected").select("span").html());
-    document.getElementById("modal").style.display = "none";
-    document.getElementById("mainContainer").style.display = "none";
-    d3.select("#results").remove()
-    closeExplanation()
-}
-
-function toggleMenu() {
-    (document.getElementById("modal").style.display === "block") ? closeMenu() : openMenu();
-}
-
-function openExplanation() {
-    document.getElementById("map-info").style.display = "block";
-    d3.select("#explanation").html(translate.tr(lang, "Hide explanation"));
-}
-
-function closeExplanation() {
-    document.getElementById("map-info").style.display = "none";
-    d3.select("#explanation").html(translate.tr(lang, "Show explanation"));
-}
-
-function toggleExplanation() {
-    (document.getElementById("map-info").style.display === "block") ? closeExplanation() : openExplanation();
-}
-
-function ready(num) {
-    const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
-    const timestamp = dateParser(timestamp_data);
-    const localTime = new Date();
-    const timeOffset = localTime.getTimezoneOffset();
-    const newTime = timeMinute.offset(timestamp, -(timeOffset));
-    const dateFormater = locale.format("%d.%m.%Y %H:%M");
-
-    d3.select("#lastUpdate").html(translate.tr(lang, "Last update") + " " + dateFormater(newTime));
-
-    d3.select("#menu").html(d3.select(".select-selected").select("span").html());
-
-    if (num === 1 && (user_selected_value === "PM10" || user_selected_value === "PM25")) {
-        hexagonheatmap.initialize(config.scale_options[user_selected_value]);
-        hexagonheatmap.data(hmhexaPM_aktuell);
-    }
-    if (num === 6 && (user_selected_value === "PM10eu" || user_selected_value === "PM25eu")) {
-        hexagonheatmap.initialize(config.scale_options[user_selected_value]);
-        hexagonheatmap.data(hmhexaPM_aktuell);
-    }
-    if (num === 5 && (user_selected_value === "PM10who" || user_selected_value === "PM25who")) {
-        hexagonheatmap.initialize(config.scale_options[user_selected_value]);
-        hexagonheatmap.data(hmhexaPM_WHO);
-    }
-    if (num === 2 && user_selected_value === "AQIus") {
-        hexagonheatmap.initialize(config.scale_options[user_selected_value]);
-        hexagonheatmap.data(hmhexaPM_AQI);
-    }
-    if (num === 3 && (user_selected_value === "Temperature" || user_selected_value === "Humidity" || user_selected_value === "Pressure")) {
-        hexagonheatmap.initialize(config.scale_options[user_selected_value]);
-        hexagonheatmap.data(hmhexa_t_h_p.filter(function (value) {
-            return api.checkValues(value.data[user_selected_value], user_selected_value);
-        }));
-    }
-    if (num === 4 && user_selected_value === "Noise") {
-        hexagonheatmap.initialize(config.scale_options[user_selected_value]);
-        hexagonheatmap.data(hmhexa_noise);
-    }
-    d3.select("#loading").style("display", "none");
-}
-
-function reloadMap(val) {
-    d3.selectAll('path.hexbin-hexagon').remove();
-    d3.select("#currentSelection").html(d3.select(".select-selected").select("span").html());
-    closeMenu();
-    switchLegend(val);
-
-    hexagonheatmap.initialize(config.scale_options[val]);
-    if (val === "PM10" || val === "PM25") {
-        hexagonheatmap.data(hmhexaPM_aktuell);
-    } else if (val === "PM10eu" || val === "PM25eu") {
-        hexagonheatmap.data(hmhexaPM_EU);
-    } else if (val === "PM10who" || val === "PM25who") {
-        hexagonheatmap.data(hmhexaPM_WHO);
-    } else if (val === "AQIus") {
-        hexagonheatmap.data(hmhexaPM_AQI);
-    } else if (val === "Temperature" || val === "Humidity" || val === "Pressure") {
-        hexagonheatmap.data(hmhexa_t_h_p.filter(function (value) {
-            return api.checkValues(value.data[user_selected_value], user_selected_value);
-        }));
-    } else if (val === "Noise") {
-        hexagonheatmap.data(hmhexa_noise);
-    }
-}
-
-function sensorNr(data) {
-    let inner_pre = "#";
-    if (user_selected_value !== "AQIus") {
-        inner_pre = "(+) #";
-    }
-
-    openMenu()
-    document.getElementById("mainContainer").style.display = "none";
-    let textefin = "<table id='results' style='width:95%;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, config.titles[user_selected_value]) + "</th></tr>";
-    if (data.length > 1) {
-        textefin += "<tr><td class='idsens'>Median " + data.length + " Sens.</td><td>" + (isNaN(parseInt(data_median(data))) ? "-" : parseInt(data_median(data))) + "</td></tr>";
-    }
-    let sensors = '';
-    data.forEach(function (i) {
-        sensors += "<tr><td class='idsens' id='id_" + i.o.id + (i.o.indoor ? "_indoor" : "") + "'>" + inner_pre + i.o.id + (i.o.indoor ? " (indoor)" : "") + "</td>";
-        if (user_selected_value === "PM10") {
-            sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
-        }
-        if (user_selected_value === "PM25") {
-            sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
-        }
-        if (user_selected_value === "PM10eu") {
-            sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
-        }
-        if (user_selected_value === "PM25eu") {
-            sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
-        }
-        if (user_selected_value === "PM10who") {
-            sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
-        }
-        if (user_selected_value === "PM25who") {
-            sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
-        }
-        if (user_selected_value === "AQIus") {
-            sensors += "<td>" + i.o.data[user_selected_value] + " (" + i.o.data.origin + ")</td></tr>";
-        }
-        if (user_selected_value === "Temperature") {
-            sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
-        }
-        if (user_selected_value === "Humidity") {
-            sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
-        }
-        if (user_selected_value === "Pressure") {
-            sensors += "<td>" + i.o.data[user_selected_value].toFixed(1) + "</td></tr>";
-        }
-        if (user_selected_value === "Noise") {
-            sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
-        }
-        sensors += "<tr id='graph_" + i.o.id + "'></tr>";
-    });
-    textefin += sensors;
-    textefin += "</table>";
-    d3.select("#table").attr("id", "table").html(textefin)
-    d3.selectAll(".idsens").on("click", function () {
-        displayGraph(d3.select(this).attr("id"));
-    });
-}
-
-function displayGraph(id) {
-    let inner_pre = "";
-    const panel_str = "<iframe src='https://maps.sensor.community/grafana/d-solo/000000004/single-sensor-view?orgId=1&panelId=<PANELID>&var-node=<SENSOR>' frameborder='0' height='300px' width='100%'></iframe>";
-    const sens = id.substr(3);
-    const sens_id = sens.replace("_indoor", "");
-    const sens_desc = sens.replace("_indoor", " (indoor)");
-
-    if (!openedGraph1.includes(sens_id)) {
-        openedGraph1.push(sens_id);
-
-        const iddiv = "#graph_" + sens_id;
-
-        d3.select(iddiv).append("td")
-            .attr("id", "frame_" + sens_id)
-            .attr("colspan", "2")
-            .html((config.panelIDs[user_selected_value][0] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][0]).replace("<SENSOR>", sens_id) + "<br/>" : "") + (config.panelIDs[user_selected_value][1] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][1]).replace("<SENSOR>", sens_id) : ""));
-
-        if (user_selected_value !== "AQIus") inner_pre = "(-) ";
-        d3.select("#id_" + sens).html(inner_pre + "#" + sens_desc);
-    } else {
-        if (user_selected_value !== "AQIus") inner_pre = "(+) ";
-        d3.select("#id_" + sens).html(inner_pre + "#" + sens_desc);
-        d3.select("#frame_" + sens_id).remove();
-        removeInArray(openedGraph1, sens_id);
-    }
-}
-
-function removeInArray(array) {
-    let what, a = arguments, L = a.length, ax;
-    while (L > 1 && array.length) {
-        what = a[--L];
-        while ((ax = array.indexOf(what)) !== -1) {
-            array.splice(ax, 1);
-        }
-    }
-    return array;
-}
-
-function switchTo(element) {
-    const custom_select = d3.select("#custom-select");
-    custom_select.select("select").property("value", element.id.substring(12));
-    user_selected_value = element.id.substring(12);
-    if (user_selected_value === "Noise") {
-        custom_select.select(".select-selected").select("span").attr("id", "noise_option");
-    } else {
-        custom_select.select(".select-selected").select("span").attr("id", null);
-    }
-    custom_select.select(".select-selected").attr("class", null);
-    element.setAttribute("class", "select-selected");
-    reloadMap(user_selected_value);
-}
-
-function countrySelector() {
-    d3.select(".countrySelected").attr('class', 'countryButton');
-    d3.select(this).attr('class', 'countrySelected')
-
-    map.setView(places[this.value], zooms[this.value]);
-    closeMenu();
 }
