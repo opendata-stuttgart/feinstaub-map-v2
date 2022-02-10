@@ -416,8 +416,8 @@ module.exports = {
 		"lt": "vėjo sluoksnis",
 		"uk": "Вітер"
 	},
-	"Hide explanation": {
-		"de": "Erläuterung",
+	"Hide": {
+		"de": "Ausblenden",
 		"bg": "Скриване на обяснението",
 		"ru": "Скрыть пояснения",
 		"fr": "Cacher les explications",
@@ -442,8 +442,8 @@ module.exports = {
 		"lt": "Paslėpti paaiškinimą",
 		"uk": "Приховати пояснення"
 	},
-	"Show explanation": {
-		"de": "Ausblenden",
+	"Explanation": {
+		"de": "Erläuterung",
 		"bg": "Показване на обяснението",
 		"ru": "Показать пояснения",
 		"fr": "Montrer les explications",
@@ -598,8 +598,8 @@ module.exports = {
 		"lt": "Vidutinė<div class='tooltip-div'>Bendra oro kokybė yra priimtina. Tačiau dėl kai kurių teršalų gali kilti susirūpinimas labai nedidelės žmonių grupės, kuri yra itin jautri oro taršai, sveikata.<div>",
 		"uk": "Помірний<div class='tooltip-div'>Якість повітря задовільна. Окремі забруднювачі повітря несуть помірну загрозу для невеликої групи людей.</div>"
 	},
-	"Unhealthy for Sensitive Groups<div class='tooltip-div'>Members of sensitive groups may experience health effects. The general public is not likely to be affected.</div>": {
-		"de": "Ungesund für empfindliche Personen<div class='tooltip-div'>Bei empfindlichen Personengruppen können gesundheitliche Auswirkungen auftreten. Die allgemeine Öffentlichkeit ist höchstwahrscheinlich nicht betroffen.</div>",
+	"Unhealthy for sensitive<div class='tooltip-div'>Members of sensitive groups may experience health effects. The general public is not likely to be affected.</div>": {
+		"de": "Ungesund für Empfindliche<div class='tooltip-div'>Bei empfindlichen Personengruppen können gesundheitliche Auswirkungen auftreten. Die allgemeine Öffentlichkeit ist höchstwahrscheinlich nicht betroffen.</div>",
 		"bg": "Нездравословно за чувствителни хора <div class = 'tooltip-div'> Въздействието върху здравето може да възникне в чувствителни групи. Малко вероятно е да се засегне широката общественост.</div>",
 		"ru": "Нездоровый для чувствительных групп<div class='tooltip-div'>Чувствительные группы людей могут испытывать негативное воздействие на здоровье. Для остальных людей влияние будет не столь заметно.</div>",
 		"fr": "Nocif pour les personnes sensibles<div class='tooltip-div'>Des effets sur la santé peuvent apparaître chez les personne les plus sensibles. La majorité de la population n'est normalement pas touchée.</div>",

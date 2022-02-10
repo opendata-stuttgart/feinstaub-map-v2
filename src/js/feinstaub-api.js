@@ -3,16 +3,10 @@ import 'whatwg-fetch'
 
 let api = {
     pm_sensors: {
-        "SDS011": true,
-        "SDS021": true,
-        "PMS1003": true,
-        "PMS3003": true,
-        "PMS5003": true,
-        "PMS6003": true,
-        "PMS7003": true,
-        "HPM": true,
-        "SPS30": true,
-    }, thp_sensors: {
+        "SDS011": true, "SDS021": true, "PMS1003": true, "PMS3003": true, "PMS5003": true, "PMS6003": true, "PMS7003": true, "HPM": true, "SPS30": true,
+    },
+
+    thp_sensors: {
         "DHT11": true,
         "DHT22": true,
         "BMP180": true,
@@ -27,9 +21,13 @@ let api = {
         "SHT31": true,
         "SHT35": true,
         "SHT85": true,
-    }, noise_sensors: {
+    },
+
+    noise_sensors: {
         "DNMS (Laerm)": true,
-    }, checkValues(obj, sel) {
+    },
+
+    checkValues(obj, sel) {
         let result = false;
         if (obj !== undefined && typeof (obj) === 'number' && !isNaN(obj)) {
             if ((sel === "Humidity") && (obj >= 0) && (obj <= 100)) {
@@ -49,7 +47,9 @@ let api = {
             }
         }
         return result;
-    }, officialAQIus(data) {
+    },
+
+    officialAQIus(data) {
         function aqius(val, type) {
             let index;
 
@@ -105,8 +105,7 @@ let api = {
         return (P1 >= P2) ? {"AQI": P1, "origin": "PM10"} : {"AQI": P2, "origin": "PM2.5"};
     },
 
-    /* fetches from /now, ignores non-finedust sensors
-    now returns data from last 5 minutes, so we group all data by sensorId
+    /* fetches from /now, ignores non-finedust sensors now returns data from last 5 minutes, so we group all data by sensorId
      and compute a mean to get distinct values per sensor */
     getData: function (URL, vizType) {
 

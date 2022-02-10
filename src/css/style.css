@@ -9,7 +9,7 @@ body {
     margin: 0;
     padding: 8px;
     box-sizing: border-box;
-    font-family: -apple-system, Roboto, Ubuntu, "Helvetica Neue", sans-serif;
+    font-family: -apple-system, sans-serif;
 }
 
 a {
@@ -17,7 +17,7 @@ a {
     text-decoration: none;
 }
 
-button{
+button {
     font-size: 0.75em;
     border-radius: 12px;
     padding: 6px 12px;
@@ -174,15 +174,17 @@ tr {
     background-color: white;
     overflow-y: auto;
 }
+
 @media only screen and (max-width: 768px) {
     #modal {
         top: 0;
-        left: 0;}
+        left: 0;
+    }
 }
 
 @media only screen and (min-width: 768px) {
     #modal {;
-        width: 340px;
+        width: 380px;
         right: 15px;
         bottom: 65px;
         height: initial;
@@ -253,6 +255,7 @@ tr {
     z-index: 0;
     -webkit-appearance: none;
 }
+
 .layerSelect li [type="checkbox"] + label::before {
     width: 1em;
     height: 1em;
@@ -266,7 +269,8 @@ tr {
     position: relative;
     margin-top: 2px
 }
-.layerSelect li [type="checkbox"]:checked+label::before {
+
+.layerSelect li [type="checkbox"]:checked + label::before {
     box-shadow: inset 0 0 0 3px #fff;
     background-color: #084945;
 }
@@ -279,20 +283,6 @@ tr {
     display: none;
 }
 
-@media only screen and (min-width: 768px) {
-    .layerSelect, .select-items {
-        font-size: 0.9em;
-    }
-    .select-items li {
-        line-height: 1.9em;
-    }
-    #map-info {
-        display: none;
-        font-size: 0.85em;
-        overflow-y: auto;
-    }
-}
-
 /* legend */
 .legend {
     position: fixed;
@@ -303,7 +293,7 @@ tr {
     max-width: 7em;
     transition: all 0.3s;
     border: 1px solid #C2C2C2;
-    font-size: 0.7em;
+    font-size: 0.8em;
     background-color: white;
     border-radius: 8px;
     display: flex;
@@ -322,22 +312,27 @@ tr {
 
 @media only screen and (max-width: 768px) {
     .legend {
-        margin-left:-110px;
+        margin-left: -110px;
     }
-    .legend:active, .legend:focus, .legend:hover{
+
+    .legend:active, .legend:focus, .legend:hover {
         transform: translate3d(110px, 0, 0);
     }
 }
 
 @media only screen and (min-width: 768px) {
-    .layerSelect, .select-items {
-        font-size: 0.9em;
-    }
     .select-items li {
         line-height: 1.9em;
     }
+
     #legend .chevron {
         display: none;
+    }
+
+    #map-info {
+        display: none;
+        font-size: 0.95em;
+        overflow-y: auto;
     }
 }
 
@@ -347,8 +342,9 @@ tr {
 }
 
 #legend .labels {
-    width: 5.5em;
+    width: 6.25em;
     position: relative;
+    display: grid;
 }
 
 #legend .labels .label {
@@ -376,7 +372,7 @@ tr {
 }
 
 #legend_PM25eu .gradient {
-    background: -webkit-linear-gradient(bottom,#50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 87%);
+    background: -webkit-linear-gradient(bottom, #50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 87%);
     background: linear-gradient(to top, #50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 87%);
 }
 
@@ -412,37 +408,10 @@ tr {
 
 #legend_AQIus .AQI_color {
     display: inline-block;
-    width: 10px;
-    height: 10px;
+    width: 7px;
+    height: 15px;
     position: relative;
     top: 3px;
-}
-
-/* legend AQI tooltip */
-.tooltip {
-    position: relative;
-    cursor: pointer;
-}
-
-.tooltip-div {
-    padding: 8px;
-    border-radius: 8px;
-}
-
-.tooltip-text div {
-    display: none;
-    pointer-events: auto
-}
-
-.tooltip-text:hover div {
-    display: inline;
-    position: absolute;
-    overflow: hidden;
-    background-color: #FDF6ED;
-    font-size: 1.2em;
-    z-index: 15;
-    margin-left: 5px;
-    bottom: 0;
 }
 
 /* leaflet map */
@@ -467,6 +436,7 @@ img.leaflet-tile {
 .hexbin-hexagon {
     stroke-width: 0;
 }
+
 /* labs popup */
 .labsSocialIcon:before {
     display: inline-block;
@@ -474,24 +444,31 @@ img.leaflet-tile {
     width: 15px;
     vertical-align: middle;
 }
+
 .labs_facebook:before {
     content: url("../images/facebook.svg");
 }
+
 .labs_twitter:before {
     content: url("../images/twitter.svg");
 }
+
 .labs_github:before {
     content: url("../images/github.svg");
 }
+
 .labs_gitlab:before {
     content: url("../images/gitlab.svg");
 }
+
 .labs_mastodon:before {
     content: url("../images/mastodon.svg");
 }
+
 .labs_meetup:before {
     content: url("../images/meetup.svg");
 }
+
 .labs_telegram:before {
     content: url("../images/telegram.svg");
 }

@@ -261,8 +261,7 @@ window.onload = function () {
             let bins = hexbin(data);
 
             // Join - Join the Hexagons to the data
-            let join = g.selectAll('path.hexbin-hexagon')
-                .data(bins);
+            let join = g.selectAll('path.hexbin-hexagon').data(bins);
 
             // Update - set the fill and opacity on a transition (opacity is re-applied in case the enter transition was cancelled)
             join.transition().duration(this.options.duration)
@@ -299,20 +298,13 @@ window.onload = function () {
     };
 
     // enable elements
-    d3.select('#explanation').html(translate.tr(lang, 'Explanation'));
-    d3.select('#map-info').html(translate.tr(lang, "<p>The hexagons represent the median of the current sensor values included in this area, depending on you selected option (PM2.5, temperature,...).</p> \
-<p>A hexagon will display a list of the corresponding sensors as a table. The first row will show you the amount of sensor and the median value.</p> \
-<p>The plus symbol will display <i>individual measurements of the last 24 hours</i> and a <i>24 hours moving average for the last seven days</i>. </br> Due to technical reasons, the first day is blank.</p> \
-<p>Map values are <strong>refreshed every 5 minutes</strong> to fit with the measurement frequency of the multiple airRohr sensors.</p>"));
-
     d3.select("#menu").on("click", toggleMenu);
-    d3.select("#explanation").on("click", toggleExplanation);
-    d3.select("#AQI_Good").html(" " + translate.tr(lang, "Good<div class='tooltip-div'>Air quality is considered satisfactory, and air pollution poses little or no risk.</div>"));
-    d3.select("#AQI_Moderate").html(" " + translate.tr(lang, "Moderate<div class='tooltip-div'>Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution.</div>"));
-    d3.select("#AQI_Unhealthy_Sensitive").html(" " + translate.tr(lang, "Unhealthy for Sensitive Groups<div class='tooltip-div'>Members of sensitive groups may experience health effects. The general public is not likely to be affected.</div>"));
-    d3.select("#AQI_Unhealthy").html(" " + translate.tr(lang, "Unhealthy<div class='tooltip-div'>Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects.</div>"));
-    d3.select("#AQI_Very_Unhealthy").html(" " + translate.tr(lang, "Very Unhealthy<div class='tooltip-div'>Health alert: everyone may experience more serious health effects.</div>"));
-    d3.select("#AQI_Hazardous").html(" " + translate.tr(lang, "Hazardous<div class='tooltip-div'>Health warnings of emergency conditions. The entire population is more likely to be affected.</div>"));
+    d3.select("#AQI_Good").html(" " + translate.tr(lang, "Good"));
+    d3.select("#AQI_Moderate").html(" " + translate.tr(lang, "Moderate"));
+    d3.select("#AQI_Unhealthy_Sensitive").html(" " + translate.tr(lang, "Unhealthy for sensitive"));
+    d3.select("#AQI_Unhealthy").html(" " + translate.tr(lang, "Unhealthy"));
+    d3.select("#AQI_Very_Unhealthy").html(" " + translate.tr(lang, "Very Unhealthy"));
+    d3.select("#AQI_Hazardous").html(" " + translate.tr(lang, "Hazardous"));
 
     d3.select("#world").html(translate.tr(lang, "World"));
     d3.select("#europe").html(translate.tr(lang, "Europe"));
@@ -349,6 +341,13 @@ window.onload = function () {
             this.setAttribute("class", "select-selected");
         }
     });
+
+    d3.select("#explanation").on("click", toggleExplanation).html(translate.tr(lang, 'Explanation'));
+
+    d3.select('#map-info').html(translate.tr(lang, "<p>The hexagons represent the median of the current sensor values included in this area, depending on you selected option (PM2.5, temperature,...).</p> \
+<p>A hexagon will display a list of the corresponding sensors as a table. The first row will show you the amount of sensor and the median value.</p> \
+<p>The plus symbol will display <i>individual measurements of the last 24 hours</i> and a <i>24 hours moving average for the last seven days</i>. </br> Due to technical reasons, the first day is blank.</p> \
+<p>Map values are <strong>refreshed every 5 minutes</strong> to fit with the measurement frequency of the multiple airRohr sensors.</p>"));
 
     switchLegend(user_selected_value);
 
@@ -414,7 +413,6 @@ window.onload = function () {
             });
         });
     }
-
     retrieveData();
 
     // refresh data
@@ -494,12 +492,12 @@ window.onload = function () {
 
     function openExplanation() {
         document.getElementById("map-info").style.display = "block";
-        d3.select("#explanation").html(translate.tr(lang, "Hide explanation"));
+        d3.select("#explanation").html(translate.tr(lang, "Hide"));
     }
 
     function closeExplanation() {
         document.getElementById("map-info").style.display = "none";
-        d3.select("#explanation").html(translate.tr(lang, "Show explanation"));
+        d3.select("#explanation").html(translate.tr(lang, "Explanation"));
     }
 
     function toggleExplanation() {
@@ -515,7 +513,6 @@ window.onload = function () {
         const dateFormater = locale.format("%d.%m.%Y %H:%M");
 
         d3.select("#lastUpdate").html(translate.tr(lang, "Last update") + " " + dateFormater(newTime));
-
         d3.select("#menu").html(d3.select(".select-selected").select("span").html());
 
         if (vizType === "pmDefault" && (user_selected_value === "PM10" || user_selected_value === "PM25")) {
@@ -572,12 +569,10 @@ window.onload = function () {
     }
 
     function sensorNr(data) {
-        let inner_pre = "#";
+        // no graphs for AQI :(
         if (user_selected_value !== "AQIus") {
-            inner_pre = "(+) #";
+            openMenu()
         }
-
-        openMenu()
         document.getElementById("mainContainer").style.display = "none";
         let textefin = "<table id='results' style='width:95%;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, config.titles[user_selected_value]) + "</th></tr>";
         if (data.length > 1) {
@@ -585,7 +580,7 @@ window.onload = function () {
         }
         let sensors = '';
         data.forEach(function (i) {
-            sensors += "<tr><td class='idsens' id='id_" + i.o.id + (i.o.indoor ? "_indoor" : "") + "'>" + inner_pre + i.o.id + (i.o.indoor ? " (indoor)" : "") + "</td>";
+            sensors += "<tr><td class='idsens' id='id_" + i.o.id + (i.o.indoor ? "_indoor" : "") + "'> #" + i.o.id + (i.o.indoor ? " (indoor)" : "") + "</td>";
             if (user_selected_value === "PM10") {
                 sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
             }
@@ -690,15 +685,12 @@ window.onload = function () {
     }
 
     // Load lab and windlayer, init checkboxes
-    // (config.layer_labs) ? d3.select("#cb_labs").property("checked", true) : d3.select("#cb_labs").property("checked", false);
-    // (config.layer_wind) ? d3.select("#cb_wind").property("checked", true) : d3.select("#cb_wind").property("checked", false);
-
+    d3.select("#cb_labs").property("checked", false);
+    d3.select("#cb_wind").property("checked", false);
 
     d3.select("#label_local_labs").html(translate.tr(lang, "Local labs"));
     d3.select("#label_wind_layer").html(translate.tr(lang, "Wind layer"));
 
-    // switchLabLayer();
-    // switchWindLayer();
     d3.select("#cb_labs").on("change", switchLabLayer);
     d3.select("#cb_wind").on("change", switchWindLayer);
 }

@@ -7,10 +7,7 @@
     <link href='https://osmc1.maps.sensor.community' rel='preconnect' crossorigin/>
     <link href='https://osmc2.maps.sensor.community' rel='preconnect' crossorigin/>
     <link href='https://osmc3.maps.sensor.community' rel='preconnect' crossorigin/>
-    <link rel="shortcut icon" href="/images/favicon.ico">
-    <link rel="icon"
-          type="image/png"
-          href="/images/favicon-32x32.png">
+    <link rel="icon" href="/images/favicon.ico">
     <title>Map Sensor.Community</title>
 </head>
 <body>
@@ -30,7 +27,6 @@
         </div>
     </div>
     <div class="infoBubble" id='attribution'>Measurements <a href="https://sensor.community/" target="_blank">Sensor.Community</a> contributors</div>
-
 </div>
 
 <button class="menuButton"><span id="menu"></span></button>
@@ -50,7 +46,6 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                 </svg>
             </a></li>
-            <!--<li><a href="https://sensors2ref.maps.sensor.community/" target="_blank">Sensors and reference stations</a></li>-->
             <li><span id="explanation"></span></li>
         </ul>
         <div id="custom-select" class="custom-select">
@@ -90,8 +85,7 @@
                 <div class="label" style="bottom: 60%;"><b>75</b></div>
                 <div class="label limit" style="bottom: 40%;"><b>50</b></div>
                 <div class="label" style="bottom: 20%;"><b>25</b></div>
-                <div class="label" style="bottom: 0;"><b>0</b></div>
-                <div class="label" style="bottom: -2%;"><b> &micro;g/m&sup3;</b></div>
+                <div class="label" style="bottom: 1%;"><b>0</b> &micro;g/m&sup3;</div>
             </div>
         </div>
         <div class="chevron">&#171;</div>
@@ -106,7 +100,7 @@
                 <div class="label" style="bottom: 60%;"><b>75</b></div>
                 <div class="label" style="bottom: 41%;"><b>50</b></div>
                 <div class="label limit" style="bottom: 20%;"><b>25</b></div>
-                <div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+                <div class="label" style="bottom: 1%;"><b>0</b> &micro;g/m&sup3;</div>
             </div>
             <div class="chevron">&#171;</div>
         </div>
@@ -122,7 +116,7 @@
                 <div class="label" style="bottom: 60%;"><b>50</b></div>
                 <div class="label" style="bottom: 40%;"><b>40</b></div>
                 <div class="label" style="bottom: 20%;"><b>20</b></div>
-                <div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+                <div class="label" style="bottom: 1%;"><b>0</b> &micro;g/m&sup3;</div>
             </div>
             <div class="chevron">&#171;</div>
         </div>
@@ -138,7 +132,7 @@
                 <div class="label" style="bottom: 60%;"><b>25</b></div>
                 <div class="label" style="bottom: 40%;"><b>20</b></div>
                 <div class="label" style="bottom: 20%;"><b>10</b></div>
-                <div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+                <div class="label" style="bottom: 1%;"><b>0</b> &micro;g/m&sup3;</div>
             </div>
             <div class="chevron">&#171;</div>
         </div>
@@ -149,7 +143,7 @@
             <div class="gradient"></div>
             <div class="labels">
                 <div class="label" style="bottom: 50%;"><b>45</b></div>
-                <div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+                <div class="label" style="bottom: 1%;"><b>0</b> &micro;g/m&sup3;</div>
             </div>
             <div class="chevron">&#171;</div>
         </div>
@@ -160,7 +154,7 @@
             <div class="gradient"></div>
             <div class="labels">
                 <div class="label" style="bottom: 50%;"><b>15</b></div>
-                <div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+                <div class="label" style="bottom: 1%;"><b>0</b> &micro;g/m&sup3;</div>
             </div>
             <div class="chevron">&#171;</div>
         </div>
@@ -169,18 +163,12 @@
     <div id="legend_AQIus">
         <div class="legend">
             <div class="labels">
-                <div class="tooltip"><span class="AQI_color" style="background-color:#00E400"></span><span
-                        class="tooltip-text" id="AQI_Good"></span></div>
-                <div class="tooltip"><span class="AQI_color" style="background-color:#FFFF00"></span><span
-                        class="tooltip-text" id="AQI_Moderate"></span></div>
-                <div class="tooltip"><span class="AQI_color" style="background-color:#FF7E00"></span><span
-                        class="tooltip-text" id="AQI_Unhealthy_Sensitive"></span></div>
-                <div class="tooltip"><span class="AQI_color" style="background-color:#FF0000"></span><span
-                        class="tooltip-text" id="AQI_Unhealthy"></span></div>
-                <div class="tooltip"><span class="AQI_color" style="background-color:#8F3F97"></span><span
-                        class="tooltip-text" id="AQI_Very_Unhealthy"></span></div>
-                <div class="tooltip"><span class="AQI_color" style="background-color:#7E0023"></span><span
-                        class="tooltip-text" id="AQI_Hazardous"></span></div>
+                <div><span class="AQI_color" style="background-color:#00E400"></span><span id="AQI_Good"></span></div>
+                <div><span class="AQI_color" style="background-color:#FFFF00"></span><span id="AQI_Moderate"></span></div>
+                <div><span class="AQI_color" style="background-color:#FF7E00"></span><span id="AQI_Unhealthy_Sensitive"></span></div>
+                <div><span class="AQI_color" style="background-color:#FF0000"></span><span id="AQI_Unhealthy"></span></div>
+                <div><span class="AQI_color" style="background-color:#8F3F97"></span><span id="AQI_Very_Unhealthy"></span></div>
+                <div><span class="AQI_color" style="background-color:#7E0023"></span><span id="AQI_Hazardous"></span></div>
             </div>
             <div class="chevron">&#171;</div>
         </div>
@@ -193,7 +181,7 @@
                 <div class="label" style="bottom: 100%;"><b>40</b></div>
                 <div class="label" style="bottom: 66%;"><b>20</b></div>
                 <div class="label" style="bottom: 33%;"><b>0</b></div>
-                <div class="label" style="bottom: 1%;"><b>-20 &deg;</b></div>
+                <div class="label" style="bottom: 1%;"><b>-20</b> &deg;</div>
             </div>
             <div class="chevron">&#171;</div>
         </div>
@@ -208,7 +196,7 @@
                 <div class="label" style="bottom: 60%;"><b>60</b></div>
                 <div class="label" style="bottom: 40%;"><b>40</b></div>
                 <div class="label" style="bottom: 20%;"><b>20</b></div>
-                <div class="label" style="bottom: 1%;"><b>0 &#37;</b></div>
+                <div class="label" style="bottom: 1%;"><b>0</b> &#37;</div>
             </div>
             <div class="chevron">&#171;</div>
         </div>
@@ -222,7 +210,7 @@
                 <div class="label" style="bottom: 75%;"><b>1057</b></div>
                 <div class="label" style="bottom: 50%;"><b>1013</b></div>
                 <div class="label" style="bottom: 25%;"><b>970</b></div>
-                <div class="label" style="bottom: 1%;"><b>926 hPa</b></div>
+                <div class="label" style="bottom: 1%;"><b>926</b> hPa</div>
             </div>
             <div class="chevron">&#171;</div>
         </div>
@@ -237,7 +225,7 @@
                 <div class="label" style="bottom: 60%;"><b>60</b></div>
                 <div class="label" style="bottom: 40%;"><b>40</b></div>
                 <div class="label" style="bottom: 20%;"><b>20</b></div>
-                <div class="label" style="bottom: 1%;"><b>0 dBA</b></div>
+                <div class="label" style="bottom: 1%;"><b>0</b> dBA</div>
             </div>
             <div class="chevron">&#171;</div>
         </div>
