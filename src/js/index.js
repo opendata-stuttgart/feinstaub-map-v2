@@ -363,6 +363,7 @@ window.onload = function () {
     // pmWHO = PM10who PM25who
     // pmEU = PM10eu PM25eu
     function retrieveData() {
+        // Todo: load data only when user calls for it
         api.getData(config.data_host + "/data/v2/data.dust.min.json", 'pmDefault').then(function (result) {
             hmhexaPM_aktuell = result.cells;
             if (result.timestamp > timestamp_data) {
@@ -463,8 +464,8 @@ window.onload = function () {
         } else {
             d3.selectAll(".velocity-overlay").style("visibility", "hidden");
         }
-        // document.getElementById("modal").style.display = "none";
-        // d3.select("#menu").html(d3.select(".select-selected").select("span").html());
+        // document.getElementById("modal").style.display = "none"; // ???
+        // d3.select("#menu").html(d3.select(".select-selected").select("span").html()); // ???
     }
 
     function switchLegend(val) {
@@ -573,7 +574,7 @@ window.onload = function () {
         if (user_selected_value !== "AQIus") {
             openMenu()
         }
-        document.getElementById("mainContainer").style.display = "none";
+        document.getElementById("mainContainer").style.display = "none"; // hide menu content
         let textefin = "<table id='results' style='width:95%;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, config.titles[user_selected_value]) + "</th></tr>";
         if (data.length > 1) {
             textefin += "<tr><td class='idsens'>Median " + data.length + " Sens.</td><td>" + (isNaN(parseInt(data_median(data))) ? "-" : parseInt(data_median(data))) + "</td></tr>";
@@ -624,7 +625,7 @@ window.onload = function () {
         });
     }
 
-    function displayGraph(id) {
+    async function displayGraph(id) {
         let inner_pre = "";
         const panel_str = "<iframe src='https://maps.sensor.community/grafana/d-solo/000000004/single-sensor-view?orgId=1&panelId=<PANELID>&var-node=<SENSOR>' frameborder='0' height='300px' width='100%'></iframe>";
         const sens = id.substr(3);
@@ -663,9 +664,8 @@ window.onload = function () {
     }
 
     function switchTo(element) {
-        const custom_select = d3.select("#custom-select");
-        custom_select.select("select").property("value", element.id.substring(12));
-        user_selected_value = element.id.substring(12);
+        user_selected_value = element.getAttribute('value')
+
         if (user_selected_value === "Noise") {
             custom_select.select(".select-selected").select("span").attr("id", "noise_option");
         } else {

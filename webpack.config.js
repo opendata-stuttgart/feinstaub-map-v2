@@ -73,8 +73,7 @@ module.exports = {
 		}),
 	],
 	output: {
-		filename: '[name].js',
+		filename: 'main.js',
 		path: path.resolve(__dirname, 'dist'),
-		chunkFilename: '[id].[chunkhash].js'
 	}
 };
