@@ -1,8 +1,5 @@
 module.exports = {
 
-
-
-
 	"Loading data...": {
 		"de": "Daten werden geladen ...",
 		"ru": "Данные загружаются...",

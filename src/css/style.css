@@ -218,7 +218,7 @@ tr {
     display: none; /*hide original SELECT element:*/
 }
 
-/*style the items (options), including the selected item:*/
+/*style the items (options), including the selected item: */
 .select-items div {
     cursor: pointer;
     user-select: none;

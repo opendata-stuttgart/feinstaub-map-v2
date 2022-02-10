@@ -28,11 +28,9 @@ import * as translate from './translate.js';
 import './static-files'
 import '../css/style.css';
 
-// declare variables
 let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise, hmhexaPM_WHO, hmhexaPM_EU;
 
-// save browser lanuage for translation
-const lang = translate.getFirstBrowserLanguage().substring(0, 2);
+const lang = translate.getFirstBrowserLanguage().substring(0, 2); // save browser lanuage for translation
 let openedGraph1 = [];
 let timestamp_data = '';			// needs to be global to work over all 4 data streams
 let timestamp_from = '';			// needs to be global to work over all 4 data streams
@@ -72,11 +70,7 @@ new L.Hash(map);
     }
 })();
 
-d3.select("#loading").html(translate.tr(lang, d3.select("#loading").html()));
-
-// set default values for wind and labs layers
-(config.layer_wind === "false") ? config.layer_wind = 0 : config.layer_wind = 1;
-(config.layer_labs === "false") ? config.layer_labs = 0 : config.layer_labs = 1;
+d3.select('#loading').html(translate.tr(lang, 'Loading data...'));
 
 // Query will overwrite default sensor selection. Query Parameter is PM25, PM10, Temperature, Humidity, Pressure or Noise. Query is case sensitive
 config.selection = (config.sensor !== undefined) ? config.sensor : "PM25";
@@ -178,8 +172,6 @@ window.onload = function () {
             };
 
             this.projection.pathFromGeojson = geoPath().projection(geoTransform({point: this.projection._projectPoint}));
-
-            // Compatibility with v.1
             this.projection.latLngToLayerFloatPoint = this.projection.latLngToLayerPoint;
             this.projection.getZoom = this.map.getZoom.bind(this.map);
             this.projection.getBounds = this.map.getBounds.bind(this.map);
@@ -195,10 +187,6 @@ window.onload = function () {
             // Remove events
             map.off({'moveend': this._redraw}, this);
             this._container = null;
-            this._map = null;
-
-            // Explicitly will leave the data array alone in case the layer will be shown again
-            // this._data = [];
         },
 
         addTo(map) {
@@ -262,7 +250,6 @@ window.onload = function () {
 
             // add the hexagons to the select
             this._createHexagons(join, data, projection);
-
         },
 
         _createHexagons(g, data, projection) {
@@ -287,8 +274,6 @@ window.onload = function () {
             join.enter().append('path').attr('class', 'hexbin-hexagon')
                 .attr('d', (d) => 'M' + d.x + ',' + d.y + hexbin.hexagon())
                 .attr('fill', (d) => typeof this.options.value(d) === 'undefined' ? '#808080' : this._colorScale(this.options.value(d)))
-                .attr('fill-opacity', 0.01)
-                .attr('stroke-opacity', 0.01)
                 .on('mouseover', this.options.mouseover)
                 .on('mouseout', this.options.mouseout)
                 .on('click', this.options.click)
@@ -299,8 +284,8 @@ window.onload = function () {
             // Exit
             join.exit()
                 .transition().duration(this.options.duration)
-                .attr('fill-opacity', 0.01)
-                .attr('stroke-opacity', 0.01)
+                .attr('fill-opacity', this.options.opacity)
+                .attr('stroke-opacity', this.options.opacity)
                 .remove();
         }, data(data) {
             this._data = (data != null) ? data : [];
@@ -395,7 +380,7 @@ window.onload = function () {
                 }
                 ready("pmWHO");
             });
-            api.getData(config.data_host + "/data/v2/data.24h.json", 'pmEU').then(function (result) {
+           api.getData(config.data_host + "/data/v2/data.24h.json", 'pmEU').then(function (result) {
                 hmhexaPM_EU = result.cells;
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
@@ -430,6 +415,26 @@ window.onload = function () {
         });
     }
 
+    retrieveData();
+
+    // refresh data
+    setInterval(function () {
+        d3.selectAll('path.hexbin-hexagon').remove();
+        retrieveData();
+    }, 300000);
+
+    map.on('moveend', function () {
+        hexagonheatmap._zoomChange();
+    });
+
+    map.on('click', function () {
+        clicked = null;
+    });
+    map.on('dblclick', function () {
+        map.zoomIn();
+        clicked += 1;
+    });
+
     function data_median(data) {
         function sort_num(a, b) {
             let c = a - b;
@@ -445,21 +450,23 @@ window.onload = function () {
     function switchLabLayer() {
         if (d3.select("#cb_labs").property("checked")) {
             map.getPane('markerPane').style.visibility = "visible";
+            labs.getData(config.data_host + "/local-labs/labs.json", map);
         } else {
             map.getPane('markerPane').style.visibility = "hidden";
         }
-        document.getElementById("modal").style.display = "none";
-        d3.select("#menu").html(d3.select(".select-selected").select("span").html());
+        // document.getElementById("modal").style.display = "none";
+        // d3.select("#menu").html(d3.select(".select-selected").select("span").html());
     }
 
     function switchWindLayer() {
         if (d3.select("#cb_wind").property("checked")) {
             d3.selectAll(".velocity-overlay").style("visibility", "visible");
+            wind.getData(config.data_host + "/data/v1/wind.json", map, switchWindLayer);
         } else {
             d3.selectAll(".velocity-overlay").style("visibility", "hidden");
         }
-        document.getElementById("modal").style.display = "none";
-        d3.select("#menu").html(d3.select(".select-selected").select("span").html());
+        // document.getElementById("modal").style.display = "none";
+        // d3.select("#menu").html(d3.select(".select-selected").select("span").html());
     }
 
     function switchLegend(val) {
@@ -682,40 +689,16 @@ window.onload = function () {
         closeMenu();
     }
 
-    retrieveData();
-
-    // refresh data
-    setInterval(function () {
-        d3.selectAll('path.hexbin-hexagon').remove();
-        retrieveData();
-    }, 300000);
-
-    map.on('moveend', function () {
-        hexagonheatmap._zoomChange();
-    });
-
-    map.on('click', function () {
-        clicked = null;
-    });
-    map.on('dblclick', function () {
-        map.zoomIn();
-        clicked += 1;
-    });
-
     // Load lab and windlayer, init checkboxes
-    (config.layer_labs) ? d3.select("#cb_labs").property("checked", true) : d3.select("#cb_labs").property("checked", false);
+    // (config.layer_labs) ? d3.select("#cb_labs").property("checked", true) : d3.select("#cb_labs").property("checked", false);
+    // (config.layer_wind) ? d3.select("#cb_wind").property("checked", true) : d3.select("#cb_wind").property("checked", false);
 
-    (config.layer_wind) ? d3.select("#cb_wind").property("checked", true)
-    : d3.select("#cb_wind").property("checked", false);
-
-    labs.getData(config.data_host + "/local-labs/labs.json", map);
-    wind.getData(config.data_host + "/data/v1/wind.json", map, switchWindLayer);
 
     d3.select("#label_local_labs").html(translate.tr(lang, "Local labs"));
     d3.select("#label_wind_layer").html(translate.tr(lang, "Wind layer"));
 
-    switchLabLayer();
-    switchWindLayer();
+    // switchLabLayer();
+    // switchWindLayer();
     d3.select("#cb_labs").on("change", switchLabLayer);
     d3.select("#cb_wind").on("change", switchWindLayer);
 }

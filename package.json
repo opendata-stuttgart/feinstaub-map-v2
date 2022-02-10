@@ -42,10 +42,8 @@
     "d3-timer": "^2.0.0",
     "d3-transition": "^2.0.0",
     "leaflet": "^1.7.1",
-    "leaflet-geosearch": "^3.6.0",
     "leaflet-hash": "^0.2.1",
     "leaflet-velocity": "^1.9.2",
-    "leaflet.locatecontrol": "^0.76.0",
     "lodash": "^4.17.21",
     "whatwg-fetch": "^3.6.2"
   }
