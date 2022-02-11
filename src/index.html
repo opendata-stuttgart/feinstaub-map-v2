@@ -13,6 +13,7 @@
 <body>
 
 <div id="loading">Loading data...</div>
+<div id='map'></div>
 <div class="topItems">
     <div class="infoBubble" id='lastUpdate'></div>
     <div id="countries">
@@ -30,51 +31,6 @@
 </div>
 
 <button class="menuButton"><span id="menu"></span></button>
-
-<div id="modal">
-    <div id="table"></div>
-    <div id="mainContainer">
-        <div id="map-info"></div>
-        <ul class="layerSelect">
-            <li><a href="https://sensor.community/" target="_blank">Website
-                <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
-            </a></li>
-            <li><a href="https://forum.sensor.community/" target="_blank">Forum
-                <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
-            </a></li>
-            <li><span id="explanation"></span></li>
-        </ul>
-        <div id="custom-select" class="custom-select">
-            <label>
-                <select>
-                    <option value="Temperature"> Temperature</option>
-                    <option value="Humidity"> rel. Humidity</option>
-                    <option value="Pressure"> Pressure</option>
-                    <option value="Noise"> Noise</option>
-                    <option value="AQIus"> Official AQI US</option>
-                    <option value="PM10who"> PM10 (WHO, 1 h. mean)</option>
-                    <option value="PM25who"> PM2.5 (WHO, 1 h. mean)</option>
-                    <option value="PM10eu"> PM10 (EU, 1 h. mean)</option>
-                    <option value="PM25eu"> PM2.5 (EU, 1 h. mean)</option>
-                    <option value="PM10"> PM10 (5 min. mean)</option>
-                    <option value="PM25"> PM2.5 (5 min. mean)</option>
-                </select>
-            </label>
-        </div>
-
-        <ul class="layerSelect">
-            <li><input type="checkbox" id="cb_labs" checked="checked"/>
-                <label for="cb_labs" id="label_local_labs">Local labs</label></li>
-            <li><input type="checkbox" id="cb_wind" checked="checked"/>
-                <label for="cb_wind" id="label_wind_layer">Wind layer</label></li>
-        </ul>
-
-    </div>
-</div>
 <div id="legend">
     <div id="legend_PM10">
         <div class="legend">
@@ -231,6 +187,46 @@
         </div>
     </div>
 </div>
-<div id='map'></div>
+<div id="modal">
+    <div id="table"></div>
+    <div id="mainContainer">
+        <div id="map-info"></div>
+        <ul class="layerSelect">
+            <li><a href="https://sensor.community/" target="_blank">Website
+                <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+            </a></li>
+            <li><a href="https://forum.sensor.community/" target="_blank">Forum
+                <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+            </a></li>
+            <li><span id="explanation"></span></li>
+        </ul>
+        <div id="custom-select">
+            <select>
+                <option value="Temperature"> Temperature</option>
+                <option value="Humidity"> rel. Humidity</option>
+                <option value="Pressure"> Pressure</option>
+                <option value="Noise"> Noise</option>
+                <option value="AQIus"> AQI US</option>
+                <option value="PM10who"> PM10 (WHO, 1 h. mean)</option>
+                <option value="PM25who"> PM2.5 (WHO, 1 h. mean)</option>
+                <option value="PM10eu"> PM10 (EU, 1 h. mean)</option>
+                <option value="PM25eu"> PM2.5 (EU, 1 h. mean)</option>
+                <option value="PM10"> PM10 (5 min. mean)</option>
+                <option value="PM25"> PM2.5 (5 min. mean)</option>
+            </select>
+        </div>
+
+        <ul class="layerSelect">
+            <li><input type="checkbox" id="cb_labs" checked="checked"/>
+                <label for="cb_labs" id="label_local_labs">Local labs</label></li>
+            <li><input type="checkbox" id="cb_wind" checked="checked"/>
+                <label for="cb_wind" id="label_wind_layer">Wind layer</label></li>
+        </ul>
+    </div>
+</div>
 </body>
 </html>

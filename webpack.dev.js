@@ -7,6 +7,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+
 	// https://webpack.js.org/concepts/entry-points/#multi-page-application
 	entry: {
 		index: './src/js/index.js'
@@ -20,15 +21,14 @@ module.exports = {
 	optimization: {
 		minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
 		splitChunks: {
-			cacheGroups: {
-				d3: {
-					test: /[\\/]node_modules[\\/]d3.*[\\/]/,
-					name: 'd3',
-					filename: '[name].bundle.js',
-        			chunks: 'all',
-				}
-			}
-		}
+			chunks: "all",
+			maxInitialRequests: 6,
+		},
+	},
+	performance: {
+		hints: false,
+		maxEntrypointSize: 512000,
+		maxAssetSize: 512000
 	},
 	module:{
 		rules:[
@@ -52,7 +52,7 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.(txt)$/i, 
+				test: /\.(txt)$/i,
 				loader: "file-loader?name=/[name].[ext]"
 			}
 		]
@@ -63,7 +63,7 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			template: './src/index.html',
 			inject: true,
-//			chunks: ['index'],
+			chunks: ['index'],
 			filename: 'index.html'
 		}),
 		new MiniCssExtractPlugin({
@@ -73,6 +73,6 @@ module.exports = {
 	],
 	output: {
 		filename: 'main.js',
-		path: path.resolve(__dirname, 'dist')
+		path: path.resolve(__dirname, 'dist'),
 	}
 };

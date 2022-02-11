@@ -21,15 +21,14 @@ module.exports = {
 	optimization: {
 		minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
 		splitChunks: {
-			cacheGroups: {
-				d3: {
-					test: /[\\/]node_modules[\\/]d3.*[\\/]/,
-					name: 'd3',
-					filename: '[name].bundle.js',
-        			chunks: 'all',
-				}
-			}
-		}
+			chunks: "all",
+			maxInitialRequests: 6,
+		},
+	},
+	performance: {
+		hints: false,
+		maxEntrypointSize: 512000,
+		maxAssetSize: 512000
 	},
 	module:{
 		rules:[

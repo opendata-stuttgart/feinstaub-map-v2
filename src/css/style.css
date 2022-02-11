@@ -63,12 +63,10 @@ th {
 
 tr {
     border: 1px solid #858585;
-    font-weight: lighter;
     padding: 2px 0;
 }
 
 /* top items */
-
 .topItems {
     display: flex;
     flex-wrap: wrap;
@@ -208,27 +206,18 @@ tr {
     rotate: -45deg;
 }
 
-.custom-select {
-    color: #084945;
-    font-weight: bold;
-    font-size: 1.2rem;
-    display: block;
-    width: 100%;
-}
-
-.custom-select select {
+#custom-select select {
     display: none; /*hide original SELECT element:*/
 }
 
 /*style the items (options), including the selected item: */
 .select-items div {
     cursor: pointer;
-    user-select: none;
     padding: 0.8em;
     border-bottom: #E0E0E0 solid 1px;
 }
 
-.select-selected {
+.selected {
     background-color: #084945;
     color: white;
 }
@@ -420,6 +409,7 @@ tr {
     pointer-events: all;
 }
 
+/* colorize leaflet map */
 img.leaflet-tile {
     filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
     -webkit-filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
@@ -431,10 +421,6 @@ img.leaflet-tile {
 
 .idsens {
     cursor: pointer;
-}
-
-.hexbin-hexagon {
-    stroke-width: 0;
 }
 
 /* labs popup */

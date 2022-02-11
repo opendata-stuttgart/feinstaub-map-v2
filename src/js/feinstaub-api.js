@@ -119,6 +119,7 @@ let api = {
             return value;
         }
 
+        // Todo: download once and safe
         return fetch(URL)
             .then((resp) => resp.json())
             .then((json) => {
@@ -132,9 +133,12 @@ let api = {
                                 timestamp_data = values.timestamp;
                                 timestamp_from = "data.dust.min";
                             }
+                            const data_in = {
+                                PM10: parseInt(getRightValue(values.sensordatavalues, "P1")), PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
+                            }
                             return {
                                 data: {
-                                    PM10: parseInt(getRightValue(values.sensordatavalues, "P1")), PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
+                                    "PM10": data_in.PM10, "PM25": data_in.PM25
                                 },
                                 id: values.sensor.id,
                                 latitude: Number(values.location.latitude),
@@ -186,7 +190,7 @@ let api = {
                         })
                         .value();
                     return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-                } else if (vizType === "pmWHO") {
+                } else {
                     let cells = _.chain(json)
                         .filter((sensor) => typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.pm_sensors[sensor.sensor.sensor_type.name] && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P1")), "PM10") && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P2")), "PM25"))
                         .map((values) => {
@@ -195,74 +199,46 @@ let api = {
                                 timestamp_from = "data.24h"
                             }
                             const data_in = {
-                                "PM10": parseInt(getRightValue(values.sensordatavalues, "P1")), "PM25": parseInt(getRightValue(values.sensordatavalues, "P2"))
+                                PM10: parseInt(getRightValue(values.sensordatavalues, "P1")), PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
                             };
-                            return {
-                                "data": {
-                                    "PM10who": data_in.PM10, "PM25who": data_in.PM25,
-                                },
-                                "id": values.sensor.id,
-                                "latitude": values.location.latitude,
-                                "longitude": values.location.longitude,
-                                "indoor": values.location.indoor,
+                            if (vizType === "pmWHO") {
+                                return {
+                                    "data": {
+                                        "PM10who": data_in.PM10, "PM25who": data_in.PM25,
+                                    },
+                                    "id": values.sensor.id,
+                                    "latitude": values.location.latitude,
+                                    "longitude": values.location.longitude,
+                                    "indoor": values.location.indoor,
+                                }
+                            } else if (vizType === "aqi") {
+                                const data_out = api.officialAQIus(data_in);
+                                return {
+                                    "data": {
+                                        "AQIus": data_out.AQI, "origin": data_out.origin
+                                    },
+                                    "id": values.sensor.id,
+                                    "latitude": values.location.latitude,
+                                    "longitude": values.location.longitude,
+                                    "indoor": values.location.indoor,
+                                }
+                            } else {
+                                return {
+                                    "data": {
+                                        "PM10eu": data_in.PM10, "PM25eu": data_in.PM25,
+                                    },
+                                    "id": values.sensor.id,
+                                    "latitude": values.location.latitude,
+                                    "longitude": values.location.longitude,
+                                    "indoor": values.location.indoor,
+                                }
                             }
-                        })
-                        .value();
-                    return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-                } else if (vizType === "pmEU") {
-                    let cells = _.chain(json)
-                        .filter((sensor) => typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.pm_sensors[sensor.sensor.sensor_type.name] && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P1")), "PM10") && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P2")), "PM25"))
-                        .map((values) => {
-                            if (values.timestamp > timestamp_data) {
-                                timestamp_data = values.timestamp;
-                                timestamp_from = "data.24h"
-                            }
-                            const data_in = {
-                                "PM10": parseInt(getRightValue(values.sensordatavalues, "P1")), "PM25": parseInt(getRightValue(values.sensordatavalues, "P2"))
-                            };
-                            return {
-                                "data": {
-                                    "PM10eu": data_in.PM10, "PM25eu": data_in.PM25
-                                },
-                                "id": values.sensor.id,
-                                "latitude": values.location.latitude,
-                                "longitude": values.location.longitude,
-                                "indoor": values.location.indoor,
-                            }
-                        })
-                        .value();
-                    return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-                } else if (vizType === "aqi") {
-                    let cells = _.chain(json)
-                        .filter((sensor) => typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.pm_sensors[sensor.sensor.sensor_type.name])
-                        .map((values) => {
-                            if (values.timestamp > timestamp_data) {
-                                timestamp_data = values.timestamp;
-                                timestamp_from = "data.24h"
-                            }
-                            const data_in = {
-                                "PM10": parseInt(getRightValue(values.sensordatavalues, "P1")), "PM25": parseInt(getRightValue(values.sensordatavalues, "P2"))
-                            };
-                            const data_out = api.officialAQIus(data_in);
-                            return {
-                                "data": {
-                                    "AQIus": data_out.AQI, "origin": data_out.origin
-                                    // ,
-                                    // "PM10who": data_in.PM10, //24 hour average
-                                    // "PM25who": data_in.PM25 //24 hour average
-                                },
-                                "id": values.sensor.id,
-                                "latitude": values.location.latitude,
-                                "longitude": values.location.longitude,
-                                "indoor": values.location.indoor,
-                            }
-                        })
-                        .filter(function (values) {
-                            return (api.checkValues(values.data.AQIus, "AQIus"));
+
                         })
                         .value();
                     return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
                 }
+
             }).catch(function (error) {
                 // If there is any error you will catch them here
                 throw new Error(`Problems fetching data ${error}`)
