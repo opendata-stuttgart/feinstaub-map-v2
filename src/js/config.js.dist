@@ -10,7 +10,7 @@ module.exports = {
     "tiles_subdomains": ["osmc1", "osmc2", "osmc3"],
     "data_host": "https://maps.sensor.community",
     "attribution": "<a href='https://openstreetmap.org'>OpenStreetMap</a>",
-    "titles": {
+    "tableTitles": {
         "PM10": "PM10 &micro;g/m&sup3;",
         "PM25": "PM2.5 &micro;g/m&sup3;",
         "PM10eu": "PM10 &micro;g/m&sup3;",
@@ -21,6 +21,7 @@ module.exports = {
         "Humidity": "Humidity %",
         "Pressure": "Pressure hPa",
         "Noise": "Noise dBA",
+        "AQIus": "AQI",
     },
     "panelIDs": {
         "PM10": [2, 1],

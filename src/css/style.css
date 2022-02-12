@@ -206,10 +206,6 @@ tr {
     rotate: -45deg;
 }
 
-#custom-select select {
-    display: none; /*hide original SELECT element:*/
-}
-
 /*style the items (options), including the selected item: */
 .select-items div {
     cursor: pointer;
@@ -450,6 +446,7 @@ img.leaflet-tile {
 .labs_mastodon:before {
     content: url("../images/mastodon.svg");
 }
+
 
 .labs_meetup:before {
     content: url("../images/meetup.svg");

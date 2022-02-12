@@ -27,7 +27,6 @@ import * as translate from './translate.js';
 import '../images/labMarker.svg';
 import '../images/favicon.ico';
 import '../css/style.css';
-import {brussels} from "./places.js";
 
 let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise, hmhexaPM_WHO, hmhexaPM_EU, hmhexaTempHumPress;
 
@@ -407,8 +406,6 @@ window.onload = function () {
         } else {
             map.getPane('markerPane').style.visibility = "hidden";
         }
-        // document.getElementById("modal").style.display = "none";
-        // d3.select("#menu").html(d3.select(".selected").select("span").html());
     }
 
     function switchWindLayer() {
@@ -418,8 +415,6 @@ window.onload = function () {
         } else {
             d3.selectAll(".velocity-overlay").style("visibility", "hidden");
         }
-        // document.getElementById("modal").style.display = "none"; // ???
-        // d3.select("#menu").html(d3.select(".selected").select("span").html()); // ???
     }
 
     function switchLegend(val) {
@@ -467,7 +462,7 @@ window.onload = function () {
         const dateFormater = locale.format("%d.%m.%Y %H:%M");
 
         d3.select("#lastUpdate").html(translate.tr(lang, "Last update") + " " + dateFormater(newTime));
-        d3.select("#menu").html(d3.select(".selected").select("span").html());
+        d3.select("#menu").html(d3.select(".selected").html());
 
         if (vizType === "pmWHO" && (user_selected_value === "PM10who" || user_selected_value === "PM25who")) {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
@@ -516,12 +511,10 @@ window.onload = function () {
     }
 
     function sensorNr(data) {
-        // no graphs for AQI :(
         openMenu()
 
         document.getElementById("mainContainer").style.display = "none"; // hide menu content
-        let textefin = "<table id='results' style='width:95%;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, config.titles[user_selected_value]) + "</th></tr>";
-        1
+        let textefin = "<table id='results' style='width:95%;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, config.tableTitles[user_selected_value]) + "</th></tr>";
         if (data.length > 1) {
             textefin += "<tr><td class='idsens'>Median " + data.length + " Sens.</td><td>" + (isNaN(parseInt(data_median(data))) ? "-" : parseInt(data_median(data))) + "</td></tr>";
         }
@@ -543,7 +536,7 @@ window.onload = function () {
         textefin += "</table>";
         d3.select("#table").html(textefin)
         d3.selectAll(".idsens").on("click", function () {
-            displayGraph(d3.select(this).attr("id"));
+            displayGraph(d3.select(this).attr("id")); // transfer id e.g. id_67849
         });
     }
 
@@ -581,35 +574,23 @@ window.onload = function () {
         }
         return array;
     }
-
     function switchTo(element) {
         user_selected_value = element.getAttribute('value')
-        /*    if (user_selected_value === "Noise") {
-            custom_select.select(".selected").select("span").attr("id", "noise_option");
-        } else {
-            custom_select.select(".selected").select("span").attr("id", null);
-        }*/
         retrieveData(user_selected_value)
-        custom_select.select(".selected").attr("class", null); // remove class selected
-        element.setAttribute("class", "selected");
+        element.classList.remove("selected"); // remove class selected
+        element.classList.add("selected");
         closeMenu();
         setTimeout(function () {
             reloadMap(user_selected_value);
         }, 1500);
     }
 
-    // Todo: remove select-items because it duplicates the data
-    const custom_select = d3.select("#custom-select");
-    custom_select.append("div").attr("class", "select-items");
-    custom_select.select("select").selectAll("option").each(function () {
-        // Todo: get rid of span
-        custom_select.select(".select-items").append("div").html("<span>" + d3.select(this).html() + "</span>").attr("id", "select-item-" + this.value).attr("value", this.value).on("click", function () {
-            switchTo(this);
-        });
-    });
-    d3.select(".select-items").selectAll("div").each(function () {
-        if (this.getAttribute('value') === custom_select.select("select").select("option:checked").node().value) {
-            this.setAttribute("class", "selected");
+    d3.select(".select-items").selectAll("div").on("click", function () {
+        this.classList.remove("selected"); // remove class selected
+
+        if (this.getAttribute('value') !== d3.select(".selected").attr("value")) {
+            d3.select(".selected").attr("class", null);  // remove class selected
+            switchTo(this)
         }
     });
 
