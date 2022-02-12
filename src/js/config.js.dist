@@ -1,5 +1,5 @@
 module.exports = {
-    "initialView": [30, 15],
+    "initialView": [40, 15],
     "initialZoom": 3,
     "minZoom": 3,
     "maxZoom": 16,

@@ -80,8 +80,6 @@ if (location.hash) {
 
 window.onload = function () {
     // translate elements
-    d3.select("#menu").on("click", toggleMenu);
-
     d3.select("#world").html(translate.tr(lang, "World"));
     d3.select("#europe").html(translate.tr(lang, "Europe"));
     d3.select("#northamerica").html(translate.tr(lang, "North America"));
@@ -175,17 +173,7 @@ window.onload = function () {
 
             // Initial draw
             this.draw();
-        },
-
-        onRemove(map) {
-            if (this._container != null) this._container.remove();
-
-            // Remove events
-            map.off({'moveend': this._redraw}, this);
-            this._container = null;
-        },
-
-        addTo(map) {
+        }, addTo(map) {
             map.addLayer(this);
             return this;
         },
@@ -305,7 +293,6 @@ window.onload = function () {
     // pmWHO = PM10who PM25who
     // pmEU = PM10eu PM25eu
     function retrieveData(user_selected_value) {
-        // Todo: load data only when user calls for it
         if (["PM25who", "PM10who"].includes(user_selected_value)) {
             api.getData(config.data_host + "/data/v2/data.24h.json", 'pmWHO').then(function (result) {
                 hmhexaPM_WHO = result.cells;
@@ -393,66 +380,6 @@ window.onload = function () {
         return median(d_temp);
     }
 
-    function countrySelector() {
-        d3.select(".countrySelected").attr('class', 'countryButton');
-        d3.select(this).attr('class', 'countrySelected')
-        map.setView(places[this.value], zooms[this.value]);
-    }
-
-    function switchLabLayer() {
-        if (d3.select("#cb_labs").property("checked")) {
-            map.getPane('markerPane').style.visibility = "visible";
-            labs.getData(config.data_host + "/local-labs/labs.json", map);
-        } else {
-            map.getPane('markerPane').style.visibility = "hidden";
-        }
-    }
-
-    function switchWindLayer() {
-        if (d3.select("#cb_wind").property("checked")) {
-            d3.selectAll(".velocity-overlay").style("visibility", "visible");
-            wind.getData(config.data_host + "/data/v1/wind.json", map, switchWindLayer);
-        } else {
-            d3.selectAll(".velocity-overlay").style("visibility", "hidden");
-        }
-    }
-
-    function switchLegend(val) {
-        d3.select('#legend').selectAll("[id^=legend_]").style("display", "none");
-        d3.select('#legend_' + val).style("display", "block");
-    }
-
-    function openMenu() {
-        document.getElementById("menu").innerHTML = "&#10006;";
-        document.getElementById("modal").style.display = "block";
-        document.getElementById("mainContainer").style.display = "block";
-    }
-
-    function closeMenu() {
-        document.getElementById("modal").style.display = "none";
-        document.getElementById("mainContainer").style.display = "none";
-        d3.select("#results").remove()
-        closeExplanation()
-    }
-
-    function toggleMenu() {
-        (document.getElementById("modal").style.display === "block") ? closeMenu() : openMenu();
-    }
-
-    function openExplanation() {
-        document.getElementById("map-info").style.display = "block";
-        d3.select("#explanation").html(translate.tr(lang, "Hide"));
-    }
-
-    function closeExplanation() {
-        document.getElementById("map-info").style.display = "none";
-        d3.select("#explanation").html(translate.tr(lang, "Explanation"));
-    }
-
-    function toggleExplanation() {
-        (document.getElementById("map-info").style.display === "block") ? closeExplanation() : openExplanation();
-    }
-
     function ready(vizType) {
         const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
         const timestamp = dateParser(timestamp_data);
@@ -490,8 +417,6 @@ window.onload = function () {
 
     function reloadMap(val) {
         d3.selectAll('path.hexbin-hexagon').remove();
-        switchLegend(val);
-
         hexagonheatmap.initialize(config.scale_options[val]);
         if (val === "PM10" || val === "PM25") {
             hexagonheatmap.data(hmhexaPM_aktuell);
@@ -508,6 +433,7 @@ window.onload = function () {
         } else if (val === "Noise") {
             hexagonheatmap.data(hmhexa_noise);
         }
+        switchLegend(val);
     }
 
     function sensorNr(data) {
@@ -552,7 +478,6 @@ window.onload = function () {
             const iddiv = "#graph_" + sens_id;
 
             d3.select(iddiv).append("td")
-                .attr("id", "frame_" + sens_id)
                 .attr("colspan", "2")
                 .html((config.panelIDs[user_selected_value][0] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][0]).replace("<SENSOR>", sens_id) + "<br/>" : "") + (config.panelIDs[user_selected_value][1] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][1]).replace("<SENSOR>", sens_id) : ""));
 
@@ -574,25 +499,90 @@ window.onload = function () {
         }
         return array;
     }
+
     function switchTo(element) {
         user_selected_value = element.getAttribute('value')
         retrieveData(user_selected_value)
         element.classList.remove("selected"); // remove class selected
         element.classList.add("selected");
         closeMenu();
+        // todo use promise
         setTimeout(function () {
             reloadMap(user_selected_value);
         }, 1500);
     }
 
     d3.select(".select-items").selectAll("div").on("click", function () {
-        this.classList.remove("selected"); // remove class selected
-
         if (this.getAttribute('value') !== d3.select(".selected").attr("value")) {
             d3.select(".selected").attr("class", null);  // remove class selected
             switchTo(this)
         }
     });
+
+    function countrySelector() {
+        d3.select(".countrySelected").attr('class', 'countryButton');
+        d3.select(this).attr('class', 'countrySelected')
+        map.setView(places[this.value], zooms[this.value]);
+    }
+
+    function switchLabLayer() {
+        if (d3.select("#cb_labs").property("checked")) {
+            labs.getData(config.data_host + "/local-labs/labs.json", map);
+            map.getPane('markerPane').style.visibility = "visible";
+            closeMenu()
+        } else {
+            map.getPane('markerPane').style.visibility = "hidden";
+        }
+    }
+
+    function switchWindLayer() {
+        if (d3.select("#cb_wind").property("checked")) {
+            wind.getData(config.data_host + "/data/v1/wind.json", map, switchWindLayer);
+            d3.selectAll(".velocity-overlay").style("visibility", "visible");
+            closeMenu()
+        } else {
+            d3.selectAll(".velocity-overlay").style("visibility", "hidden");
+        }
+    }
+
+    function switchLegend(val) {
+        d3.select('#legend').selectAll("[id^=legend_]").style("display", "none");
+        d3.select('#legend_' + val).style("display", "block");
+    }
+
+    function openMenu() {
+        document.getElementById("menu").innerHTML = "&#10006;";
+        document.getElementById("modal").style.display = "block";
+        document.getElementById("mainContainer").style.display = "block";
+    }
+
+    function closeMenu() {
+        document.getElementById("modal").style.display = "none";
+        document.getElementById("mainContainer").style.display = "none";
+        closeExplanation()
+        d3.select("#menu").html(d3.select(".selected").html());
+        d3.select("#results").remove()
+    }
+
+    function toggleMenu() {
+        (document.getElementById("modal").style.display === "block") ? closeMenu() : openMenu();
+    }
+
+    function openExplanation() {
+        document.getElementById("map-info").style.display = "block";
+        d3.select("#explanation").html(translate.tr(lang, "Hide"));
+    }
+
+    function closeExplanation() {
+        document.getElementById("map-info").style.display = "none";
+        d3.select("#explanation").html(translate.tr(lang, "Explanation"));
+    }
+
+    function toggleExplanation() {
+        (document.getElementById("map-info").style.display === "block") ? closeExplanation() : openExplanation();
+    }
+
+    d3.select("#menu").on("click", toggleMenu);
 
     // Load lab and windlayer, init checkboxes
     d3.select("#cb_labs").property("checked", false);

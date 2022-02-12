@@ -36,5 +36,4 @@ let wind = {
     }
 }
 
-
 export default wind
