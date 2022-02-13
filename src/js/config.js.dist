@@ -3,8 +3,7 @@ module.exports = {
     "initialZoom": 3,
     "minZoom": 3,
     "maxZoom": 16,
-    "selection": "PM25", // sensor shown at start, possible values: PM10, PM25, AQIus, Temperature, Humidity, Pressure, Noise
-    "sensor": "PM25",
+    "sensor": "PM25", // sensor shown at start, possible values: PM10, PM25, AQIus, Temperature, Humidity, Pressure, Noise
     "tiles_server": "https://{s}.maps.sensor.community",
     "tiles_path": "/{z}/{x}/{y}.png",
     "tiles_subdomains": ["osmc1", "osmc2", "osmc3"],

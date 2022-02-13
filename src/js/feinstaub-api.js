@@ -1,11 +1,6 @@
 import _ from 'lodash'
 import 'whatwg-fetch'
 
-let pmDataRetrieved = null
-let pmData24hRetrieved = null
-let tempHumPressDataRetrieved = null
-let pmNoiseDataRetrieved = null
-
 let api = {
     pm_sensors: {
         "SDS011": true, "SDS021": true, "PMS1003": true, "PMS3003": true, "PMS5003": true, "PMS6003": true, "PMS7003": true, "HPM": true, "SPS30": true,
@@ -124,135 +119,113 @@ let api = {
             return value;
         }
 
-        if (!pmDataRetrieved || !pmData24hRetrieved || !tempHumPressDataRetrieved || !pmNoiseDataRetrieved) {
-            return fetch(URL)
-                .then((resp) => resp.json())
-                .then((json) => {
-                    let timestamp_data = '';
-                    let timestamp_from = '';
-                    if (vizType === "pmDefault") {
-                        let cells = _.chain(json)
-                            .filter((sensor) => typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.pm_sensors[sensor.sensor.sensor_type.name] && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P1")), "PM10") && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P2")), "PM25"))
-                            .map((values) => {
-                                if (values.timestamp > timestamp_data) {
-                                    timestamp_data = values.timestamp;
-                                    timestamp_from = "data.dust.min";
-                                }
-                                const data_in = {
-                                    PM10: parseInt(getRightValue(values.sensordatavalues, "P1")), PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
-                                }
-                                pmDataRetrieved = true
-                                return {
-                                    data: {
-                                        "PM10": data_in.PM10, "PM25": data_in.PM25
-                                    },
-                                    id: values.sensor.id,
-                                    latitude: Number(values.location.latitude),
-                                    longitude: Number(values.location.longitude),
-                                    indoor: values.location.indoor,
-                                }
-                            })
-                            .value();
-                        return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-                    } else if (vizType === "tempHumPress") {
-                        let cells = _.chain(json)
-                            .filter((sensor) => typeof api.thp_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.thp_sensors[sensor.sensor.sensor_type.name])
-                            .map((values) => {
-                                if (values.timestamp > timestamp_data) {
-                                    timestamp_data = values.timestamp;
-                                    timestamp_from = "data.temp.min";
-                                }
-                                tempHumPressDataRetrieved = true
-                                return {
-                                    data: {
-                                        Pressure: parseInt(getRightValue(values.sensordatavalues, "pressure_at_sealevel")) / 100,
-                                        Humidity: parseInt(getRightValue(values.sensordatavalues, "humidity")),
-                                        Temperature: parseInt(getRightValue(values.sensordatavalues, "temperature"))
-                                    },
-                                    id: values.sensor.id,
-                                    latitude: values.location.latitude,
-                                    longitude: values.location.longitude,
-                                    indoor: values.location.indoor,
-                                }
-                            })
-                            .value();
-                        return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-                    } else if (vizType === "noise") {
-                        let cells = _.chain(json)
-                            .filter((sensor) => typeof api.noise_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.noise_sensors[sensor.sensor.sensor_type.name])
-                            .map((values) => {
-                                if (values.timestamp > timestamp_data) {
-                                    timestamp_data = values.timestamp;
-                                    timestamp_from = "data.noise";
-                                }
-                                pmNoiseDataRetrieved = true
-                                return {
-                                    data: {
-                                        Noise: parseInt(getRightValue(values.sensordatavalues, "noise_LAeq")),
-                                    },
-                                    id: values.sensor.id,
-                                    latitude: values.location.latitude,
-                                    longitude: values.location.longitude,
-                                    indoor: values.location.indoor,
-                                }
-                            })
-                            .value();
-                        return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-                    } else {
-                        let cells = _.chain(json)
-                            .filter((sensor) => typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.pm_sensors[sensor.sensor.sensor_type.name] && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P1")), "PM10") && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P2")), "PM25"))
-                            .map((values) => {
-                                if (values.timestamp > timestamp_data) {
-                                    timestamp_data = values.timestamp;
-                                    timestamp_from = "data.24h"
-                                }
-                                const data_in = {
-                                    PM10: parseInt(getRightValue(values.sensordatavalues, "P1")), PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
-                                };
-                                pmData24hRetrieved = true
-                                if (vizType === "pmWHO") {
-                                    return {
-                                        data: {
-                                            PM10who: data_in.PM10, "PM25who": data_in.PM25,
-                                        },
-                                        id: values.sensor.id,
-                                        latitude: values.location.latitude,
-                                        longitude: values.location.longitude,
-                                        indoor: values.location.indoor,
-                                    }
-                                } else if (vizType === "aqi") {
-                                    const data_out = api.officialAQIus(data_in);
-                                    return {
-                                        data: {
-                                            AQIus: data_out.AQI, "origin": data_out.origin
-                                        },
-                                        id: values.sensor.id,
-                                        latitude: values.location.latitude,
-                                        longitude: values.location.longitude,
-                                        indoor: values.location.indoor,
-                                    }
-                                } else {
-                                    return {
-                                        data: {
-                                            PM10eu: data_in.PM10, "PM25eu": data_in.PM25,
-                                        },
-                                        id: values.sensor.id,
-                                        latitude: values.location.latitude,
-                                        longitude: values.location.longitude,
-                                        indoor: values.location.indoor,
-                                    }
-                                }
+        return fetch(URL)
+            .then((resp) => resp.json())
+            .then((json) => {
+                let timestamp_data = '';
+                let timestamp_from = '';
+                if (vizType === "pmDefault") {
+                    let cells = _.chain(json)
+                        .filter((sensor) => typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.pm_sensors[sensor.sensor.sensor_type.name] && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P1")), "PM10") && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P2")), "PM25"))
+                        .map((values) => {
+                            if (values.timestamp > timestamp_data) {
+                                timestamp_data = values.timestamp;
+                                timestamp_from = "data.dust.min";
+                            }
+                            const data_in = {
+                                PM10: parseInt(getRightValue(values.sensordatavalues, "P1")), PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
+                            }
+                            return {
+                                data: {
+                                    "PM10": data_in.PM10, "PM25": data_in.PM25
+                                },
+                                id: values.sensor.id,
+                                latitude: Number(values.location.latitude),
+                                longitude: Number(values.location.longitude),
+                                indoor: values.location.indoor,
+                            }
+                        })
+                        .value();
+                    return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
+                } else if (vizType === "tempHumPress") {
+                    let cells = _.chain(json)
+                        .filter((sensor) => typeof api.thp_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.thp_sensors[sensor.sensor.sensor_type.name])
+                        .map((values) => {
+                            if (values.timestamp > timestamp_data) {
+                                timestamp_data = values.timestamp;
+                                timestamp_from = "data.temp.min";
+                            }
+                            return {
+                                data: {
+                                    Pressure: parseInt(getRightValue(values.sensordatavalues, "pressure_at_sealevel")) / 100,
+                                    Humidity: parseInt(getRightValue(values.sensordatavalues, "humidity")),
+                                    Temperature: parseInt(getRightValue(values.sensordatavalues, "temperature"))
+                                },
+                                id: values.sensor.id,
+                                latitude: values.location.latitude,
+                                longitude: values.location.longitude,
+                                indoor: values.location.indoor,
+                            }
+                        })
+                        .value();
+                    return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
+                } else if (vizType === "noise") {
+                    let cells = _.chain(json)
+                        .filter((sensor) => typeof api.noise_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.noise_sensors[sensor.sensor.sensor_type.name])
+                        .map((values) => {
+                            if (values.timestamp > timestamp_data) {
+                                timestamp_data = values.timestamp;
+                                timestamp_from = "data.noise";
+                            }
+                            return {
+                                data: {
+                                    Noise: parseInt(getRightValue(values.sensordatavalues, "noise_LAeq")),
+                                },
+                                id: values.sensor.id,
+                                latitude: values.location.latitude,
+                                longitude: values.location.longitude,
+                                indoor: values.location.indoor,
+                            }
+                        })
+                        .value();
+                    return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
+                } else {
+                    let cells = _.chain(json)
+                        .filter((sensor) => typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.pm_sensors[sensor.sensor.sensor_type.name] && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P1")), "PM10") && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P2")), "PM25"))
+                        .map((values) => {
+                            if (values.timestamp > timestamp_data) {
+                                timestamp_data = values.timestamp;
+                                timestamp_from = "data.24h"
+                            }
+                            const data_in = {
+                                PM10: parseInt(getRightValue(values.sensordatavalues, "P1")), PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
+                            };
 
-                            })
-                            .value();
-                        return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
-                    }
+                            const data_out = api.officialAQIus(data_in);
 
-                }).catch(function (error) {
-                    // If there is any error you will catch them here
-                    throw new Error(`Problems fetching data ${error}`)
-                });
-        }
+                            return {
+                                data: {
+                                    PM10who: data_in.PM10,
+                                    "PM25who": data_in.PM25,
+                                    AQIus: data_out.AQI,
+                                    "origin": data_out.origin,
+                                    PM10eu: data_in.PM10,
+                                    "PM25eu": data_in.PM25
+                                },
+                                id: values.sensor.id,
+                                latitude: values.location.latitude,
+                                longitude: values.location.longitude,
+                                indoor: values.location.indoor,
+                            }
+                        })
+                        .value();
+                    return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
+                }
+
+            }).catch(function (error) {
+                // If there is any error you will catch them here
+                throw new Error(`Problems fetching data ${error}`)
+            });
     }
 };
 

@@ -35,11 +35,17 @@ let openedGraph1 = [];
 let timestamp_data = '';			// needs to be global to work over all 4 data streams
 let timestamp_from = '';			// needs to be global to work over all 4 data streams
 let clicked = null;
-let user_selected_value = config.selection;
+let user_selected_value = config.sensor;
 let coordsCenter = config.initialView;
 let zoomLevel = config.initialZoom;
 const locale = timeFormatLocale(config.locale);
 const map = L.map("map", {preferCanvas: true, zoomControl: false, controls: false}).setView(config.initialView, config.initialZoom);
+let windLayerRetrieved = false
+let labsLayerRetrieved = false
+let pmDataRetrieved = false
+let pmData24hRetrieved = false
+let tempHumPressDataRetrieved = false
+let noiseDataRetrieved = false
 
 config.tiles = config.tiles_server + config.tiles_path;
 L.tileLayer(config.tiles, {
@@ -50,12 +56,11 @@ new L.Hash(map);
 
 // iife function to read query parameter from URL
 (function () {
-    let telem;
+    let query_value;
     const search_values = location.search.replace('\?', '').split('&');
     for (let i = 0; i < search_values.length; i++) {
-        telem = search_values[i].split('=');
-        config[telem[0]] = '';
-        if (typeof telem[1] != 'undefined') config[telem[0]] = telem[1];
+        query_value = search_values[i].split('=');
+        if (typeof query_value[0] != 'sensor' && undefined) user_selected_value = query_value[1];
     }
 })();
 
@@ -79,17 +84,6 @@ if (location.hash) {
 }
 
 window.onload = function () {
-    // translate elements
-    d3.select("#world").html(translate.tr(lang, "World"));
-    d3.select("#europe").html(translate.tr(lang, "Europe"));
-    d3.select("#northamerica").html(translate.tr(lang, "North America"));
-    d3.select("#southamerica").html(translate.tr(lang, "South America"));
-    d3.select("#asia").html(translate.tr(lang, "Asia"));
-    d3.select("#africa").html(translate.tr(lang, "Africa"));
-    d3.select("#oceania").html(translate.tr(lang, "Oceania"));
-
-    d3.selectAll(".selectCountry").selectAll("button").on("click", countrySelector);
-
     L.HexbinLayer = L.Layer.extend({
         _undef(a) {
             return typeof a === 'undefined';
@@ -292,103 +286,69 @@ window.onload = function () {
     // noise = Noise
     // pmWHO = PM10who PM25who
     // pmEU = PM10eu PM25eu
-    function retrieveData(user_selected_value) {
-        if (["PM25who", "PM10who"].includes(user_selected_value)) {
-            api.getData(config.data_host + "/data/v2/data.24h.json", 'pmWHO').then(function (result) {
-                hmhexaPM_WHO = result.cells;
-                if (result.timestamp > timestamp_data) {
-                    timestamp_data = result.timestamp;
-                    timestamp_from = result.timestamp_from;
-                }
-                ready("pmWHO");
-            });
-        }
-        if (["PM25eu", "PM10eu"].includes(user_selected_value)) {
-            api.getData(config.data_host + "/data/v2/data.24h.json", 'pmEU').then(function (result) {
-                hmhexaPM_EU = result.cells;
-                if (result.timestamp > timestamp_data) {
-                    timestamp_data = result.timestamp;
-                    timestamp_from = result.timestamp_from;
-                }
-                ready("pmEU");
-            });
-        }
-        if (user_selected_value === "AQIus") {
-            api.getData(config.data_host + "/data/v2/data.24h.json", 'aqi').then(function (result) {
-                hmhexaPM_AQI = result.cells;
-                if (result.timestamp > timestamp_data) {
-                    timestamp_data = result.timestamp;
-                    timestamp_from = result.timestamp_from;
-                }
-                ready("aqi");
-            });
-        }
-        if (["Temperature", "Humidity", "Pressure"].includes(user_selected_value)) {
-            api.getData(config.data_host + "/data/v2/data.temp.min.json", 'tempHumPress').then(function (result) {
-                hmhexa_t_h_p = result.cells;
-                if (result.timestamp > timestamp_data) {
-                    timestamp_data = result.timestamp;
-                    timestamp_from = result.timestamp_from;
-                }
-                ready("tempHumPress");
-            });
-        }
-        if (user_selected_value === "Noise") {
-            api.getData(config.data_host + "/data/v1/data.noise.json", 'noise').then(function (result) {
-                hmhexa_noise = result.cells;
-                if (result.timestamp > timestamp_data) {
-                    timestamp_data = result.timestamp;
-                    timestamp_from = result.timestamp_from;
-                }
-                ready("noise");
-            });
-        } else {
+    async function retrieveData(user_selected_value) {
+        if (["PM25", "PM10", undefined].includes(user_selected_value) && !pmDataRetrieved) {
             api.getData(config.data_host + "/data/v2/data.dust.min.json", 'pmDefault').then(function (result) {
                 hmhexaPM_aktuell = result.cells;
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
                 }
-                ready("pmDefault");
+                ready("pmDefault")
+                pmDataRetrieved = true
+            });
+        }
+        if (["PM25who", "PM10who", "PM25eu", "PM10eu", "AQIus"].includes(user_selected_value) && !pmData24hRetrieved) {
+            api.getData(config.data_host + "/data/v2/data.24h.json").then(function (result) {
+                hmhexaPM_WHO = result.cells;
+                hmhexaPM_EU = result.cells;
+                hmhexaPM_AQI = result.cells;
+
+                if (result.timestamp > timestamp_data) {
+                    timestamp_data = result.timestamp;
+                    timestamp_from = result.timestamp_from;
+                }
+                ready("pmWHO")
+                ready("pmEU")
+                ready("aqi")
+                pmData24hRetrieved = true
+            });
+        }
+        if (["Temperature", "Humidity", "Pressure"].includes(user_selected_value) && !tempHumPressDataRetrieved) {
+            api.getData(config.data_host + "/data/v2/data.temp.min.json", 'tempHumPress').then(function (result) {
+                hmhexa_t_h_p = result.cells;
+                if (result.timestamp > timestamp_data) {
+                    timestamp_data = result.timestamp;
+                    timestamp_from = result.timestamp_from;
+                }
+                ready("tempHumPress")
+                tempHumPressDataRetrieved = true
+            });
+        }
+        if (user_selected_value === "Noise" && !noiseDataRetrieved) {
+            api.getData(config.data_host + "/data/v1/data.noise.json", 'noise').then(function (result) {
+                hmhexa_noise = result.cells;
+                if (result.timestamp > timestamp_data) {
+                    timestamp_data = result.timestamp;
+                    timestamp_from = result.timestamp_from;
+                }
+                ready("noise")
+                noiseDataRetrieved = true
             });
         }
     }
 
-    retrieveData();
-
-    map.on('moveend', function () {
-        hexagonheatmap._zoomChange();
-    });
-
-    map.on('click', function () {
-        clicked = null;
-    });
-    map.on('dblclick', function () {
-        map.zoomIn();
-        clicked += 1;
-    });
-
-    function data_median(data) {
-        function sort_num(a, b) {
-            let c = a - b;
-            return (c < 0 ? -1 : (c = 0 ? 0 : 1));
-        }
-
-        let d_temp = data.filter(d => !d.o.indoor)
-            .map(o => o.o.data[user_selected_value])
-            .sort(sort_num);
-        return median(d_temp);
-    }
+    var offset = function(date, step) {
+        return (date = new Date(+date), step == null ? 1 : Math.floor(step));
+    };
 
     function ready(vizType) {
-        const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
-        const timestamp = dateParser(timestamp_data);
         const localTime = new Date();
-        const timeOffset = localTime.getTimezoneOffset();
-        const newTime = timeMinute.offset(timestamp, -(timeOffset));
+        const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
+        const lastUpdateTimestamp = timeMinute.offset(dateParser(timestamp_data), -(localTime.getTimezoneOffset()));
         const dateFormater = locale.format("%d.%m.%Y %H:%M");
 
-        d3.select("#lastUpdate").html(translate.tr(lang, "Last update") + " " + dateFormater(newTime));
+        d3.select("#lastUpdate").html(translate.tr(lang, "Last update") + " " + dateFormater(lastUpdateTimestamp));
         d3.select("#menu").html(d3.select(".selected").html());
 
         if (vizType === "pmWHO" && (user_selected_value === "PM10who" || user_selected_value === "PM25who")) {
@@ -413,6 +373,30 @@ window.onload = function () {
             hexagonheatmap.data(hmhexaPM_aktuell);
         }
         d3.select("#loading").style("display", "none");
+    }
+
+    map.on('moveend', function () {
+        hexagonheatmap._zoomChange();
+    });
+
+    map.on('click', function () {
+        clicked = null;
+    });
+    map.on('dblclick', function () {
+        map.zoomIn();
+        clicked += 1;
+    });
+
+    function data_median(data) {
+        function sort_num(a, b) {
+            let c = a - b;
+            return (c < 0 ? -1 : (c = 0 ? 0 : 1));
+        }
+
+        let d_temp = data.filter(d => !d.o.indoor)
+            .map(o => o.o.data[user_selected_value])
+            .sort(sort_num);
+        return median(d_temp);
     }
 
     function reloadMap(val) {
@@ -500,24 +484,16 @@ window.onload = function () {
         return array;
     }
 
-    function switchTo(element) {
-        user_selected_value = element.getAttribute('value')
-        retrieveData(user_selected_value)
-        element.classList.remove("selected"); // remove class selected
-        element.classList.add("selected");
-        closeMenu();
-        // todo use promise
-        setTimeout(function () {
+    function switchTo(user_selected_value) {
+        let elem = document.querySelector(`div[value='${user_selected_value}']`)
+        document.querySelector('.selected').classList.remove("selected"); // remove class selected
+        elem.classList.add("selected");
+        retrieveData(user_selected_value).then(r => setTimeout(function () {
             reloadMap(user_selected_value);
-        }, 1500);
+        }, 1500))
     }
 
-    d3.select(".select-items").selectAll("div").on("click", function () {
-        if (this.getAttribute('value') !== d3.select(".selected").attr("value")) {
-            d3.select(".selected").attr("class", null);  // remove class selected
-            switchTo(this)
-        }
-    });
+    switchTo(user_selected_value)
 
     function countrySelector() {
         d3.select(".countrySelected").attr('class', 'countryButton');
@@ -529,7 +505,6 @@ window.onload = function () {
         if (d3.select("#cb_labs").property("checked")) {
             labs.getData(config.data_host + "/local-labs/labs.json", map);
             map.getPane('markerPane').style.visibility = "visible";
-            closeMenu()
         } else {
             map.getPane('markerPane').style.visibility = "hidden";
         }
@@ -539,7 +514,6 @@ window.onload = function () {
         if (d3.select("#cb_wind").property("checked")) {
             wind.getData(config.data_host + "/data/v1/wind.json", map, switchWindLayer);
             d3.selectAll(".velocity-overlay").style("visibility", "visible");
-            closeMenu()
         } else {
             d3.selectAll(".velocity-overlay").style("visibility", "hidden");
         }
@@ -585,14 +559,14 @@ window.onload = function () {
     d3.select("#menu").on("click", toggleMenu);
 
     // Load lab and windlayer, init checkboxes
-    d3.select("#cb_labs").property("checked", false);
-    d3.select("#cb_wind").property("checked", false);
+    document.querySelector("#cb_labs").checked = false;
+    document.querySelector("#cb_wind").checked = false;
 
     d3.select("#label_local_labs").html(translate.tr(lang, "Local labs"));
     d3.select("#label_wind_layer").html(translate.tr(lang, "Wind layer"));
 
-    d3.select("#cb_labs").on("change", switchLabLayer);
-    d3.select("#cb_wind").on("change", switchWindLayer);
+    document.querySelector("#cb_labs").addEventListener("change", switchLabLayer);
+    document.querySelector("#cb_wind").addEventListener("change", switchWindLayer);
 
     // translate AQI values
     d3.select("#AQI_Good").html(" " + translate.tr(lang, "Good"));
@@ -606,17 +580,33 @@ window.onload = function () {
     d3.select("#website").html(translate.tr(lang, "Website"));
     d3.select("#forum").html(translate.tr(lang, "Forum"));
     d3.select("#explanation").on("click", toggleExplanation).html(translate.tr(lang, 'Explanation'));
-
     d3.select('#map-info').html(translate.tr(lang, "<p>The hexagons represent the median of the current sensor values included in this area, depending on you selected option (PM2.5, temperature,...).</p> \
 <p>A hexagon will display a list of the corresponding sensors as a table. The first row will show you the amount of sensor and the median value.</p> \
 <p>The plus symbol will display <i>individual measurements of the last 24 hours</i> and a <i>24 hours moving average for the last seven days</i>. </br> Due to technical reasons, the first day is blank.</p> \
 <p>Map values are <strong>refreshed every 5 minutes</strong> to fit with the measurement frequency of the multiple airRohr sensors.</p>"));
 
-    // refresh data every 5 minutes
+// refresh data every 5 minutes
     setInterval(function () {
         d3.selectAll('path.hexbin-hexagon').remove();
-        retrieveData();
+        windLayerRetrieved = labsLayerRetrieved = pmDataRetrieved = pmData24hRetrieved = tempHumPressDataRetrieved = noiseDataRetrieved = false
+        retrieveData(user_selected_value)
     }, 300000);
 
-    switchLegend(user_selected_value);
+    // translate elements
+    d3.select("#world").html(translate.tr(lang, "World"));
+    d3.select("#europe").html(translate.tr(lang, "Europe"));
+    d3.select("#northamerica").html(translate.tr(lang, "North America"));
+    d3.select("#southamerica").html(translate.tr(lang, "South America"));
+    d3.select("#asia").html(translate.tr(lang, "Asia"));
+    d3.select("#africa").html(translate.tr(lang, "Africa"));
+    d3.select("#oceania").html(translate.tr(lang, "Oceania"));
+
+    d3.selectAll(".selectCountry").selectAll("button").on("click", countrySelector);
+
+    d3.select(".select-items").selectAll("div").on("click", function () {
+        user_selected_value = this.getAttribute('value')
+        if (user_selected_value !== d3.select(".selected").attr("value")) {
+            switchTo(user_selected_value)
+        }
+    });
 }

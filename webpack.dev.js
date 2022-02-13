@@ -20,22 +20,6 @@ module.exports = {
 	},
 	optimization: {
 		minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
-		/*		splitChunks: {
-                    cacheGroups: {
-                        d3: {
-                            test: /[\\/]node_modules[\\/]d3.*[\\/]/,
-                            name: 'd3',
-                            filename: '[name].bundle.js',
-                            chunks: 'all',
-                        },
-                        leaflet: {
-                            test: /[\\/]node_modules[\\/]leaflet.*[\\/]/,
-                            name: 'leaflet',
-                            filename: '[name].bundle.js',
-                            chunks: 'all',
-                        }
-                    }
-                } */
 	},
 	module:{
 		rules:[
@@ -47,11 +31,6 @@ module.exports = {
 				test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
 				include: /node_modules/,
 				use: ['file-loader']
-			},
-			{
-				test: /\.(jpe?g|png|gif|svg|ico|xml|webmanifest)$/i,
-				include: /favicons/,
-				loader: "file-loader?name=/favicons/[name].[ext]"
 			},
 			{
 				test: /\.(jpe?g|png|gif|svg|ico|xml|webmanifest)$/i,
@@ -75,7 +54,6 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			template: './src/index.html',
 			inject: true,
-//			chunks: ['index'],
 			filename: 'index.html'
 		}),
 		new MiniCssExtractPlugin({

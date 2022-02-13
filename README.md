@@ -76,11 +76,7 @@ http://127.0.0.1:8080/?sensor=Noise
 valid parameters zoom level, lat and long 
 http://127.0.0.1:8080/#9/48.8123/9.2487
 
-### Layer Wind and Labs
-valid sensor parameters layer_wind and/or layer_labs, this will prevent showing one of those layers
-http://127.0.0.1:8080/?layer_labs
-
 ### combine parameters
 first start with sensor, then layers and finally location
-http://127.0.0.1:8080/?sensor=Noise&layer_wind=false#3/48.8123/9.2487
+http://127.0.0.1:8080/?sensor=Noise#3/48.8123/9.2487
 
