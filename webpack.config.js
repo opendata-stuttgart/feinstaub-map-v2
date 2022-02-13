@@ -18,13 +18,19 @@ module.exports = {
         host: '127.0.0.1', port: 8080
     }, optimization: {
         minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})], splitChunks: {
-            chunks: "all"
-        },
+            cacheGroups: {
+                d3: {
+                    test: /[\\/]node_modules[\\/]d3.*[\\/]/, name: 'd3', filename: '[name].bundle.js', chunks: 'all',
+                }
+            }
+        }
     }, module: {
         rules: [{
             test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader'],
         }, {
             test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/, include: /node_modules/, use: ['file-loader']
+        }, {
+            test: /\.(jpe?g|png|gif|svg|ico|xml|webmanifest)$/i, include: /favicons/, loader: "file-loader?name=/favicons/[name].[ext]"
         }, {
             test: /\.(jpe?g|png|gif|svg|ico|xml|webmanifest)$/i, include: /images/, loader: "file-loader", options: {
                 outputPath: 'images/', publicPath: 'images/', name: '[name].[ext]'
@@ -36,10 +42,11 @@ module.exports = {
 
     // https://webpack.js.org/concepts/plugins/
     plugins: [new HtmlWebpackPlugin({
-        template: './src/index.html', inject: true, chunks: ['index'], filename: 'index.html'
+        template: './src/index.html', inject: true, //			chunks: ['index'],
+        filename: 'index.html'
     }), new MiniCssExtractPlugin({
         filename: '[name].css', chunkFilename: '[name].css',
     }),], output: {
-        filename: '[name].js', path: path.resolve(__dirname, 'dist')
+        filename: 'main.js', path: path.resolve(__dirname, 'dist')
     }
 };

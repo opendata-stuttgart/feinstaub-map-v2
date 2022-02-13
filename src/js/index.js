@@ -9,7 +9,6 @@ import * as d3_Selection from 'd3-selection';
 import * as d3_Transition from "d3-transition";
 import {scaleLinear} from 'd3-scale';
 import {geoPath, geoTransform} from 'd3-geo';
-import {timeMinute} from 'd3-time';
 import {timeFormatLocale, timeParse} from 'd3-time-format';
 import {median} from 'd3-array';
 import 'whatwg-fetch';
@@ -338,14 +337,12 @@ window.onload = function () {
         }
     }
 
-    var offset = function(date, step) {
-        return (date = new Date(+date), step == null ? 1 : Math.floor(step));
-    };
-
     function ready(vizType) {
-        const localTime = new Date();
+        const date = new Date()
         const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
-        const lastUpdateTimestamp = timeMinute.offset(dateParser(timestamp_data), -(localTime.getTimezoneOffset()));
+        const getOffsetHours = date.getTimezoneOffset()*60000
+        const logTimestamp = dateParser(timestamp_data).getTime()
+        const lastUpdateTimestamp = logTimestamp+(-getOffsetHours)
         const dateFormater = locale.format("%d.%m.%Y %H:%M");
 
         d3.select("#lastUpdate").html(translate.tr(lang, "Last update") + " " + dateFormater(lastUpdateTimestamp));
@@ -488,6 +485,7 @@ window.onload = function () {
         let elem = document.querySelector(`div[value='${user_selected_value}']`)
         document.querySelector('.selected').classList.remove("selected"); // remove class selected
         elem.classList.add("selected");
+        closeMenu()
         retrieveData(user_selected_value).then(r => setTimeout(function () {
             reloadMap(user_selected_value);
         }, 1500))
