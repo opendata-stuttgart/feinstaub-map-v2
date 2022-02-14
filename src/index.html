@@ -14,19 +14,21 @@
 <div id="loading">Loading data...</div>
 <div id='map'></div>
 <div class="topItems">
-    <div class="infoBubble" id='lastUpdate'></div>
     <div id="countries">
         <div class="selectCountry">
-            <button class="countrySelected" id="world" value="world"></button>
-            <button id="europe" value="europe"></button>
-            <button id="northamerica" value="northamerica"></button>
-            <button id="southamerica" value="southamerica"></button>
-            <button id="africa" value="africa"></button>
-            <button id="asia" value="asia"></button>
-            <button id="oceania" value="oceania"></button>
+            <button class="countrySelected" id="world" value="world">World</button>
+            <button id="europe" value="europe">Europe</button>
+            <button id="northamerica" value="northamerica">North America</button>
+            <button id="southamerica" value="southamerica">South America</button>
+            <button id="africa" value="africa">Africa</button>
+            <button id="asia" value="asia">Asia</button>
+            <button id="oceania" value="oceania">Oceania</button>
+        </div>
+        <div class="lowerItems">
+            <div id='lastUpdate'>Timestamp</div>
+            <div id='attribution'>Measurements by <a href="https://sensor.community/" target="_blank">Sensor.Community</a> contributors</div>
         </div>
     </div>
-    <div class="infoBubble" id='attribution'>Measurements <a href="https://sensor.community/" target="_blank">Sensor.Community</a> contributors</div>
 </div>
 
 <button class="menuButton"><span id="menu"></span></button>
@@ -191,12 +193,12 @@
     <div id="mainContainer">
         <div id="map-info"></div>
         <ul class="layerSelect">
-            <li><a href="https://sensor.community/" target="_blank">Website
+            <li><a href="https://sensor.community/" target="_blank" id="website">Website
                 <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                 </svg>
             </a></li>
-            <li><a href="https://forum.sensor.community/" target="_blank">Forum
+            <li><a href="https://forum.sensor.community/" target="_blank" id="forum">Forum
                 <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                 </svg>
