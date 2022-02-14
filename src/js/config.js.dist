@@ -8,7 +8,7 @@ module.exports = {
     "tiles_path": "/{z}/{x}/{y}.png",
     "tiles_subdomains": ["osmc1", "osmc2", "osmc3"],
     "data_host": "https://maps.sensor.community",
-    "attribution": "<a href='https://openstreetmap.org'>OpenStreetMap</a>",
+    "attribution": "<a href='https://openstreetmap.org'>OpenStreetMap</a> | <a href='https://sensor.community/'>Sensor.Community</a>",
     "tableTitles": {
         "PM10": "PM10 &micro;g/m&sup3;",
         "PM25": "PM2.5 &micro;g/m&sup3;",

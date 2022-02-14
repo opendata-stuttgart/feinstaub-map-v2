@@ -29,9 +29,7 @@ module.exports = {
             test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader'],
         }, {
             test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/, include: /node_modules/, use: ['file-loader']
-        }, {
-            test: /\.(jpe?g|png|gif|svg|ico|xml|webmanifest)$/i, include: /favicons/, loader: "file-loader?name=/favicons/[name].[ext]"
-        }, {
+        },{
             test: /\.(jpe?g|png|gif|svg|ico|xml|webmanifest)$/i, include: /images/, loader: "file-loader", options: {
                 outputPath: 'images/', publicPath: 'images/', name: '[name].[ext]'
             }

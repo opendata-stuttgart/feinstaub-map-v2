@@ -1,7 +1,6 @@
 // import leaflet
 import leaflet from 'leaflet';
 import hash from 'leaflet-hash';
-import 'leaflet/dist/leaflet.css';
 
 // d3 libraries
 import * as d3_Hexbin from "d3-hexbin";
@@ -26,6 +25,7 @@ import * as translate from './translate.js';
 import '../images/labMarker.svg';
 import '../images/favicon.ico';
 import '../css/style.css';
+import '../css/leaflet.css';
 
 let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise, hmhexaPM_WHO, hmhexaPM_EU, hmhexaTempHumPress;
 
@@ -59,11 +59,11 @@ new L.Hash(map);
     const search_values = location.search.replace('\?', '').split('&');
     for (let i = 0; i < search_values.length; i++) {
         query_value = search_values[i].split('=');
-        if (typeof query_value[0] != 'sensor' && undefined) user_selected_value = query_value[1];
+        (typeof query_value[0] != 'sensor' && undefined) ? user_selected_value = query_value[1] : user_selected_value = config.sensor;
     }
 })();
 
-d3.select('#loading').html(translate.tr(lang, 'Loading data...'));
+document.querySelector('#loading').innerText = translate.tr(lang, 'Loading data...')
 
 // read zoom level and coordinates query parameter from URL
 if (location.hash) {
@@ -345,8 +345,8 @@ window.onload = function () {
         const lastUpdateTimestamp = logTimestamp+(-getOffsetHours)
         const dateFormater = locale.format("%d.%m.%Y %H:%M");
 
-        d3.select("#lastUpdate").html(translate.tr(lang, "Last update") + " " + dateFormater(lastUpdateTimestamp));
-        d3.select("#menu").html(d3.select(".selected").html());
+        document.querySelector("#lastUpdate").innerText = translate.tr(lang, "Last update") + " " + dateFormater(lastUpdateTimestamp);
+        document.querySelector("#menu").innerText = document.querySelector(".selected").innerText
 
         if (vizType === "pmWHO" && (user_selected_value === "PM10who" || user_selected_value === "PM25who")) {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
@@ -369,7 +369,7 @@ window.onload = function () {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
             hexagonheatmap.data(hmhexaPM_aktuell);
         }
-        d3.select("#loading").style("display", "none");
+        document.querySelector("#loading").style.display = "none";
     }
 
     map.on('moveend', function () {
@@ -441,7 +441,7 @@ window.onload = function () {
         });
         textefin += sensors;
         textefin += "</table>";
-        d3.select("#table").html(textefin)
+        document.querySelector('#table').innerHTML = textefin;
         d3.selectAll(".idsens").on("click", function () {
             displayGraph(d3.select(this).attr("id")); // transfer id e.g. id_67849
         });
@@ -466,7 +466,7 @@ window.onload = function () {
         } else {
             d3.select("#id_" + sens).html("(+) #" + sens_desc);
             d3.select("#frame_" + sens_id).remove();
-            removeInArray(openedGraph1, sens_id);
+                                     removeInArray(openedGraph1, sens_id);
         }
     }
 
@@ -542,12 +542,12 @@ window.onload = function () {
 
     function openExplanation() {
         document.getElementById("map-info").style.display = "block";
-        d3.select("#explanation").html(translate.tr(lang, "Hide"));
+        document.querySelector("#explanation").innerText = translate.tr(lang, "Hide")
     }
 
     function closeExplanation() {
         document.getElementById("map-info").style.display = "none";
-        d3.select("#explanation").html(translate.tr(lang, "Explanation"));
+        document.querySelector("#explanation").innerText = translate.tr(lang, "Explanation")
     }
 
     function toggleExplanation() {
@@ -560,28 +560,28 @@ window.onload = function () {
     document.querySelector("#cb_labs").checked = false;
     document.querySelector("#cb_wind").checked = false;
 
-    d3.select("#label_local_labs").html(translate.tr(lang, "Local labs"));
-    d3.select("#label_wind_layer").html(translate.tr(lang, "Wind layer"));
+    document.querySelector("#label_local_labs").innerText = translate.tr(lang, "Local labs");
+    document.querySelector("#label_wind_layer").innerText = translate.tr(lang, "Wind layer");
 
     document.querySelector("#cb_labs").addEventListener("change", switchLabLayer);
     document.querySelector("#cb_wind").addEventListener("change", switchWindLayer);
 
     // translate AQI values
-    d3.select("#AQI_Good").html(" " + translate.tr(lang, "Good"));
-    d3.select("#AQI_Moderate").html(" " + translate.tr(lang, "Moderate"));
-    d3.select("#AQI_Unhealthy_Sensitive").html(" " + translate.tr(lang, "Unhealthy for sensitive"));
-    d3.select("#AQI_Unhealthy").html(" " + translate.tr(lang, "Unhealthy"));
-    d3.select("#AQI_Very_Unhealthy").html(" " + translate.tr(lang, "Very Unhealthy"));
-    d3.select("#AQI_Hazardous").html(" " + translate.tr(lang, "Hazardous"));
+    document.querySelector("#AQI_Good").innerText = translate.tr(lang, "Good");
+    document.querySelector("#AQI_Moderate").innerText = translate.tr(lang, "Moderate");
+    document.querySelector("#AQI_Unhealthy_Sensitive").innerText = translate.tr(lang, "Unhealthy for sensitive");
+    document.querySelector("#AQI_Unhealthy").innerText = translate.tr(lang, "Unhealthy");
+    document.querySelector("#AQI_Very_Unhealthy").innerText = translate.tr(lang, "Very Unhealthy");
+    document.querySelector("#AQI_Hazardous").innerText = translate.tr(lang, "Hazardous");
 
     // translate menu links
-    d3.select("#website").html(translate.tr(lang, "Website"));
-    d3.select("#forum").html(translate.tr(lang, "Forum"));
-    d3.select("#explanation").on("click", toggleExplanation).html(translate.tr(lang, 'Explanation'));
-    d3.select('#map-info').html(translate.tr(lang, "<p>The hexagons represent the median of the current sensor values included in this area, depending on you selected option (PM2.5, temperature,...).</p> \
+    document.querySelector("#website").innerText = translate.tr(lang, "Website");
+    document.querySelector("#forum").innerText = translate.tr(lang, "Forum");
+    document.querySelector("#explanation").addEventListener("click", toggleExplanation);
+    document.querySelector('#map-info').innerHTML = translate.tr(lang, "<p>The hexagons represent the median of the current sensor values included in this area, depending on you selected option (PM2.5, temperature,...).</p> \
 <p>A hexagon will display a list of the corresponding sensors as a table. The first row will show you the amount of sensor and the median value.</p> \
 <p>The plus symbol will display <i>individual measurements of the last 24 hours</i> and a <i>24 hours moving average for the last seven days</i>. </br> Due to technical reasons, the first day is blank.</p> \
-<p>Map values are <strong>refreshed every 5 minutes</strong> to fit with the measurement frequency of the multiple airRohr sensors.</p>"));
+<p>Map values are <strong>refreshed every 5 minutes</strong> to fit with the measurement frequency of the multiple airRohr sensors.</p>");
 
 // refresh data every 5 minutes
     setInterval(function () {
@@ -591,19 +591,19 @@ window.onload = function () {
     }, 300000);
 
     // translate elements
-    d3.select("#world").html(translate.tr(lang, "World"));
-    d3.select("#europe").html(translate.tr(lang, "Europe"));
-    d3.select("#northamerica").html(translate.tr(lang, "North America"));
-    d3.select("#southamerica").html(translate.tr(lang, "South America"));
-    d3.select("#asia").html(translate.tr(lang, "Asia"));
-    d3.select("#africa").html(translate.tr(lang, "Africa"));
-    d3.select("#oceania").html(translate.tr(lang, "Oceania"));
+    document.querySelector("#world").innerText = translate.tr(lang, "World")
+    document.querySelector("#europe").innerText = translate.tr(lang, "Europe")
+    document.querySelector("#northamerica").innerText = translate.tr(lang, "North America")
+    document.querySelector("#southamerica").innerText = translate.tr(lang, "South America")
+    document.querySelector("#asia").innerText = translate.tr(lang, "Asia")
+    document.querySelector("#africa").innerText = translate.tr(lang, "Africa")
+    document.querySelector("#oceania").innerText = translate.tr(lang, "Oceania")
 
     d3.selectAll(".selectCountry").selectAll("button").on("click", countrySelector);
 
     d3.select(".select-items").selectAll("div").on("click", function () {
         user_selected_value = this.getAttribute('value')
-        if (user_selected_value !== d3.select(".selected").attr("value")) {
+        if (user_selected_value !== document.querySelector(".selected").getAttribute("value")) {
             switchTo(user_selected_value)
         }
     });
