@@ -111,11 +111,7 @@ let api = {
 
         function getRightValue(array, type) {
             let value;
-            array.forEach(function (item) {
-                if (item.value_type === type) {
-                    value = item.value;
-                }
-            });
+            array.forEach(item => (item.value_type === type) ? value = item.value : null);
             return value;
         }
 

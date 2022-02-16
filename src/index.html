@@ -3,6 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name=viewport content="width=device-width,initial-scale=1"/>
+    <link rel="preload" href="main.js" as="script"/>
     <link href='https://osmc1.maps.sensor.community' rel='preconnect' crossorigin/>
     <link href='https://osmc2.maps.sensor.community' rel='preconnect' crossorigin/>
     <link href='https://osmc3.maps.sensor.community' rel='preconnect' crossorigin/>
@@ -31,7 +32,7 @@
     </div>
 </div>
 
-<button class="menuButton"><span id="menu"></span></button>
+<button class="menuButton"><span id="menu">PM2.5 (5 min. mean)</span></button>
 <div id="legend">
     <div id="legend_PM10">
         <div class="legend">
@@ -188,6 +189,7 @@
         </div>
     </div>
 </div>
+
 <div id="modal">
     <div id="table"></div>
     <div id="mainContainer">
@@ -203,7 +205,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                 </svg>
             </a></li>
-            <li><span id="explanation"></span></li>
+            <li><span id="explanation">Explanation</span></li>
         </ul>
         <div class="select-items">
             <div value="Temperature">Temperature</div>
@@ -227,6 +229,5 @@
         </ul>
     </div>
 </div>
-<link rel="preload" href="main.js" as="script"/>
 </body>
 </html>

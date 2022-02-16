@@ -87,7 +87,7 @@ window.onload = function () {
         _undef(a) {
             return typeof a === 'undefined';
         }, options: {
-            radius: 25, opacity: 0.6, duration: 200, onmouseover: undefined, onmouseout: undefined, attribution: config.attribution, click: function (d) {
+            radius: 25, opacity: 0.6, duration: 200, attribution: config.attribution, click: function (d) {
                 setTimeout(function () {
                     if (clicked === null) sensorNr(d);
                     clicked += 1;
@@ -130,6 +130,7 @@ window.onload = function () {
             // SVG element
             this._svg = L.svg();
             map.addLayer(this._svg);
+            // Todo: get rid of d3.select and use vanilla js instead
             this._rootGroup = d3.select(this._svg._rootGroup).classed('d3-overlay', true);
             this.selection = this._rootGroup;
 
@@ -250,8 +251,6 @@ window.onload = function () {
             join.enter().append('path').attr('class', 'hexbin-hexagon')
                 .attr('d', (d) => 'M' + d.x + ',' + d.y + hexbin.hexagon())
                 .attr('fill', (d) => typeof this.options.value(d) === 'undefined' ? '#808080' : this._colorScale(this.options.value(d)))
-                .on('mouseover', this.options.mouseover)
-                .on('mouseout', this.options.mouseout)
                 .on('click', this.options.click)
                 .transition().duration(this.options.duration)
                 .attr('fill-opacity', this.options.opacity)
@@ -340,9 +339,9 @@ window.onload = function () {
     function ready(vizType) {
         const date = new Date()
         const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
-        const getOffsetHours = date.getTimezoneOffset()*60000
+        const getOffsetHours = date.getTimezoneOffset() * 60000
         const logTimestamp = dateParser(timestamp_data).getTime()
-        const lastUpdateTimestamp = logTimestamp+(-getOffsetHours)
+        const lastUpdateTimestamp = logTimestamp + (-getOffsetHours)
         const dateFormater = locale.format("%d.%m.%Y %H:%M");
 
         document.querySelector("#lastUpdate").innerText = translate.tr(lang, "Last update") + " " + dateFormater(lastUpdateTimestamp);
@@ -356,7 +355,7 @@ window.onload = function () {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
             hexagonheatmap.data(hmhexaPM_AQI);
         }
-        if (vizType === "TempHumPress" && (user_selected_value === "Temperature" || user_selected_value === "Humidity" || user_selected_value === "Pressure")) {
+        if (vizType === "TempHumPress" && ["Temperature", "Humidity", "Pressure"].includes(user_selected_value)) {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
             hexagonheatmap.data(hmhexa_t_h_p.filter(function (value) {
                 return api.checkValues(value.data[user_selected_value], user_selected_value);
@@ -397,7 +396,9 @@ window.onload = function () {
     }
 
     function reloadMap(val) {
-        d3.selectAll('path.hexbin-hexagon').remove();
+        document.querySelectorAll('path.hexbin-hexagon').forEach(function (d) {
+            d.remove();
+        });
         hexagonheatmap.initialize(config.scale_options[val]);
         if (val === "PM10" || val === "PM25") {
             hexagonheatmap.data(hmhexaPM_aktuell);
@@ -423,10 +424,10 @@ window.onload = function () {
         document.getElementById("mainContainer").style.display = "none"; // hide menu content
         let textefin = "<table id='results' style='width:95%;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, config.tableTitles[user_selected_value]) + "</th></tr>";
         if (data.length > 1) {
-            textefin += "<tr><td class='idsens'>Median " + data.length + " Sens.</td><td>" + (isNaN(parseInt(data_median(data))) ? "-" : parseInt(data_median(data))) + "</td></tr>";
+            textefin += "<tr><td class='idsens'>Median " + data.length + " Sensors</td><td>" + (isNaN(parseInt(data_median(data))) ? "-" : parseInt(data_median(data))) + "</td></tr>";
         }
         let sensors = '';
-        data.forEach(function (i) {
+        data.forEach(function(i) {
             sensors += "<tr><td class='idsens' id='id_" + i.o.id + (i.o.indoor ? "_indoor" : "") + "'> #" + i.o.id + (i.o.indoor ? " (indoor)" : "") + "</td>";
             if (["PM10", "PM25", "PM10eu", "PM25eu", "PM10who", "PM25who", "Temperature", "Humidity", "Noise"].includes(user_selected_value)) {
                 sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
@@ -442,8 +443,10 @@ window.onload = function () {
         textefin += sensors;
         textefin += "</table>";
         document.querySelector('#table').innerHTML = textefin;
-        d3.selectAll(".idsens").on("click", function () {
-            displayGraph(d3.select(this).attr("id")); // transfer id e.g. id_67849
+        document.querySelectorAll('.idsens').forEach(function (d) {
+            d.addEventListener('click', function () {
+                displayGraph(this.id); // transfer id e.g. id_67849
+            });
         });
     }
 
@@ -455,18 +458,16 @@ window.onload = function () {
 
         if (!openedGraph1.includes(sens_id)) {
             openedGraph1.push(sens_id);
+            const iframeID = 'frame_' + sens_id
+            document.querySelector("#graph_" + sens_id).appendChild(document.createElement('td')).setAttribute('id', iframeID);
+            document.querySelector('#'+iframeID).setAttribute('colspan', '2')
+            document.querySelector('#'+iframeID).innerHTML = ((config.panelIDs[user_selected_value][0] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][0]).replace("<SENSOR>", sens_id) + "<br/>" : "") + (config.panelIDs[user_selected_value][1] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][1]).replace("<SENSOR>", sens_id) : ""))
 
-            const iddiv = "#graph_" + sens_id;
-
-            d3.select(iddiv).append("td")
-                .attr("colspan", "2")
-                .html((config.panelIDs[user_selected_value][0] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][0]).replace("<SENSOR>", sens_id) + "<br/>" : "") + (config.panelIDs[user_selected_value][1] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][1]).replace("<SENSOR>", sens_id) : ""));
-
-            d3.select("#id_" + sens).html("(-) #" + sens_desc);
+            document.querySelector("#id_" + sens).innerText = "(-) #" + sens_desc
         } else {
-            d3.select("#id_" + sens).html("(+) #" + sens_desc);
-            d3.select("#frame_" + sens_id).remove();
-                                     removeInArray(openedGraph1, sens_id);
+            document.querySelector("#id_" + sens).innerText = "(+) #" + sens_desc
+            document.querySelector('#frame_'+sens_id).remove();
+            removeInArray(openedGraph1, sens_id);
         }
     }
 
@@ -485,22 +486,19 @@ window.onload = function () {
         let elem = document.querySelector(`div[value='${user_selected_value}']`)
         document.querySelector('.selected').classList.remove("selected"); // remove class selected
         elem.classList.add("selected");
-        closeMenu()
-        retrieveData(user_selected_value).then(r => setTimeout(function () {
-            reloadMap(user_selected_value);
-        }, 1500))
+        retrieveData(user_selected_value).then(() => setTimeout(()=> reloadMap(user_selected_value), 1500))
     }
 
     switchTo(user_selected_value)
 
     function countrySelector() {
-        d3.select(".countrySelected").attr('class', 'countryButton');
-        d3.select(this).attr('class', 'countrySelected')
+        document.querySelector(".countrySelected").classList.remove("countrySelected")
+        document.querySelector(`#${this.id}`).classList.add("countrySelected")
         map.setView(places[this.value], zooms[this.value]);
     }
 
     function switchLabLayer() {
-        if (d3.select("#cb_labs").property("checked")) {
+        if (document.querySelector("#cb_labs").checked) {
             labs.getData(config.data_host + "/local-labs/labs.json", map);
             map.getPane('markerPane').style.visibility = "visible";
         } else {
@@ -509,17 +507,17 @@ window.onload = function () {
     }
 
     function switchWindLayer() {
-        if (d3.select("#cb_wind").property("checked")) {
+        if (document.querySelector("#cb_wind").checked) {
             wind.getData(config.data_host + "/data/v1/wind.json", map, switchWindLayer);
-            d3.selectAll(".velocity-overlay").style("visibility", "visible");
+            document.querySelectorAll(".velocity-overlay").forEach((d) => d.style.visibility = "visible");
         } else {
-            d3.selectAll(".velocity-overlay").style("visibility", "hidden");
+            document.querySelectorAll(".velocity-overlay").forEach((d) => d.style.visibility = "hidden");
         }
     }
 
     function switchLegend(val) {
-        d3.select('#legend').selectAll("[id^=legend_]").style("display", "none");
-        d3.select('#legend_' + val).style("display", "block");
+        document.querySelectorAll('[id^=legend_]').forEach(d => d.style.display = "none");
+        document.querySelector("#legend_" + val).style.display = "block";
     }
 
     function openMenu() {
@@ -532,8 +530,8 @@ window.onload = function () {
         document.getElementById("modal").style.display = "none";
         document.getElementById("mainContainer").style.display = "none";
         closeExplanation()
-        d3.select("#menu").html(d3.select(".selected").html());
-        d3.select("#results").remove()
+        document.querySelector("#menu").innerText = document.querySelector('.selected').innerText;
+        (document.querySelector('#results')) ? document.querySelector('#results').remove() : null;
     }
 
     function toggleMenu() {
@@ -554,7 +552,7 @@ window.onload = function () {
         (document.getElementById("map-info").style.display === "block") ? closeExplanation() : openExplanation();
     }
 
-    d3.select("#menu").on("click", toggleMenu);
+    document.querySelector("#menu").onclick = toggleMenu;
 
     // Load lab and windlayer, init checkboxes
     document.querySelector("#cb_labs").checked = false;
@@ -577,6 +575,7 @@ window.onload = function () {
     // translate menu links
     document.querySelector("#website").innerText = translate.tr(lang, "Website");
     document.querySelector("#forum").innerText = translate.tr(lang, "Forum");
+    document.querySelector("#explanation").innerText = translate.tr(lang, "Explanation")
     document.querySelector("#explanation").addEventListener("click", toggleExplanation);
     document.querySelector('#map-info').innerHTML = translate.tr(lang, "<p>The hexagons represent the median of the current sensor values included in this area, depending on you selected option (PM2.5, temperature,...).</p> \
 <p>A hexagon will display a list of the corresponding sensors as a table. The first row will show you the amount of sensor and the median value.</p> \
@@ -585,7 +584,7 @@ window.onload = function () {
 
 // refresh data every 5 minutes
     setInterval(function () {
-        d3.selectAll('path.hexbin-hexagon').remove();
+        document.querySelectorAll('path.hexbin-hexagon').forEach((e) => e.remove());
         windLayerRetrieved = labsLayerRetrieved = pmDataRetrieved = pmData24hRetrieved = tempHumPressDataRetrieved = noiseDataRetrieved = false
         retrieveData(user_selected_value)
     }, 300000);
@@ -598,13 +597,14 @@ window.onload = function () {
     document.querySelector("#asia").innerText = translate.tr(lang, "Asia")
     document.querySelector("#africa").innerText = translate.tr(lang, "Africa")
     document.querySelector("#oceania").innerText = translate.tr(lang, "Oceania")
+    document.querySelector("#explanation").innerText = translate.tr(lang, "Explanation")
 
-    d3.selectAll(".selectCountry").selectAll("button").on("click", countrySelector);
+    document.querySelectorAll(".selectCountry button").forEach( d => d.addEventListener("click", countrySelector));
 
-    d3.select(".select-items").selectAll("div").on("click", function () {
-        user_selected_value = this.getAttribute('value')
-        if (user_selected_value !== document.querySelector(".selected").getAttribute("value")) {
-            switchTo(user_selected_value)
-        }
+    document.querySelectorAll(".select-items div").forEach(function (d) {
+        d.addEventListener("click", function () {
+            user_selected_value = this.getAttribute('value')
+            !(user_selected_value === document.querySelector(".selected").getAttribute("value")) && switchTo(user_selected_value)
+        })
     });
 }

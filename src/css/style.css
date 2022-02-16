@@ -273,7 +273,7 @@ input[type="checkbox"]:checked {
     display: flex;
 }
 
-#legend .chevron {
+.legend .chevron {
     position: relative;
     height: 24px;
     width: 24px;
@@ -386,22 +386,7 @@ input[type="checkbox"]:checked {
     height: 15px;
     position: relative;
     top: 3px;
-}
-
-/* leaflet map */
-.leaflet-pane > svg .d3-overlay path {
-    cursor: help;
-    pointer-events: all;
-}
-
-/* colorize leaflet map */
-img.leaflet-tile {
-    filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
-    -webkit-filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
-}
-
-.leaflet-control-velocity.leaflet-control {
-    display: none;
+    margin-right: 4px;
 }
 
 .idsens {
