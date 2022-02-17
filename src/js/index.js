@@ -44,10 +44,6 @@ const locale = timeFormatLocale(config.locale);
 const map = L.map("map", {preferCanvas: true, zoomControl: false, controls: false}).setView(config.initialView, config.initialZoom);
 let windLayerRetrieved = false
 let labsLayerRetrieved = false
-let pmDataRetrieved = false
-let pmData24hRetrieved = false
-let tempHumPressDataRetrieved = false
-let noiseDataRetrieved = false
 
 config.tiles = config.tiles_server + config.tiles_path;
 L.tileLayer(config.tiles, {
@@ -288,57 +284,44 @@ window.onload = function () {
     // pmWHO = PM10who PM25who
     // pmEU = PM10eu PM25eu
     async function retrieveData(user_selected_value) {
-        if (["PM25", "PM10", undefined].includes(user_selected_value) && !pmDataRetrieved) {
-            document.querySelector('#loading').style.display = 'block';
-            await api.getData(config.data_host + "/data/v2/data.dust.min.json", 'pmDefault').then(function (result) {
-                hmhexaPM_aktuell = result.cells;
-                if (result.timestamp > timestamp_data) {
-                    timestamp_data = result.timestamp;
-                    timestamp_from = result.timestamp_from;
-                }
-            }).then(() => ready("pmDefault")).then(() => pmDataRetrieved = true).then(() => reloadMap(user_selected_value))
-        }
-        if (["PM25who", "PM10who", "PM25eu", "PM10eu", "AQIus"].includes(user_selected_value) && !pmData24hRetrieved) {
-            document.querySelector('#loading').style.display = 'block';
-            await api.getData(config.data_host + "/data/v2/data.24h.json").then(function (result) {
-                hmhexaPM_WHO = result.cells;
-                hmhexaPM_EU = result.cells;
-                hmhexaPM_AQI = result.cells;
+        await api.getData(config.data_host + "/data/v2/data.dust.min.json", 'pmDefault').then(function (result) {
+            hmhexaPM_aktuell = result.cells;
+            if (result.timestamp > timestamp_data) {
+                timestamp_data = result.timestamp;
+                timestamp_from = result.timestamp_from;
+            }
+        }).then(() => ready("pmDefault"))
 
-                if (result.timestamp > timestamp_data) {
-                    timestamp_data = result.timestamp;
-                    timestamp_from = result.timestamp_from;
-                }
-            }).then(function () {
-                ready("pmWHO")
-                ready("pmEU")
-                ready("aqi")
-                pmData24hRetrieved = true
-            }).then(() => reloadMap(user_selected_value))
-        }
-        if (["Temperature", "Humidity", "Pressure"].includes(user_selected_value) && !tempHumPressDataRetrieved) {
-            document.querySelector('#loading').style.display = 'block';
-            await api.getData(config.data_host + "/data/v2/data.temp.min.json", 'tempHumPress').then(function (result) {
-                hmhexa_t_h_p = result.cells;
-                if (result.timestamp > timestamp_data) {
-                    timestamp_data = result.timestamp;
-                    timestamp_from = result.timestamp_from;
-                }
-            }).then(function () {
-                ready("tempHumPress")
-                tempHumPressDataRetrieved = true
-            }).then(() => reloadMap(user_selected_value))
-        }
-        if (user_selected_value === "Noise" && !noiseDataRetrieved) {
-            document.querySelector('#loading').style.display = 'block';
-            await api.getData(config.data_host + "/data/v1/data.noise.json", 'noise').then(function (result) {
-                hmhexa_noise = result.cells;
-                if (result.timestamp > timestamp_data) {
-                    timestamp_data = result.timestamp;
-                    timestamp_from = result.timestamp_from;
-                }
-            }).then(() => ready("noise")).then(() => noiseDataRetrieved = true).then(() => reloadMap(user_selected_value))
-        }
+        await api.getData(config.data_host + "/data/v2/data.24h.json").then(function (result) {
+            hmhexaPM_WHO = result.cells;
+            hmhexaPM_EU = result.cells;
+            hmhexaPM_AQI = result.cells;
+
+            if (result.timestamp > timestamp_data) {
+                timestamp_data = result.timestamp;
+                timestamp_from = result.timestamp_from;
+            }
+        }).then(function () {
+            ready("pmWHO")
+            ready("pmEU")
+            ready("aqi")
+        })
+
+        await api.getData(config.data_host + "/data/v2/data.temp.min.json", 'tempHumPress').then(function (result) {
+            hmhexa_t_h_p = result.cells;
+            if (result.timestamp > timestamp_data) {
+                timestamp_data = result.timestamp;
+                timestamp_from = result.timestamp_from;
+            }
+        }).then(() => ready("tempHumPress"))
+
+        await api.getData(config.data_host + "/data/v1/data.noise.json", 'noise').then(function (result) {
+            hmhexa_noise = result.cells;
+            if (result.timestamp > timestamp_data) {
+                timestamp_data = result.timestamp;
+                timestamp_from = result.timestamp_from;
+            }
+        }).then(() => ready("noise"))
     }
 
     function ready(vizType) {
@@ -347,7 +330,7 @@ window.onload = function () {
         const getOffsetHours = date.getTimezoneOffset() * 60000
         const logTimestamp = dateParser(timestamp_data).getTime()
         const lastUpdateTimestamp = logTimestamp + (-getOffsetHours)
-        const dateFormater = locale.format("%d.%m.%Y %H:%M");
+        const dateFormater = locale.format("%d.%m.%Y %H:%M:%S");
 
         document.querySelector("#lastUpdate").innerText = translate.tr(lang, "Last update") + " " + dateFormater(lastUpdateTimestamp);
         document.querySelector("#menuButton").innerText = document.querySelector(".selected").innerText
@@ -360,7 +343,7 @@ window.onload = function () {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
             hexagonheatmap.data(hmhexaPM_AQI);
         }
-        if (vizType === "TempHumPress" && ["Temperature", "Humidity", "Pressure"].includes(user_selected_value)) {
+        if (vizType === "tempHumPress" && ["Temperature", "Humidity", "Pressure"].includes(user_selected_value)) {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
             hexagonheatmap.data(hmhexa_t_h_p.filter(function (value) {
                 return api.checkValues(value.data[user_selected_value], user_selected_value);
@@ -375,6 +358,8 @@ window.onload = function () {
         }
         document.querySelector("#loading").style.display = "none";
     }
+
+    retrieveData()
 
     map.on('moveend', function () {
         hexagonheatmap._zoomChange();
@@ -493,7 +478,7 @@ window.onload = function () {
         elem.classList.add("selected");
         // https://javascript.info/async-await
         // https://t3n.de/news/javascript-zukunft-diese-neuen-1451816/?utm_source=rss&utm_medium=feed&utm_campaign=news
-        retrieveData(user_selected_value)
+        reloadMap(user_selected_value)
         switchLegend(user_selected_value)
         closeMenu()
     }
@@ -594,8 +579,8 @@ window.onload = function () {
 // refresh data every 5 minutes
     setInterval(function () {
         document.querySelectorAll('path.hexbin-hexagon').forEach((e) => e.remove());
-        windLayerRetrieved = labsLayerRetrieved = pmDataRetrieved = pmData24hRetrieved = tempHumPressDataRetrieved = noiseDataRetrieved = false
-        retrieveData(user_selected_value)
+        windLayerRetrieved = labsLayerRetrieved = false
+        retrieveData()
     }, 300000);
 
     // translate elements
@@ -629,12 +614,7 @@ window.onload = function () {
     }
 }
 
-
 // add searchbox
 new GeoSearch.GeoSearchControl({
-    style: 'bar',
-    showMarker: false,
-    provider: new GeoSearch.OpenStreetMapProvider(),
+    style: 'bar', showMarker: false, provider: new GeoSearch.OpenStreetMapProvider(),
 }).addTo(map);
-
-L.addTo(map);
