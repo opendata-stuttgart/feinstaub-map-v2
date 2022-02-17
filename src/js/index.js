@@ -286,18 +286,18 @@ window.onload = function () {
     // pmEU = PM10eu PM25eu
     async function retrieveData(user_selected_value) {
         if (["PM25", "PM10", undefined].includes(user_selected_value) && !pmDataRetrieved) {
-            api.getData(config.data_host + "/data/v2/data.dust.min.json", 'pmDefault').then(function (result) {
+            document.querySelector('#loading').style.display = 'block';
+            await api.getData(config.data_host + "/data/v2/data.dust.min.json", 'pmDefault').then(function (result) {
                 hmhexaPM_aktuell = result.cells;
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
                 }
-                ready("pmDefault")
-                pmDataRetrieved = true
-            });
+            }).then(() => ready("pmDefault")).then(() => pmDataRetrieved = true).then(()=>reloadMap(user_selected_value))
         }
         if (["PM25who", "PM10who", "PM25eu", "PM10eu", "AQIus"].includes(user_selected_value) && !pmData24hRetrieved) {
-            api.getData(config.data_host + "/data/v2/data.24h.json").then(function (result) {
+            document.querySelector('#loading').style.display = 'block';
+            await api.getData(config.data_host + "/data/v2/data.24h.json").then(function (result) {
                 hmhexaPM_WHO = result.cells;
                 hmhexaPM_EU = result.cells;
                 hmhexaPM_AQI = result.cells;
@@ -306,33 +306,35 @@ window.onload = function () {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
                 }
+            }).then(function () {
                 ready("pmWHO")
                 ready("pmEU")
                 ready("aqi")
                 pmData24hRetrieved = true
-            });
+            }).then(()=>reloadMap(user_selected_value))
         }
         if (["Temperature", "Humidity", "Pressure"].includes(user_selected_value) && !tempHumPressDataRetrieved) {
-            api.getData(config.data_host + "/data/v2/data.temp.min.json", 'tempHumPress').then(function (result) {
+            document.querySelector('#loading').style.display = 'block';
+            await  api.getData(config.data_host + "/data/v2/data.temp.min.json", 'tempHumPress').then(function (result) {
                 hmhexa_t_h_p = result.cells;
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
                 }
+            }).then(function () {
                 ready("tempHumPress")
                 tempHumPressDataRetrieved = true
-            });
+            }).then(()=>reloadMap(user_selected_value))
         }
         if (user_selected_value === "Noise" && !noiseDataRetrieved) {
-            api.getData(config.data_host + "/data/v1/data.noise.json", 'noise').then(function (result) {
+            document.querySelector('#loading').style.display = 'block';
+            await api.getData(config.data_host + "/data/v1/data.noise.json", 'noise').then(function (result) {
                 hmhexa_noise = result.cells;
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
                 }
-                ready("noise")
-                noiseDataRetrieved = true
-            });
+            }).then(()=> ready("noise")).then(() => noiseDataRetrieved = true).then(()=>reloadMap(user_selected_value))
         }
     }
 
@@ -427,7 +429,7 @@ window.onload = function () {
             textefin += "<tr><td class='idsens'>Median " + data.length + " Sensors</td><td>" + (isNaN(parseInt(data_median(data))) ? "-" : parseInt(data_median(data))) + "</td></tr>";
         }
         let sensors = '';
-        data.forEach(function(i) {
+        data.forEach(function (i) {
             sensors += "<tr><td class='idsens' id='id_" + i.o.id + (i.o.indoor ? "_indoor" : "") + "'> #" + i.o.id + (i.o.indoor ? " (indoor)" : "") + "</td>";
             if (["PM10", "PM25", "PM10eu", "PM25eu", "PM10who", "PM25who", "Temperature", "Humidity", "Noise"].includes(user_selected_value)) {
                 sensors += "<td>" + i.o.data[user_selected_value] + "</td></tr>";
@@ -460,13 +462,13 @@ window.onload = function () {
             openedGraph1.push(sens_id);
             const iframeID = 'frame_' + sens_id
             document.querySelector("#graph_" + sens_id).appendChild(document.createElement('td')).setAttribute('id', iframeID);
-            document.querySelector('#'+iframeID).setAttribute('colspan', '2')
-            document.querySelector('#'+iframeID).innerHTML = ((config.panelIDs[user_selected_value][0] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][0]).replace("<SENSOR>", sens_id) + "<br/>" : "") + (config.panelIDs[user_selected_value][1] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][1]).replace("<SENSOR>", sens_id) : ""))
+            document.querySelector('#' + iframeID).setAttribute('colspan', '2')
+            document.querySelector('#' + iframeID).innerHTML = ((config.panelIDs[user_selected_value][0] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][0]).replace("<SENSOR>", sens_id) + "<br/>" : "") + (config.panelIDs[user_selected_value][1] > 0 ? panel_str.replace("<PANELID>", config.panelIDs[user_selected_value][1]).replace("<SENSOR>", sens_id) : ""))
 
             document.querySelector("#id_" + sens).innerText = "(-) #" + sens_desc
         } else {
             document.querySelector("#id_" + sens).innerText = "(+) #" + sens_desc
-            document.querySelector('#frame_'+sens_id).remove();
+            document.querySelector('#frame_' + sens_id).remove();
             removeInArray(openedGraph1, sens_id);
         }
     }
@@ -486,7 +488,11 @@ window.onload = function () {
         let elem = document.querySelector(`div[value='${user_selected_value}']`)
         document.querySelector('.selected').classList.remove("selected"); // remove class selected
         elem.classList.add("selected");
-        retrieveData(user_selected_value).then(() => setTimeout(()=> reloadMap(user_selected_value), 1500))
+        // https://javascript.info/async-await
+        // https://t3n.de/news/javascript-zukunft-diese-neuen-1451816/?utm_source=rss&utm_medium=feed&utm_campaign=news
+        retrieveData(user_selected_value)
+        switchLegend(user_selected_value)
+        closeMenu()
     }
 
     switchTo(user_selected_value)
@@ -599,7 +605,7 @@ window.onload = function () {
     document.querySelector("#oceania").innerText = translate.tr(lang, "Oceania")
     document.querySelector("#explanation").innerText = translate.tr(lang, "Explanation")
 
-    document.querySelectorAll(".selectCountry button").forEach( d => d.addEventListener("click", countrySelector));
+    document.querySelectorAll(".selectCountry button").forEach(d => d.addEventListener("click", countrySelector));
 
     document.querySelectorAll(".select-items div").forEach(function (d) {
         d.addEventListener("click", function () {

@@ -119,6 +119,7 @@ tr {
 }
 
 /* loading layer */
+
 #loading {
     margin: 0;
     position: absolute;
@@ -126,9 +127,10 @@ tr {
     left: 50%;
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
-    z-index: 20;
+    background-color: #084945;
+    color: white;
 }
 
 #map {
@@ -146,7 +148,7 @@ tr {
     position: fixed;
     bottom: 20px;
     right: 10px;
-    z-index: 25;
+    z-index: 20;
     display: flex;
     align-items: center;
     font-size: 1em;

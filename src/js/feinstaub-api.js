@@ -107,7 +107,7 @@ let api = {
 
     /* fetches from /now, ignores non-finedust sensors now returns data from last 5 minutes, so we group all data by sensorId
      and compute a mean to get distinct values per sensor */
-    getData: function (URL, vizType) {
+    getData: async function (URL, vizType) {
 
         function getRightValue(array, type) {
             let value;
@@ -115,7 +115,7 @@ let api = {
             return value;
         }
 
-        return fetch(URL)
+        return await fetch(URL)
             .then((resp) => resp.json())
             .then((json) => {
                 let timestamp_data = '';

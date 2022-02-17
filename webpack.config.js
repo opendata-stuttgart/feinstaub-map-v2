@@ -17,19 +17,13 @@ module.exports = {
     devServer: {
         host: '127.0.0.1', port: 8080
     }, optimization: {
-        minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})], splitChunks: {
-            cacheGroups: {
-                d3: {
-                    test: /[\\/]node_modules[\\/]d3.*[\\/]/, name: 'd3', filename: '[name].bundle.js', chunks: 'all',
-                }
-            }
-        }
+        minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})]
     }, module: {
         rules: [{
             test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader'],
         }, {
             test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/, include: /node_modules/, use: ['file-loader']
-        },{
+        }, {
             test: /\.(jpe?g|png|gif|svg|ico|xml|webmanifest)$/i, include: /images/, loader: "file-loader", options: {
                 outputPath: 'images/', publicPath: 'images/', name: '[name].[ext]'
             }
