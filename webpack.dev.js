@@ -17,13 +17,7 @@ module.exports = {
     devServer: {
         host: '127.0.0.1', port: 8080
     }, optimization: {
-        minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})], splitChunks: {
-            cacheGroups: {
-                d3: {
-                    test: /[\\/]node_modules[\\/]d3.*[\\/]/, name: 'd3', filename: '[name].bundle.js', chunks: 'all',
-                }
-            }
-        }
+        minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})]
     }, module: {
         rules: [{
             test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader'],

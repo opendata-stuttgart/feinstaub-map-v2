@@ -148,7 +148,7 @@ tr {
     position: fixed;
     bottom: 20px;
     right: 10px;
-    z-index: 20;
+    z-index: 50;
     display: flex;
     align-items: center;
     font-size: 1em;
@@ -158,7 +158,6 @@ tr {
     color: white;
 }
 
-/* todo: use flex for mobile optimization*/
 #modal {
     display: none;
     width: 100vw;
@@ -193,6 +192,9 @@ tr {
     margin: auto;
     padding: 0.8em;
     bottom: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .externalLink {
@@ -202,11 +204,17 @@ tr {
     rotate: -45deg;
 }
 
-/*style the items (options), including the selected item: */
-.select-items div {
+.select-items{
+    display: flex;
+    flex-direction: column;
+}
+.select-items > div {
     cursor: pointer;
-    padding: 0.8em;
+    padding: 1.2em;
     border-bottom: #E0E0E0 solid 1px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: auto;
 }
 
 .selected {
@@ -220,8 +228,6 @@ tr {
     border-radius: 12px;
     display: flex;
     justify-content: space-evenly;
-    row-gap: 10px;
-    width: 100%;
     margin-top: 10px;
 }
 
