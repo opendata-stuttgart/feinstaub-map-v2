@@ -12,6 +12,8 @@ let api = {
 		"PMS7003": true,
 		"HPM": true,
 		"SPS30": true,
+		"NextPM": true,
+		"IPS-7100": true,
 	},
 
 	thp_sensors: {
