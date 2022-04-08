@@ -32,7 +32,7 @@
     </div>
 </div>
 
-<button class="menuButton"><span id="menu">PM2.5 (5 min. mean)</span></button>
+<button id="menuButton">PM2.5 (5 min. mean)</button>
 <div id="legend">
     <div id="legend_PM10">
         <div class="legend">
@@ -195,19 +195,14 @@
     <div id="mainContainer">
         <div id="map-info"></div>
         <ul class="layerSelect">
-            <li><a href="https://sensor.community/" target="_blank" id="website">Website
-                <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
-            </a></li>
-            <li><a href="https://forum.sensor.community/" target="_blank" id="forum">Forum
-                <svg class="externalLink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
-            </a></li>
+            <li><a href="https://sensor.community/" target="_blank" id="website">Website</a></li>
+            <li><a href="https://forum.sensor.community/" target="_blank" id="forum">Forum</a></li>
             <li><span id="explanation">Explanation</span></li>
         </ul>
         <div class="select-items">
+            <div id="share">Share View <svg xmlns="http://www.w3.org/2000/svg" class="linkIcon" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+            </svg></div>
             <div value="Temperature">Temperature</div>
             <div value="Humidity">Rel. Humidity</div>
             <div value="Pressure">Pressure</div>

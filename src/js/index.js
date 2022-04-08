@@ -1,6 +1,9 @@
 // import leaflet
 import leaflet from 'leaflet';
 import hash from 'leaflet-hash';
+import * as GeoSearch from 'leaflet-geosearch';
+import * as L from 'leaflet';
+import 'leaflet-geosearch/dist/geosearch.css';
 
 // d3 libraries
 import * as d3_Hexbin from "d3-hexbin";
@@ -27,7 +30,7 @@ import '../images/favicon.ico';
 import '../css/style.css';
 import '../css/leaflet.css';
 
-let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise, hmhexaPM_WHO, hmhexaPM_EU, hmhexaTempHumPress;
+let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise, hmhexaPM_WHO, hmhexaPM_EU;
 
 const lang = translate.getFirstBrowserLanguage().substring(0, 2); // save browser lanuage for translation
 let openedGraph1 = [];
@@ -293,7 +296,7 @@ window.onload = function () {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
                 }
-            }).then(() => ready("pmDefault")).then(() => pmDataRetrieved = true).then(()=>reloadMap(user_selected_value))
+            }).then(() => ready("pmDefault")).then(() => pmDataRetrieved = true).then(() => reloadMap(user_selected_value))
         }
         if (["PM25who", "PM10who", "PM25eu", "PM10eu", "AQIus"].includes(user_selected_value) && !pmData24hRetrieved) {
             document.querySelector('#loading').style.display = 'block';
@@ -311,11 +314,11 @@ window.onload = function () {
                 ready("pmEU")
                 ready("aqi")
                 pmData24hRetrieved = true
-            }).then(()=>reloadMap(user_selected_value))
+            }).then(() => reloadMap(user_selected_value))
         }
         if (["Temperature", "Humidity", "Pressure"].includes(user_selected_value) && !tempHumPressDataRetrieved) {
             document.querySelector('#loading').style.display = 'block';
-            await  api.getData(config.data_host + "/data/v2/data.temp.min.json", 'tempHumPress').then(function (result) {
+            await api.getData(config.data_host + "/data/v2/data.temp.min.json", 'tempHumPress').then(function (result) {
                 hmhexa_t_h_p = result.cells;
                 if (result.timestamp > timestamp_data) {
                     timestamp_data = result.timestamp;
@@ -324,7 +327,7 @@ window.onload = function () {
             }).then(function () {
                 ready("tempHumPress")
                 tempHumPressDataRetrieved = true
-            }).then(()=>reloadMap(user_selected_value))
+            }).then(() => reloadMap(user_selected_value))
         }
         if (user_selected_value === "Noise" && !noiseDataRetrieved) {
             document.querySelector('#loading').style.display = 'block';
@@ -334,7 +337,7 @@ window.onload = function () {
                     timestamp_data = result.timestamp;
                     timestamp_from = result.timestamp_from;
                 }
-            }).then(()=> ready("noise")).then(() => noiseDataRetrieved = true).then(()=>reloadMap(user_selected_value))
+            }).then(() => ready("noise")).then(() => noiseDataRetrieved = true).then(() => reloadMap(user_selected_value))
         }
     }
 
@@ -347,7 +350,7 @@ window.onload = function () {
         const dateFormater = locale.format("%d.%m.%Y %H:%M");
 
         document.querySelector("#lastUpdate").innerText = translate.tr(lang, "Last update") + " " + dateFormater(lastUpdateTimestamp);
-        document.querySelector("#menu").innerText = document.querySelector(".selected").innerText
+        document.querySelector("#menuButton").innerText = document.querySelector(".selected").innerText
 
         if (vizType === "pmWHO" && (user_selected_value === "PM10who" || user_selected_value === "PM25who")) {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
@@ -527,7 +530,7 @@ window.onload = function () {
     }
 
     function openMenu() {
-        document.getElementById("menu").innerHTML = "&#10006;";
+        document.getElementById("menuButton").innerHTML = "&#10006;";
         document.getElementById("modal").style.display = "block";
         document.getElementById("mainContainer").style.display = "block";
     }
@@ -536,7 +539,7 @@ window.onload = function () {
         document.getElementById("modal").style.display = "none";
         document.getElementById("mainContainer").style.display = "none";
         closeExplanation()
-        document.querySelector("#menu").innerText = document.querySelector('.selected').innerText;
+        document.querySelector("#menuButton").innerText = document.querySelector('.selected').innerText;
         (document.querySelector('#results')) ? document.querySelector('#results').remove() : null;
     }
 
@@ -558,7 +561,7 @@ window.onload = function () {
         (document.getElementById("map-info").style.display === "block") ? closeExplanation() : openExplanation();
     }
 
-    document.querySelector("#menu").onclick = toggleMenu;
+    document.querySelector("#menuButton").onclick = toggleMenu;
 
     // Load lab and windlayer, init checkboxes
     document.querySelector("#cb_labs").checked = false;
@@ -613,4 +616,25 @@ window.onload = function () {
             !(user_selected_value === document.querySelector(".selected").getAttribute("value")) && switchTo(user_selected_value)
         })
     });
+    if (navigator.share) {
+        document.querySelector("#share").addEventListener("click", function () {
+            navigator.share({
+                title: 'Maps.Sensor.Community',
+                text: 'Maps is a free web app to monitor air quality in your area. You can find more information on Sensor.Community.',
+                url: document.location.href
+            })
+        })
+    } else {
+        document.querySelector("#share").style.display = "none"
+    }
 }
+
+
+// add searchbox
+new GeoSearch.GeoSearchControl({
+    style: 'bar',
+    showMarker: false,
+    provider: new GeoSearch.OpenStreetMapProvider(),
+}).addTo(map);
+
+L.addTo(map);

@@ -18,12 +18,12 @@ a {
 }
 
 button {
-    font-size: 0.8em;
+    font-size: 12px;
     border-radius: 12px;
     padding: 6px 12px;
     cursor: pointer;
-    background-color: #FDF6ED;
-    border: solid #FDF6ED;
+    background-color: white;
+    border: solid white;
 }
 
 ul {
@@ -34,6 +34,7 @@ ul {
 li {
     width: 100%;
     pointer-events: auto;
+    text-align: center;
 }
 
 table {
@@ -68,15 +69,16 @@ tr {
 
 /* top items */
 .topItems {
+    margin-top: 1em;
     display: flex;
     justify-content: center;
 }
 
 #countries {
     z-index: 10;
-    background-color: #FDF6ED;
+    background-color: white;
     border-radius: 12px;
-    border: 1px solid #cee0de;
+    border: 1px solid #C2C2C2;
 }
 
 .countrySelected {
@@ -89,7 +91,7 @@ tr {
     display: flex;
     justify-content: space-evenly;
     padding: 8px 6px;
-    font-size: 0.75em;
+    font-size: 12px;
     font-weight: bold;
     text-align: center;
     border-top: 1px solid #C2C2C2;
@@ -119,7 +121,6 @@ tr {
 }
 
 /* loading layer */
-
 #loading {
     margin: 0;
     position: absolute;
@@ -143,7 +144,7 @@ tr {
 }
 
 /* Menu */
-.menuButton {
+#menuButton {
     cursor: pointer;
     position: fixed;
     bottom: 20px;
@@ -151,11 +152,12 @@ tr {
     z-index: 50;
     display: flex;
     align-items: center;
-    font-size: 1em;
+    font-size: 1.2em;
     background-color: #084945;
     border-style: solid;
     border-color: #084945;
     color: white;
+    font-weight: bold;
 }
 
 #modal {
@@ -177,7 +179,7 @@ tr {
 
 @media only screen and (min-width: 768px) {
     #modal {;
-        width: 380px;
+        width: 420px;
         right: 15px;
         bottom: 65px;
         height: initial;
@@ -197,11 +199,10 @@ tr {
     height: 100%;
 }
 
-.externalLink {
-    height: 0.8em;
-    width: 0.8em;
+.linkIcon {
+    height: 1em;
     margin-left: 2px;
-    rotate: -45deg;
+    vertical-align: middle;
 }
 
 .select-items{
@@ -210,7 +211,7 @@ tr {
 }
 .select-items > div {
     cursor: pointer;
-    padding: 1.2em;
+    padding: 1em;
     border-bottom: #E0E0E0 solid 1px;
     flex-grow: 1;
     flex-shrink: 1;
@@ -443,4 +444,14 @@ input[type="checkbox"]:checked {
     width: auto;
     text-align: left;
     vertical-align: middle;
+}
+
+.leaflet-touch .leaflet-geosearch-bar form {
+    margin-top: 6.25em !important;
+    border-radius: 10px;
+    border: 1px solid #C2C2C2;
+}
+
+.leaflet-touch .leaflet-geosearch-bar .reset {
+    background-color: transparent;
 }
