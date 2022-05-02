@@ -148,7 +148,7 @@ tr {
     cursor: pointer;
     position: fixed;
     bottom: 20px;
-    right: 10px;
+    left: 8em;
     z-index: 50;
     display: flex;
     align-items: center;
@@ -175,12 +175,16 @@ tr {
         top: 0;
         left: 0;
     }
+    #menuButton {
+        left: unset;
+        right: 15px;
+    }
 }
 
 @media only screen and (min-width: 768px) {
     #modal {;
         width: 420px;
-        right: 15px;
+        left: 9.5em;
         bottom: 65px;
         height: initial;
         max-height: calc(100vh - 10em);

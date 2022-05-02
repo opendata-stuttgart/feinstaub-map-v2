@@ -216,7 +216,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 /* attribution and scale controls */
 
 .leaflet-container .leaflet-control-attribution {
-    background: rgba(255, 255, 255, 0.5);
+    background: none;
     margin: 0;
     font-size: 0.7em;
 }
@@ -224,10 +224,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-control-attribution,
 .leaflet-control-scale-line {
     padding: 0 5px;
-}
-
-.leaflet-container .leaflet-control-attribution, .leaflet-div-icon {
-    background: #fff;
 }
 
 /* div icon */

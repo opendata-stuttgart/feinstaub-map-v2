@@ -42,12 +42,13 @@ let coordsCenter = config.initialView;
 let zoomLevel = config.initialZoom;
 const locale = timeFormatLocale(config.locale);
 const map = L.map("map", {preferCanvas: true, zoomControl: false, controls: false}).setView(config.initialView, config.initialZoom);
+map.attributionControl.setPosition('bottomleft')
 let windLayerRetrieved = false
 let labsLayerRetrieved = false
 
 config.tiles = config.tiles_server + config.tiles_path;
 L.tileLayer(config.tiles, {
-    maxZoom: config.maxZoom, minZoom: config.minZoom, subdomains: config.tiles_subdomains
+    maxZoom: config.maxZoom, minZoom: config.minZoom, subdomains: config.tiles_subdomains,
 }).addTo(map);
 // Adds query and hash parameter to the current URL
 new L.Hash(map);
@@ -218,11 +219,9 @@ window.onload = function () {
             let join = selection.selectAll('g.hexbin')
                 .data([zoom], (d) => d);
 
-            // enter
             join.enter().append('g')
                 .attr('class', (d) => 'hexbin zoom-' + d);
 
-            // exit
             join.exit().remove();
 
             // add the hexagons to the select
@@ -410,7 +409,6 @@ window.onload = function () {
 
     function sensorNr(data) {
         openMenu()
-
         document.getElementById("mainContainer").style.display = "none"; // hide menu content
         let textefin = "<table id='results' style='width:95%;'><tr><th class ='title'>" + translate.tr(lang, 'Sensor') + "</th><th class = 'title'>" + translate.tr(lang, config.tableTitles[user_selected_value]) + "</th></tr>";
         if (data.length > 1) {
@@ -476,8 +474,6 @@ window.onload = function () {
         let elem = document.querySelector(`div[value='${user_selected_value}']`)
         document.querySelector('.selected').classList.remove("selected"); // remove class selected
         elem.classList.add("selected");
-        // https://javascript.info/async-await
-        // https://t3n.de/news/javascript-zukunft-diese-neuen-1451816/?utm_source=rss&utm_medium=feed&utm_campaign=news
         reloadMap(user_selected_value)
         switchLegend(user_selected_value)
         closeMenu()
