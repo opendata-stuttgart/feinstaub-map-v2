@@ -689,6 +689,10 @@ input[type="checkbox"]:checked {
     #8c161e 80%,
     #8c161e 100%
   );
+  height: 12em;
+bottom: 20px;
+left: 10px;
+position: absolute;
 }
 
 #legend_Reference {
@@ -698,11 +702,19 @@ input[type="checkbox"]:checked {
 
 #legend_Reference .cercle {
   position: absolute;
-  top: 20px;
-  left: 10px;
+  
+  left: 20px;
 }
 
+#cercle1{
+  z-index: 1001;
+  bottom: 200px;
+}
 
+#cercle2{
+  z-index: 1001;
+  bottom: 190;
+}
 
 
 #legend_Reference .gradient {
@@ -815,4 +827,15 @@ input[type="radio"] {
   z-index: 1001;
   display: block;
   position: absolute;
+  bottom:215px;
+  left: 20px;
+}
+
+#radios
+{
+  z-index: 1001;
+  display: block;
+  position: absolute;
+  bottom:215px;
+  left: 20px;
 }
