@@ -35,6 +35,7 @@
     "d3-array": "^2.12.1",
     "d3-geo": "^2.0.2",
     "d3-hexbin": "^0.2.2",
+    "d3-interpolate": "^3.0.1",
     "d3-scale": "^3.3.0",
     "d3-selection": "^1.4.2",
     "d3-time-format": "^3.0.0",

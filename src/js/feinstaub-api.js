@@ -121,6 +121,11 @@ let api = {
                 let timestamp_data = '';
                 let timestamp_from = '';
                 if (vizType === "pmDefault") {
+                    
+                    
+
+
+
                     let cells = _.chain(json)
                         .filter((sensor) => typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.pm_sensors[sensor.sensor.sensor_type.name] && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P1")), "PM10") && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P2")), "PM25"))
                         .map((values) => {
@@ -142,7 +147,15 @@ let api = {
                             }
                         })
                         .value();
-                    return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
+
+
+                        let cells2 = _.chain(json)
+						.map((values) => {
+							return {"type":"Feature","properties":{"id":values.sensor.id,"indoor":values.location.indoor,"type":values.sensor.sensor_type.name},"geometry":{"type":"Point","coordinates":[values.location.longitude,values.location.latitude]}}})
+						.value();
+
+
+                    return Promise.resolve({cells: cells, cells2 : {"type":"FeatureCollection","features":cells2}, timestamp: timestamp_data, timestamp_from: timestamp_from});
                 } else if (vizType === "tempHumPress") {
                     let cells = _.chain(json)
                         .filter((sensor) => typeof api.thp_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.thp_sensors[sensor.sensor.sensor_type.name])
