@@ -183,7 +183,7 @@ tr {
 
 @media only screen and (min-width: 768px) {
     #modal {;
-        width: 420px;
+        width: 400px;
         left: 9.5em;
         bottom: 65px;
         height: initial;
@@ -197,6 +197,7 @@ tr {
 #mainContainer {
     margin: auto;
     padding: 0.8em;
+    font-size: 0.9em;
     bottom: 0;
     display: flex;
     flex-direction: column;
@@ -215,7 +216,7 @@ tr {
 }
 .select-items > div {
     cursor: pointer;
-    padding: 1em;
+    padding: 0.8em;
     border-bottom: #E0E0E0 solid 1px;
     flex-grow: 1;
     flex-shrink: 1;
@@ -304,6 +305,10 @@ input[type="checkbox"]:checked {
 
     .legend:active, .legend:focus, .legend:hover {
         transform: translate3d(110px, 0, 0);
+    }
+    .select-items > div {
+        padding: 1em;
+        font-size: initial;
     }
 }
 
