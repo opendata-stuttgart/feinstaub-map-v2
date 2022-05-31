@@ -24,8 +24,12 @@ module.exports = {
         }, {
             test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/, include: /node_modules/, use: ['file-loader']
         }, {
-            test: /\.(jpe?g|png|gif|svg|ico|xml|webmanifest)$/i, include: /images/, loader: "file-loader", options: {
+            test: /\.(jpe?g|png|gif|svg)$/i, include: /images/, loader: "file-loader", options: {
                 outputPath: 'images/', publicPath: 'images/', name: '[name].[ext]'
+            }
+        }, {
+            test: /\.(png|svg|ico|xml|webmanifest)$/i, include: /favicons/, loader: "file-loader", options: {
+                outputPath: 'favicons/', publicPath: 'favicons/', name: '[name].[ext]'
             }
         }, {
             test: /\.(txt)$/i, loader: "file-loader?name=/[name].[ext]"

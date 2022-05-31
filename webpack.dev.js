@@ -28,6 +28,10 @@ module.exports = {
                 outputPath: 'images/', publicPath: 'images/', name: '[name].[ext]'
             }
         }, {
+            test: /\.(png|svg|ico|xml|webmanifest)$/i, include: /favicons/, loader: "file-loader", options: {
+                outputPath: 'favicons/', publicPath: 'favicons/', name: '[name].[ext]'
+            }
+        }, {
             test: /\.(txt)$/i, loader: "file-loader?name=/[name].[ext]"
         }]
     },
