@@ -3,9 +3,18 @@ import 'whatwg-fetch'
 
 let api = {
     pm_sensors: {
-        "SDS011": true, "SDS021": true, "PMS1003": true, "PMS3003": true, "PMS5003": true, "PMS6003": true, "PMS7003": true, "HPM": true, "SPS30": true,
+      "SDS011": true,
+      "SDS021": true,
+      "PMS1003": true,
+      "PMS3003": true,
+      "PMS5003": true,
+      "PMS6003": true,
+      "PMS7003": true,
+      "HPM": true,
+      "SPS30": true,
+      "NextPM": true,
+      "IPS-7100": true,
     },
-
     thp_sensors: {
         "DHT11": true,
         "DHT22": true,
