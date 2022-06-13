@@ -1,7 +1,13 @@
 module.exports = {
 
 //	---- Europe ----
+	"world":[0,0],
 	"europe": [57.5, 22],
+	"northamerica": [39.64,-102.96],
+	"southamerica": [-16.21,-63.68],
+	"asia": [22.19,94.88],
+	"africa" : [7.62,20.53],
+	"oceania": [-25.60,134.74],
 
 //	Germany
 	"deutschland": [51.165, 10.4553],

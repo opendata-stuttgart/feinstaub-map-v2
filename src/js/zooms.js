@@ -1,6 +1,10 @@
 module.exports = {
-
+	"world" :2,
 	"europe": 4,
+	"northamerica": 4,
+	"southamerica": 4,
+	"asia": 4,
+	"oceania": 4,
 
 //	---- Europe ----
 

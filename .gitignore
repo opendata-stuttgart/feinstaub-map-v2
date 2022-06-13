@@ -122,4 +122,7 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+### JetBrains ###
+.idea
+
 # End of https://www.gitignore.io/api/node
