@@ -706,17 +706,6 @@ position: absolute;
   left: 20px;
 }
 
-#cercle1{
-  z-index: 1001;
-  bottom: 200px;
-}
-
-#cercle2{
-  z-index: 1001;
-  bottom: 190;
-}
-
-
 #legend_Reference .gradient {
   position: absolute;
 bottom: 20px;
@@ -739,6 +728,8 @@ left: 10px;
   background: blue;
   margin-left: 5px;
   display: inline-block;
+  z-index: 1001;
+  bottom: 170px;
 }
 
 #cercle2 {
@@ -748,6 +739,8 @@ left: 10px;
   background: red;
   margin-left: 5px;
   display: inline-block;
+  z-index: 1001;
+  bottom: 150px;
 }
 
 
@@ -838,4 +831,6 @@ input[type="radio"] {
   position: absolute;
   bottom:215px;
   left: 20px;
+  width: 6em;
+  font-size: 12px;
 }

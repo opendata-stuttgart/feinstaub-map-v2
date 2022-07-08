@@ -128,8 +128,13 @@ document.querySelector("#dateNO2").addEventListener('change', function() {
 
   dateNO2 = this.value;
 
+  console.log(dateNO2);
+
   dataPointsNO2 = L.geoJSON(no2data.default, {
     pointToLayer: function (feature, latlng) {
+
+    // console.log(feature.properties.tubeId);
+    // console.log(feature.properties.stop.substring(0,7));
 
     if (dateNO2 === "all"){
 
@@ -143,7 +148,7 @@ document.querySelector("#dateNO2").addEventListener('change', function() {
       });
 
     } else if (dateNO2 === feature.properties.stop.substring(0,7)){
-
+      console.log(feature.properties.city);
       return L.circleMarker(latlng, {
         radius: responsiveRadius(mobile),
         fillColor: colorScale(feature.properties.value),
@@ -152,10 +157,30 @@ document.querySelector("#dateNO2").addEventListener('change', function() {
         stroke: false,
         fillOpacity: 1,
       });
+    }
+    },
+    onEachFeature: function (feature, layer) {
+      var popupContent;
+      if(feature.properties.campaign == "DUH")
+      {
+        popupContent = "<h2>DUH</h2><p><b>City</b> : "+feature.properties.city+"</p><p><b>Info</b> : "+feature.properties.info+"</p><p><b>Timespan</b> : "+feature.properties.start+" - "+ feature.properties.stop +"</p><b>Value</b> : "+feature.properties.value+" µg\/m&sup3; (average concentration for the month)</p>";
 
+      };
+      if(feature.properties.campaign == "SC")
+      {
+        var traficLevel;
+        // console.log(feature.properties.tubeId);
+        if (feature.properties.trafic == 0) {traficLevel="low"}else{traficLevel="high"};
+        if (feature.properties.value != 0 && feature.properties.remark == ""){
+          popupContent = "<h2>Sensor.Community</h2><p><b>City</b> : "+feature.properties.city+"</p><p><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='"+feature.properties.link+"'>"+feature.properties.group+"</a></p><p><b>Tube ID</b> : "+feature.properties.tubeId+"</p><p><b>Height</b> : "+feature.properties.height+" m</p><p><b>Trafic</b> : "+traficLevel+"</p><p><b>Information</b> : "+feature.properties.info+"<br><br><b>Value</b> : "+feature.properties.value+" µg\/m&sup3; (average concentration for the month)</p>";
+        }else{
+          popupContent = "<h2>Sensor.Community</h2><p><b>City</b> : "+feature.properties.city+"</p><p><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='"+feature.properties.link+"'>"+feature.properties.group+"</a></p><p><b>Tube ID</b> : "+feature.properties.tubeId+"</p><p><b>Height</b> : "+feature.properties.height+" m</p><p><b>Trafic</b> : "+traficLevel+"</p><p><b>Information</b> : "+feature.properties.info+"<br><br><b>Remark</b> : "+feature.properties.remark+"</p>";
+            };
+      };
+      layer.bindPopup(popupContent,{closeButton:true, maxWidth: "auto"});
     }
 
-    }
+
   })
     .addTo(map)
     .bringToFront();
@@ -163,12 +188,6 @@ document.querySelector("#dateNO2").addEventListener('change', function() {
 
 
 });
-
-
-
-
-
-
 
 
 
@@ -913,7 +932,27 @@ onEachFeature: function (feature, layer) {
 
       }
 
-      }
+      },
+    onEachFeature: function (feature, layer) {
+      var popupContent;
+      if(feature.properties.campaign == "DUH")
+      {
+        popupContent = "<h2>DUH</h2><p><b>City</b> : "+feature.properties.city+"</p><p><b>Info</b> : "+feature.properties.info+"</p><p><b>Timespan</b> : "+feature.properties.start+" - "+ feature.properties.stop +"</p><b>Value</b> : "+feature.properties.value+" µg\/m&sup3; (average concentration for the month)</p>";
+
+      };
+      if(feature.properties.campaign == "SC")
+      {
+        var traficLevel;
+        // console.log(feature.properties.tubeId);
+        if (feature.properties.trafic == 0) {traficLevel="low"}else{traficLevel="high"};
+        if (feature.properties.value != 0 && feature.properties.remark == ""){
+          popupContent = "<h2>Sensor.Community</h2><p><b>City</b> : "+feature.properties.city+"</p><p><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='"+feature.properties.link+"'>"+feature.properties.group+"</a></p><p><b>Tube ID</b> : "+feature.properties.tubeId+"</p><p><b>Height</b> : "+feature.properties.height+" m</p><p><b>Trafic</b> : "+traficLevel+"</p><p><b>Information</b> : "+feature.properties.info+"<br><br><b>Value</b> : "+feature.properties.value+" µg\/m&sup3; (average concentration for the month)</p>";
+        }else{
+          popupContent = "<h2>Sensor.Community</h2><p><b>City</b> : "+feature.properties.city+"</p><p><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='"+feature.properties.link+"'>"+feature.properties.group+"</a></p><p><b>Tube ID</b> : "+feature.properties.tubeId+"</p><p><b>Height</b> : "+feature.properties.height+" m</p><p><b>Trafic</b> : "+traficLevel+"</p><p><b>Information</b> : "+feature.properties.info+"<br><br><b>Remark</b> : "+feature.properties.remark+"</p>";
+            };
+      };
+      layer.bindPopup(popupContent,{closeButton:true, maxWidth: "auto"});
+    }
     })
       .addTo(map)
       .bringToFront();
