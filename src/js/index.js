@@ -24,17 +24,21 @@ import api from "./feinstaub-api";
 // import api3 from "./stations-api";
 import labs from "./labs.js";
 import wind from "./wind.js";
+import s2s from "./s2s.js";
 import * as config from "./config.js";
 import * as places from "./places.js";
 import * as zooms from "./zooms.js";
 import * as translate from "./translate.js";
 import * as no2data from "./no2.json";
 import * as stations from "./stations.json";
+import * as s2s_data from "./s2s_data.json";
 
 console.log(no2data.default);
 console.log(stations.default);
+console.log(s2s_data.default);
 
 import "../images/labMarker.svg";
+import "../images/schoolMarker.svg";
 import "../images/favicon.ico";
 import "../css/style.css";
 import "../css/leaflet.css";
@@ -65,6 +69,8 @@ const map = L.map("map", {
 }).setView(config.initialView, config.initialZoom);
 map.attributionControl.setPosition("bottomleft");
 
+map.createPane('markerPane1');
+map.createPane('markerPane2');
 
 
 
@@ -1116,9 +1122,21 @@ onEachFeature: function (feature, layer) {
   function switchLabLayer() {
     if (document.querySelector("#cb_labs").checked) {
       labs.getData(config.data_host + "/local-labs/labs.json", map);
-      map.getPane("markerPane").style.visibility = "visible";
+      map.getPane("markerPane1").style.visibility = "visible";
     } else {
-      map.getPane("markerPane").style.visibility = "hidden";
+      map.getPane("markerPane1").style.visibility = "hidden";
+    }
+  }
+
+  function switchS2SLayer() {
+    console.log("S2S");
+    console.log(process.cwd());
+    console.log(__dirname);
+    if (document.querySelector("#cb_s2s").checked) {
+      s2s.getData(s2s_data, map);
+      map.getPane("markerPane2").style.visibility = "visible";
+    } else {
+      map.getPane("markerPane2").style.visibility = "hidden";
     }
   }
 
@@ -1203,11 +1221,16 @@ onEachFeature: function (feature, layer) {
 
   // Load lab and windlayer, init checkboxes
   document.querySelector("#cb_labs").checked = false;
+  document.querySelector("#cb_s2s").checked = false;
   document.querySelector("#cb_wind").checked = false;
 
   document.querySelector("#label_local_labs").innerText = translate.tr(
     lang,
     "Local labs"
+  );
+  document.querySelector("#label_sensor_school").innerText = translate.tr(
+    lang,
+    "Sensor2School"
   );
   document.querySelector("#label_wind_layer").innerText = translate.tr(
     lang,
@@ -1215,9 +1238,8 @@ onEachFeature: function (feature, layer) {
   );
 
   document.querySelector("#cb_labs").addEventListener("change", switchLabLayer);
-  document
-    .querySelector("#cb_wind")
-    .addEventListener("change", switchWindLayer);
+  document.querySelector("#cb_s2s").addEventListener("change", switchS2SLayer);
+  document.querySelector("#cb_wind").addEventListener("change", switchWindLayer);
 
   // translate AQI values
   document.querySelector("#AQI_Good").innerText = translate.tr(lang, "Good");

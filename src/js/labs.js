@@ -89,7 +89,7 @@ let labs = {
                         lab_popuptext += "</table>";
                         lab_popuptext += "<br />Your location is missing? Add it <a href='https://github.com/opendata-stuttgart/luftdaten-local-labs' target='_blank' rel='noreferrer'>here</a>."
                         L.marker([data[i].lat, data[i].lon], {
-                            icon: new labelRight(), riseOnHover: true
+                            icon: new labelRight(), riseOnHover: true, pane: 'markerPane1'
                         })
                             .bindPopup(lab_popuptext)
                             .addTo(map);
