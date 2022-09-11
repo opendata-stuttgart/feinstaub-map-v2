@@ -834,3 +834,28 @@ input[type="radio"] {
   width: 6em;
   font-size: 12px;
 }
+
+#textCountRefStation{
+  z-index: 1001;
+  position: absolute;
+  bottom:14em;
+  left: 50px;
+  font-size: 12px;
+}
+
+#textCountRefSensor{
+  z-index: 1001;
+  position: absolute;
+  bottom:12em;
+  left: 50px;
+  font-size: 12px;
+}
+
+.textCount{
+  z-index: 1001;
+  position: absolute;
+  bottom:20em;
+  left: 20px;
+  font-size: 12px;
+  /* display:none; */
+}

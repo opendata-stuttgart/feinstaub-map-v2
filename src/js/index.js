@@ -75,13 +75,12 @@ map.createPane('markerPane2');
 
 
 
-
-
-
-
-
-
-
+let arrayCountSensorsHexPM;
+let arrayCountSensorsHexEUWHOAQI;
+let arrayCountSensorsHexT;
+let arrayCountSensorsHexH;
+let arrayCountSensorsHexP;
+let arrayCountSensorsHexNoise;
 
 let windLayerRetrieved = false;
 let labsLayerRetrieved = false;
@@ -95,6 +94,8 @@ let coo = [];
 
 let stationsInBounds;
 let sensorsInBounds;
+
+let sensorsInBoundsHex;
 
 let mapBounds;
 
@@ -508,11 +509,17 @@ window.onload = function () {
   // noise = Noise
   // pmWHO = PM10who PM25who
   // pmEU = PM10eu PM25eu
-  async function retrieveData(user_selected_value) {
+
+
+    //FILTRER ICI CHAQUE DATASET!!!! POUR INDOOR => Créer 2 variables ? OU BIEN AprÈs a cahque iteration
+
+
+  async function retrieveData() {
     await api
       .getData(config.data_host + "/data/v2/data.dust.min.json", "pmDefault")
       .then(function (result) {
-        hmhexaPM_aktuell = result.cells;
+        if(document.querySelector("#indoor").checked){hmhexaPM_aktuell = result.cells;}else{hmhexaPM_aktuell = result.cells.filter(e => e.indoor==0);}
+        LatLngMapper(hmhexaPM_aktuell,"PM");
         sensorsLocations = result.cells2;
         console.log(sensorsLocations);
         if (result.timestamp > timestamp_data) {
@@ -528,10 +535,10 @@ window.onload = function () {
     await api
       .getData(config.data_host + "/data/v2/data.24h.json")
       .then(function (result) {
-        hmhexaPM_WHO = result.cells;
-        hmhexaPM_EU = result.cells;
-        hmhexaPM_AQI = result.cells;
-
+        if(document.querySelector("#indoor").checked){hmhexaPM_WHO = result.cells;}else{hmhexaPM_WHO = result.cells.filter(e => e.indoor==0);}
+        if(document.querySelector("#indoor").checked){hmhexaPM_EU = result.cells;}else{hmhexaPM_EU = result.cells.filter(e => e.indoor==0);}
+        if(document.querySelector("#indoor").checked){hmhexaPM_AQI = result.cells;}else{hmhexaPM_AQI = result.cells.filter(e => e.indoor==0);}
+        LatLngMapper(hmhexaPM_WHO,"EUWHOAQI");
         if (result.timestamp > timestamp_data) {
           timestamp_data = result.timestamp;
           timestamp_from = result.timestamp_from;
@@ -546,7 +553,12 @@ window.onload = function () {
     await api
       .getData(config.data_host + "/data/v2/data.temp.min.json", "tempHumPress")
       .then(function (result) {
-        hmhexa_t_h_p = result.cells;
+        //hmhexa_t_h_p = result.cells;
+        //console.log(hmhexa_t_h_p);
+        if(document.querySelector("#indoor").checked){hmhexa_t_h_p = result.cells;}else{hmhexa_t_h_p = result.cells.filter(e => e.indoor==0);}
+        LatLngMapper(hmhexa_t_h_p,"Temperature");
+        LatLngMapper(hmhexa_t_h_p,"Humidity");
+        LatLngMapper(hmhexa_t_h_p,"Pressure");
         if (result.timestamp > timestamp_data) {
           timestamp_data = result.timestamp;
           timestamp_from = result.timestamp_from;
@@ -557,7 +569,9 @@ window.onload = function () {
     await api
       .getData(config.data_host + "/data/v1/data.noise.json", "noise")
       .then(function (result) {
-        hmhexa_noise = result.cells;
+        //hmhexa_noise = result.cells;
+        if(document.querySelector("#indoor").checked){hmhexa_noise = result.cells;}else{hmhexa_noise = result.cells.filter(e => e.indoor==0);}
+        LatLngMapper(hmhexa_noise,"Noise");
         if (result.timestamp > timestamp_data) {
           timestamp_data = result.timestamp;
           timestamp_from = result.timestamp_from;
@@ -574,6 +588,40 @@ window.onload = function () {
       // .then(() => ready("reference"));
   }
 
+function LatLngMapper(array,selector){
+
+if (selector == "PM"){
+  arrayCountSensorsHexPM = array.map(e=>new L.LatLng(e.latitude,e.longitude));
+  console.log(arrayCountSensorsHexPM);
+}
+
+if (selector == "EUWHOAQI"){
+  arrayCountSensorsHexEUWHOAQI = array.map(e=>new L.LatLng(e.latitude,e.longitude));
+  console.log(arrayCountSensorsHexEUWHOAQI);
+}
+
+if (selector == "Temperature"){
+  arrayCountSensorsHexT = array.filter(e=>!isNaN(e.data.Temperature)).map(e=>new L.LatLng(e.latitude,e.longitude));
+  console.log(arrayCountSensorsHexT);
+}
+
+if (selector == "Humidity"){
+  arrayCountSensorsHexH = array.filter(e=>!isNaN(e.data.Humidity)).map(e=>new L.LatLng(e.latitude,e.longitude));
+  console.log(arrayCountSensorsHexH);
+}
+
+if (selector == "Pressure"){
+  arrayCountSensorsHexP = array.filter(e=>!isNaN(e.data.Pressure)).map(e=>new L.LatLng(e.latitude,e.longitude));
+  console.log(arrayCountSensorsHexP);
+}
+
+if (selector == "Noise"){
+  arrayCountSensorsHexNoise = array.map(e=>new L.LatLng(e.latitude,e.longitude));
+  console.log(arrayCountSensorsHexNoise);
+}
+
+}
+
   function ready(vizType) {
     const date = new Date();
     const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
@@ -589,17 +637,32 @@ window.onload = function () {
     document.querySelector("#menuButton").innerText =
       document.querySelector(".selected").innerText;
 
+   //d3.selectAll("p[class='textCount']").style("diplay", "block");
+
+
     if (
       vizType === "pmWHO" &&
       (user_selected_value === "PM10who" || user_selected_value === "PM25who")
     ) {
       hexagonheatmap.initialize(config.scale_options[user_selected_value]);
       hexagonheatmap.data(hmhexaPM_WHO);
-    }
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);    }
+
+    if (
+      vizType === "pmEU" &&
+      (user_selected_value === "PM10eu" || user_selected_value === "PM25eu")
+    ) {
+      hexagonheatmap.initialize(config.scale_options[user_selected_value]);
+      hexagonheatmap.data(hmhexaPM_EU);
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);    }
 
     if (vizType === "aqi" && user_selected_value === "AQIus") {
       hexagonheatmap.initialize(config.scale_options[user_selected_value]);
       hexagonheatmap.data(hmhexaPM_AQI);
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
     }
 
     if (
@@ -615,17 +678,38 @@ window.onload = function () {
           );
         })
       );
+
+        if(user_selected_value == "Temperature"){
+            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexT));
+            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexT.length);
+          }
+        
+
+        if(user_selected_value == "Humidity"){
+          d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexH));
+          d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexH.length);
+        }
+      
+
+      if(user_selected_value == "Pressure"){
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexP));
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexP.length);
+      }
     }
 
-    if (vizType === "Noise" && user_selected_value === "Noise") {
+    if (vizType === "noise" && user_selected_value === "Noise") {
       hexagonheatmap.initialize(config.scale_options[user_selected_value]);
       hexagonheatmap.data(hmhexa_noise);
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexNoise));
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexNoise.length);
     } 
     
     if (vizType === "pmDefault" && (user_selected_value === "PM25" || user_selected_value === "PM10")) {
       hexagonheatmap.initialize(config.scale_options[user_selected_value]);
       hexagonheatmap.data(hmhexaPM_aktuell);
-      console.log("TEST");
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexPM));
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexPM.length);
+
     }
 
     if (vizType === "Reference" && user_selected_value === "Reference") {
@@ -658,11 +742,6 @@ sensorsPoints.bringToFront();
 document.getElementById("radiocontainer").style.display ="block";
     }
 
-
-
-
-
-
     document.querySelector("#loading").style.display = "none";
   }
 
@@ -679,12 +758,70 @@ document.getElementById("radiocontainer").style.display ="block";
     circleRadii.clearLayers()
   });
   
-
-
-
   map.on("moveend", function () {
     if(user_selected_value !== "NO2" && user_selected_value !== "Reference"){
     hexagonheatmap._zoomChange();
+
+    if (user_selected_value === "PM10" || user_selected_value === "PM25") {
+      if (arrayCountSensorsHexPM != undefined){
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexPM));
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexPM.length);
+      }
+    }
+
+ if (user_selected_value === "PM10eu" || user_selected_value === "PM25eu") {
+      if (arrayCountSensorsHexEUWHOAQI != undefined){
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+      }
+    } 
+  
+  if (user_selected_value === "PM10who" || user_selected_value === "PM25who") {
+    if (arrayCountSensorsHexEUWHOAQI != undefined){
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+    }
+  } 
+  
+  if (user_selected_value === "AQIus") {
+    if (arrayCountSensorsHexEUWHOAQI != undefined){
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+      d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+    }
+ }
+  
+  if (["Temperature", "Humidity", "Pressure"].includes(user_selected_value)) {
+    if (user_selected_value == "Temperature"){
+      if (arrayCountSensorsHexT != undefined){
+        //console.log(d3.select("#legend").select("div[style='display: block;']"));
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexT));
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexT.length);
+      }
+
+    }
+    if (user_selected_value == "Humidity"){
+      if (arrayCountSensorsHexH != undefined){
+        //console.log(d3.select("#legend").select("div[style='display: block;']"));
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexH));
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexH.length);
+      }
+    }
+    if (user_selected_value == "Pressure"){
+      if (arrayCountSensorsHexP != undefined){
+        //console.log(d3.select("#legend").select("div[style='display: block;']"));
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexP));
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexP.length);
+      }
+  }
+
+}
+  if (user_selected_value === "Noise") {
+      if (arrayCountSensorsHexNoise != undefined){
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexNoise));
+        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexNoise.length);
+      }
+  }
+
   }
 
   if (user_selected_value === "Reference"){
@@ -792,10 +929,6 @@ document.getElementById("radiocontainer").style.display ="block";
     }
   });
 
-
-
-
-
   function data_median(data) {
     function sort_num(a, b) {
       let c = a - b;
@@ -810,6 +943,7 @@ document.getElementById("radiocontainer").style.display ="block";
   }
 
   function reloadMap(val) {
+    console.log(val);
     document.querySelectorAll("path.hexbin-hexagon").forEach(function (d) {
       d.remove();
     });
@@ -828,9 +962,12 @@ map.removeLayer(dataPointsNO2);
 
     map.removeLayer(sensorsPoints);
 }
-   
-          
 
+if(map.hasLayer(circleRadii)){
+
+  circleRadii.clearLayers();
+}
+   
     if (val !== "NO2" && val !=="Reference"){
     hexagonheatmap.initialize(config.scale_options[val]);
     if (val === "PM10" || val === "PM25") {
@@ -854,6 +991,63 @@ map.removeLayer(dataPointsNO2);
       hexagonheatmap.data(hmhexa_noise);
     }
     switchLegend(val);
+
+      if (val === "PM10" || val === "PM25") {
+        if (arrayCountSensorsHexPM != undefined){
+         // console.log(d3.select("#legend").select("div[style='display: block;']"));
+          d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexPM));
+          d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexPM.length);
+        }
+      } else if (val === "PM10eu" || val === "PM25eu") {
+        if (arrayCountSensorsHexEUWHOAQI != undefined){
+          // console.log(d3.select("#legend").select("div[style='display: block;']"));
+           d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+           d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+         }
+      } else if (val === "PM10who" || val === "PM25who") {
+        if (arrayCountSensorsHexEUWHOAQI != undefined){
+          // console.log(d3.select("#legend").select("div[style='display: block;']"));
+           d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+           d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+         }
+      } else if (val === "AQIus") {
+        if (arrayCountSensorsHexEUWHOAQI != undefined){
+          // console.log(d3.select("#legend").select("div[style='display: block;']"));
+           d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+           d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+         }
+      } else if (["Temperature", "Humidity", "Pressure"].includes(val)) {
+        if (val == "Temperature"){
+          if (arrayCountSensorsHexT != undefined){
+            //console.log(d3.select("#legend").select("div[style='display: block;']"));
+            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexT));
+            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexT.length);
+          }
+
+        }
+        if (val == "Humidity"){
+          if (arrayCountSensorsHexH != undefined){
+            //console.log(d3.select("#legend").select("div[style='display: block;']"));
+            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexH));
+            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexH.length);
+          }
+        }
+        if (val == "Pressure"){
+          if (arrayCountSensorsHexP != undefined){
+            //console.log(d3.select("#legend").select("div[style='display: block;']"));
+            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexP));
+            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexP.length);
+          }
+
+        }
+ 
+      } else if (val === "Noise") {
+        if (arrayCountSensorsHexNoise != undefined){
+          //console.log(d3.select("#legend").select("div[style='display: block;']"));
+          d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexNoise));
+          d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexNoise.length);
+        }
+      }
   }else{
 
     if (val === "Reference") {
@@ -969,19 +1163,6 @@ onEachFeature: function (feature, layer) {
   }
 
   }
-
-
-
-  // function stations(feature) {
-  //   if (feature.properties.ostation == 1) {
-  //     return "#ff0000";
-  //   } else {
-  //     return "transparent";
-  //   }
-  // }
-
-
-
 
   function sensorNr(data) {
     openMenu();
@@ -1128,10 +1309,19 @@ onEachFeature: function (feature, layer) {
     }
   }
 
+  function switchIndoorLayer() {
+    // if (document.querySelector("#indoor").checked) {
+
+    // } else {
+
+    // }
+    retrieveData();
+  }
+
   function switchS2SLayer() {
-    console.log("S2S");
-    console.log(process.cwd());
-    console.log(__dirname);
+    // console.log("S2S");
+    // console.log(process.cwd());
+    // console.log(__dirname);
     if (document.querySelector("#cb_s2s").checked) {
       s2s.getData(s2s_data, map);
       map.getPane("markerPane2").style.visibility = "visible";
@@ -1223,6 +1413,12 @@ onEachFeature: function (feature, layer) {
   document.querySelector("#cb_labs").checked = false;
   document.querySelector("#cb_s2s").checked = false;
   document.querySelector("#cb_wind").checked = false;
+  document.querySelector("#indoor").checked = false;
+  // d3.selectAll("p[class='textCount']").style("diplay", "none");
+  // console.log(d3.selectAll("p[class='textCount']"));
+  //document.querySelector(".textCount").style.display = "none";
+
+  
 
   document.querySelector("#label_local_labs").innerText = translate.tr(
     lang,
@@ -1236,10 +1432,15 @@ onEachFeature: function (feature, layer) {
     lang,
     "Wind layer"
   );
+  document.querySelector("#label_indoor").innerText = translate.tr(
+    lang,
+    "Show indoor sensors"
+  );
 
   document.querySelector("#cb_labs").addEventListener("change", switchLabLayer);
   document.querySelector("#cb_s2s").addEventListener("change", switchS2SLayer);
   document.querySelector("#cb_wind").addEventListener("change", switchWindLayer);
+  document.querySelector("#indoor").addEventListener("change", switchIndoorLayer);
 
   // translate AQI values
   document.querySelector("#AQI_Good").innerText = translate.tr(lang, "Good");
@@ -1414,19 +1615,28 @@ function boundsCountStations (object){
   stationsInBounds.forEach(function(e){e.count250 = 0;
                                       e.count1000 = 0  });
       
-  document.getElementById("stationsCount").innerHTML = stationsInBounds.length;
+  document.getElementById("stationsCountRef").innerHTML = stationsInBounds.length;
 
   console.log(stationsInBounds);
 
 }
 
+function boundsCountSensorsHex (array){
+  mapBounds = map.getBounds();
+  sensorsInBoundsHex = array.filter(function (e) {
+    if(mapBounds.contains(e)){return e}
+  }); 
+  console.log(sensorsInBoundsHex.length);
+  console.log(array.length);
+  return sensorsInBoundsHex.length;
+}
 
 function boundsCountSensors (object){
   var arrayConv = Object.values(object);
   mapBounds = map.getBounds();
   sensorsInBounds = arrayConv.filter(function (e) {if (mapBounds.contains(e._latlng)){return e}}); 
   
-  document.getElementById("sensorsCount").innerHTML = sensorsInBounds.length;
+  document.getElementById("sensorsCountRef").innerHTML = sensorsInBounds.length;
 
   console.log(sensorsInBounds);
 

@@ -37,6 +37,7 @@
 <button id="menuButton">PM2.5 (5 min. mean)</button>
 <div id="legend">
     <div id="legend_PM10">
+        <p class="textCount"><span class="sensorsCount"></span> visible sensors out of <span class="sensorsCountTotal"></span></p>
         <div class="legend">
             <div class="gradient"></div>
             <div class="labels">
@@ -52,6 +53,7 @@
     </div>
 
     <div id="legend_PM25">
+        <p class="textCount"><span class="sensorsCount"></span> visible sensors out of <span class="sensorsCountTotal"></span></p>
         <div class="legend">
             <div class="gradient"></div>
             <div class="labels">
@@ -67,6 +69,7 @@
     </div>
 
     <div id="legend_PM10eu">
+        <p class="textCount"><span class="sensorsCount"></span> visible sensors out of <span class="sensorsCountTotal"></span></p>
         <div class="legend">
             <div class="gradient"></div>
             <div class="labels">
@@ -83,6 +86,7 @@
     </div>
 
     <div id="legend_PM25eu">
+        <p class="textCount"><span class="sensorsCount"></span> visible sensors out of <span class="sensorsCountTotal"></span></p>
         <div class="legend">
             <div class="gradient"></div>
             <div class="labels">
@@ -99,6 +103,7 @@
     </div>
 
     <div id="legend_PM10who">
+        <p class="textCount"><span class="sensorsCount"></span> visible sensors out of <span class="sensorsCountTotal"></span></p>
         <div class="legend">
             <div class="gradient"></div>
             <div class="labels">
@@ -110,6 +115,7 @@
     </div>
 
     <div id="legend_PM25who">
+        <p class="textCount"><span class="sensorsCount"></span> visible sensors out of <span class="sensorsCountTotal"></span></p>
         <div class="legend">
             <div class="gradient"></div>
             <div class="labels">
@@ -121,6 +127,7 @@
     </div>
 
     <div id="legend_AQIus">
+        <p class="textCount"><span class="sensorsCount"></span> visible sensors out of <span class="sensorsCountTotal"></span></p>
         <div class="legend">
             <div class="labels">
                 <div><span class="AQI_color" style="background-color:#00E400"></span><span id="AQI_Good"></span></div>
@@ -140,6 +147,7 @@
     </div>
 
     <div id="legend_Temperature">
+        <p class="textCount"><span class="sensorsCount"></span> visible sensors out of <span class="sensorsCountTotal"></span></p>
         <div class="legend">
             <div class="gradient"></div>
             <div class="labels">
@@ -153,6 +161,7 @@
     </div>
 
     <div id="legend_Humidity">
+        <p class="textCount"><span class="sensorsCount"></span> visible sensors out of <span class="sensorsCountTotal"></span></p>
         <div class="legend">
             <div class="gradient"></div>
             <div class="labels">
@@ -168,6 +177,7 @@
     </div>
 
     <div id="legend_Pressure">
+        <p class="textCount"><span class="sensorsCount"></span> visible sensors out of <span class="sensorsCountTotal"></span></p>
         <div class="legend">
             <div class="gradient"></div>
             <div class="labels">
@@ -182,6 +192,7 @@
     </div>
 
     <div id="legend_Noise">
+        <p class="textCount"><span class="sensorsCount"></span> visible sensors out of <span class="sensorsCountTotal"></span></p>
         <div class="legend">
             <div class="gradient"></div>
             <div class="labels">
@@ -272,10 +283,10 @@
             <label for="1000m">1000 m</label>
     </div>
     <div class="cercle" id="cercle1"></div>
-    <span id="stationsCount"></span> Reference stations
+    <p id="textCountRefStation"><span id="stationsCountRef"></span> Reference stations</p>
     <br>
     <div class="cercle" id="cercle2"></div>
-    <span id="sensorsCount"></span> Community sensors
+    <p id="textCountRefSensor"><span id="sensorsCountRef"></span> Community sensors</p>
 
 
     <div class="legend">
@@ -336,10 +347,14 @@
         <ul class="layerSelect">
             <li><input type="checkbox" id="cb_labs" checked="checked"/>
                 <label for="cb_labs" id="label_local_labs">Local labs</label></li>
-            <li><input type="checkbox" id="cb_wind" checked="checked"/>
-                <label for="cb_wind" id="label_wind_layer">Wind layer</label></li>
             <li><input type="checkbox" id="cb_s2s" checked="checked"/>
                 <label for="cb_s2s" id="label_sensor_school">Sensor2School</label></li>
+        </ul>
+        <ul class="layerSelect">
+            <li><input type="checkbox" id="cb_wind" checked="checked"/>
+                <label for="cb_wind" id="label_wind_layer">Wind layer</label></li>
+            <li><input type="checkbox" id="indoor" checked="checked">
+                <label for="indoor" id="label_indoor">Show indoor sensors</label></li>
         </ul>
     </div>
 </div>
