@@ -72,7 +72,8 @@ map.attributionControl.setPosition("bottomleft");
 map.createPane('markerPane1');
 map.createPane('markerPane2');
 
-
+// let projectionSaved;
+// let selectionSaved;
 
 
 let arrayCountSensorsHexPM;
@@ -392,10 +393,16 @@ window.onload = function () {
       this._enableLeafletRounding();
     },
     getEvents: function () {
-      return { zoomend: this._zoomChange };
+      //return { zoomend: this._zoomChange };
+      //return { zoomend: null };
+      return { moveend: this._zoomChange,
+               zoomend: this._zoomChange,
+              };
     },
 
+
     _zoomChange: function () {
+      console.log("ZOOMCHANGE")
       let mapZoom = map.getZoom();
       this._disableLeafletRounding();
       let newZoom = this._undef(mapZoom) ? this.map._zoom : mapZoom;
@@ -413,6 +420,14 @@ window.onload = function () {
     },
     _redraw(selection, projection, zoom) {
       // Generate the mapped version of the data
+
+      // console.log(selection);
+      // console.log(projection);
+      console.log("zoom at redraw: " + zoom);
+
+      // selectionSaved = selection;
+      // projectionSaved = projection;
+
       let data = this._data.map((d) => {
         let lng = this.options.lng(d);
         let lat = this.options.lat(d);
@@ -442,7 +457,10 @@ window.onload = function () {
         .radius(this.getFlexRadius() / projection.scale)
         .x((d) => d.point.x)
         .y((d) => d.point.y);
+
       let bins = hexbin(data);
+
+     // console.log(bins);
 
       // Join - Join the Hexagons to the data
       let join = g.selectAll("path.hexbin-hexagon").data(bins);
@@ -457,7 +475,7 @@ window.onload = function () {
             : this._colorScale(this.options.value(d))
         )
         .attr("fill-opacity", this.options.opacity)
-        .attr("stroke-opacity", this.options.opacity);
+        .attr("stroke-opacity", this.options.opacity);    
 
       // Enter - establish the path, the fill, and the initial opacity
       join
@@ -498,9 +516,12 @@ window.onload = function () {
 
   map.setView(coordsCenter, zoomLevel);
   map.clicked = 0;
+
   hexagonheatmap = L.hexbinLayer(
     config.scale_options[user_selected_value]
   ).addTo(map);
+
+  //map.on(this.getEvents(),this);
 
   //retrieve data from api
   // pmDefault = PM10 PM25 5 min
@@ -751,16 +772,30 @@ document.getElementById("radiocontainer").style.display ="block";
   map.on('move', function() {
     // document.getElementById('legend_Reference').style.display = 'none'; 
     circleRadii.clearLayers()
+    // if(map.hasLayer(hexagonheatmap)){
+    //   hexagonheatmap._zoomChange();
+    // }
+    console.log("move");
   });
   
   map.on('zoom', function() {
     // document.getElementById('legend_Reference').style.display = 'none'; 
     circleRadii.clearLayers()
+
+    // if(map.hasLayer(hexagonheatmap)){
+    //   hexagonheatmap._zoomChange();  
+    // }
+
+    console.log("zoom");
   });
   
   map.on("moveend", function () {
     if(user_selected_value !== "NO2" && user_selected_value !== "Reference"){
-    hexagonheatmap._zoomChange();
+   //hexagonheatmap._zoomChange();
+    //hexagonheatmap.getEvents();
+    //hexagonheatmap._redraw(selectionSaved,projectionSaved,map.getZoom());
+
+    //2 variable ajoutées
 
     if (user_selected_value === "PM10" || user_selected_value === "PM25") {
       if (arrayCountSensorsHexPM != undefined){
@@ -843,7 +878,7 @@ document.getElementById("radiocontainer").style.display ="block";
 
   }
 
-
+  console.log("movend");
   });
 
   map.on("click", function () {
@@ -853,6 +888,8 @@ document.getElementById("radiocontainer").style.display ="block";
     map.zoomIn();
     clicked += 1;
   });
+
+
 
   map.on("zoomend", function () {
     let zl = map.getZoom();
@@ -927,6 +964,13 @@ document.getElementById("radiocontainer").style.display ="block";
         sensorsPoints.setStyle({ radius: 20 });
       }
     }
+  
+  // if(map.hasLayer(hexagonheatmap)){
+  //   hexagonheatmap._zoomChange();
+  // }
+
+  console.log("zoomend");
+
   });
 
   function data_median(data) {
