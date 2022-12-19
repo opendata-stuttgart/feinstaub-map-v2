@@ -433,6 +433,8 @@ window.onload = function () {
 
       // if(zoomDetect == true){
 
+        if (user_selected_value !== "NO2" && user_selected_value !=="Reference"){
+
       console.log("ZOOMCHANGE")
       let mapZoom = map.getZoom();
       this._disableLeafletRounding();
@@ -449,7 +451,7 @@ window.onload = function () {
       this.draw();
       this._enableLeafletRounding();
 
-
+        }
       // moveDetect = false;
       // zoomDetect = false;
       // }
