@@ -66,6 +66,7 @@ const map = L.map("map", {
   preferCanvas: true,
   zoomControl: false,
   controls: false,
+  // scrollWheelZoom:false
 }).setView(config.initialView, config.initialZoom);
 map.attributionControl.setPosition("bottomleft");
 
@@ -130,6 +131,10 @@ for (var i = 0; i < radios.length; i++) {
 
 
 let dateNO2 = "all";
+
+// let moveDetect = false;
+// let zoomDetect = false;
+
 
 document.querySelector("#dateNO2").addEventListener('change', function() {
   map.removeLayer(dataPointsNO2);
@@ -395,13 +400,39 @@ window.onload = function () {
     getEvents: function () {
       //return { zoomend: this._zoomChange };
       //return { zoomend: null };
-      return { moveend: this._zoomChange,
-               zoomend: this._zoomChange,
+      return { 
+              // move:this._zoomChange,
+              // zoom:this._zoomChange,
+             // movestart:this._moveDetect,
+              // zoomstart:this._zoomDetect,
+              // move:this._moveDetect,
+              // zoom:this._zoomDetect,
+              moveend: this._moveChange,
+              zoomend: this._zoomChange
               };
     },
+    // _moveDetect:function(){
 
+    //   console.log("move");
+    //   moveDetect = true;
+    //   zoomDetect = true;
+      
+    // },
+
+    // _zoomDetect:function(){
+
+    //   console.log("zoom");
+    //   //moveDetect = true;
+    //   zoomDetect = true;
+
+    //   // map.scrollWheelZoom.disable();
+    // },
+    // //setTimeout(myGreeting, 5000);
 
     _zoomChange: function () {
+
+      // if(zoomDetect == true){
+
       console.log("ZOOMCHANGE")
       let mapZoom = map.getZoom();
       this._disableLeafletRounding();
@@ -417,6 +448,38 @@ window.onload = function () {
       this._rootGroup.attr("transform", shift.concat(scale).join(""));
       this.draw();
       this._enableLeafletRounding();
+
+
+      // moveDetect = false;
+      // zoomDetect = false;
+      // }
+
+    },
+    _moveChange: function () {
+
+      // if(zoomDetect == false){
+      console.log("MOVECHANGE")
+      let mapZoom = map.getZoom();
+      this._disableLeafletRounding();
+      let newZoom = this._undef(mapZoom) ? this.map._zoom : mapZoom;
+      this._zoomDiff = newZoom - this._zoom;
+      this._scale = Math.pow(2, this._zoomDiff);
+      this.projection.scale = this._scale;
+      this._shift = this.map
+        .latLngToLayerPoint(this._wgsOrigin)
+        ._subtract(this._wgsInitialShift.multiplyBy(this._scale));
+      let shift = ["translate(", this._shift.x, ",", this._shift.y, ") "];
+      let scale = ["scale(", this._scale, ",", this._scale, ") "];
+      this._rootGroup.attr("transform", shift.concat(scale).join(""));
+      this.draw();
+      this._enableLeafletRounding();
+
+      // zoomDetect = false;
+    
+      // }
+
+      
+
     },
     _redraw(selection, projection, zoom) {
       // Generate the mapped version of the data
@@ -435,6 +498,8 @@ window.onload = function () {
         return { o: d, point: point };
       });
 
+
+    
       // Select the hex group for the current zoom level. This has
       // the effect of recreating the group if the zoom level has changed
       let join = selection.selectAll("g.hexbin").data([zoom], (d) => d);
@@ -446,12 +511,19 @@ window.onload = function () {
 
       join.exit().remove();
 
-      // add the hexagons to the select
-      this._createHexagons(join, data, projection);
+       // add the hexagons to the select
+       this._createHexagons(join, data, projection);
+
+   
+
+     
     },
 
     _createHexagons(g, data, projection) {
       // Create the bins using the hexbin layout
+      
+     
+      
       let hexbin = d3
         .hexbin()
         .radius(this.getFlexRadius() / projection.scale)
@@ -475,7 +547,8 @@ window.onload = function () {
             : this._colorScale(this.options.value(d))
         )
         .attr("fill-opacity", this.options.opacity)
-        .attr("stroke-opacity", this.options.opacity);    
+        .attr("stroke-opacity", this.options.opacity); 
+        //.attr("stroke-width", "0%");
 
       // Enter - establish the path, the fill, and the initial opacity
       join
@@ -494,6 +567,7 @@ window.onload = function () {
         .attr("fill-opacity", this.options.opacity)
         .attr("stroke-opacity", this.options.opacity);
 
+        // setTimeout(function(){
       // Exit
       join
         .exit()
@@ -502,6 +576,13 @@ window.onload = function () {
         .attr("fill-opacity", this.options.opacity)
         .attr("stroke-opacity", this.options.opacity)
         .remove();
+
+      //  }, 5000);
+ 
+      // setTimeout(function(){
+      //   map.scrollWheelZoom.enable();
+      //     }, 5000);
+
     },
     data(data) {
       this._data = data != null ? data : [];
@@ -775,7 +856,7 @@ document.getElementById("radiocontainer").style.display ="block";
     // if(map.hasLayer(hexagonheatmap)){
     //   hexagonheatmap._zoomChange();
     // }
-    console.log("move");
+   // console.log("move");
   });
   
   map.on('zoom', function() {
@@ -786,7 +867,7 @@ document.getElementById("radiocontainer").style.display ="block";
     //   hexagonheatmap._zoomChange();  
     // }
 
-    console.log("zoom");
+   // console.log("zoom");
   });
   
   map.on("moveend", function () {
@@ -878,7 +959,14 @@ document.getElementById("radiocontainer").style.display ="block";
 
   }
 
-  console.log("movend");
+   
+    // if(map.hasLayer(hexagonheatmap)){
+    // setTimeout(function(){  
+    //   hexagonheatmap._zoomChange();  
+    // },5000);
+    // }
+ 
+  //console.log("movend");
   });
 
   map.on("click", function () {
@@ -966,10 +1054,12 @@ document.getElementById("radiocontainer").style.display ="block";
     }
   
   // if(map.hasLayer(hexagonheatmap)){
-  //   hexagonheatmap._zoomChange();
+  //   setTimeout(function(){  
+  //     hexagonheatmap._zoomChange();  
+  //   },5000);
   // }
 
-  console.log("zoomend");
+  //console.log("zoomend");
 
   });
 

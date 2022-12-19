@@ -235,8 +235,20 @@ svg.leaflet-image-layer.leaflet-interactive path {
 /* leaflet map */
 .leaflet-pane > svg .d3-overlay path {
     cursor: help;
-    pointer-events: all;
+    /* pointer-events: all; */
+    pointer-events: fill;
 }
+/* 
+.hexbin-hexagon:hover{
+
+    stroke:red;
+    stroke: none;
+    padding:0px;
+    stroke-width: 0.01em;
+  }  
+  */
+
+
 
 /* colorize leaflet map */
 img.leaflet-tile {
@@ -244,7 +256,7 @@ img.leaflet-tile {
     -webkit-filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
 }
 
-/* .hexbin-hexagon{
+ /* .hexbin-hexagon{
 
-    stroke:transparent;
-  } */
+    stroke:red;
+  }  */
