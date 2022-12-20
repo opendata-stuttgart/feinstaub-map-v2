@@ -235,7 +235,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 /* leaflet map */
 .leaflet-pane > svg .d3-overlay path {
     cursor: help;
-    pointer-events: all;
+    pointer-events: fill;
 }
 
 /* colorize leaflet map */
