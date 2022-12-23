@@ -639,8 +639,8 @@ window.onload = function () {
         ) {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
             hexagonheatmap.data(hmhexaPM_WHO);
-            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
-            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+            d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+            d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
         }
 
         if (
@@ -649,15 +649,15 @@ window.onload = function () {
         ) {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
             hexagonheatmap.data(hmhexaPM_EU);
-            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
-            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+            d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+            d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
         }
 
         if (vizType === "aqi" && user_selected_value === "AQIus") {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
             hexagonheatmap.data(hmhexaPM_AQI);
-            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
-            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+            d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+            d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
         }
 
         if (
@@ -678,16 +678,15 @@ window.onload = function () {
         if (vizType === "noise" && user_selected_value === "Noise") {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
             hexagonheatmap.data(hmhexa_noise);
-            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexNoise));
-            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexNoise.length);
+            d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexNoise));
+            d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexNoise.length);
         }
 
         if (vizType === "pmDefault" && (user_selected_value === "PM25" || user_selected_value === "PM10")) {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
             hexagonheatmap.data(hmhexaPM_aktuell);
-            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexPM));
-            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexPM.length);
-
+            d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexPM));
+            d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexPM.length);
         }
 
         if (vizType === "Reference" && user_selected_value === "Reference") {
@@ -745,29 +744,29 @@ window.onload = function () {
 
             if (user_selected_value === "PM10" || user_selected_value === "PM25") {
                 if (arrayCountSensorsHexPM != undefined) {
-                    d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexPM));
-                    d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexPM.length);
+                    d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexPM));
+                    d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexPM.length);
                 }
             }
 
             if (user_selected_value === "PM10eu" || user_selected_value === "PM25eu") {
                 if (arrayCountSensorsHexEUWHOAQI != undefined) {
-                    d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
-                    d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+                    d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+                    d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
                 }
             }
 
             if (user_selected_value === "PM10who" || user_selected_value === "PM25who") {
                 if (arrayCountSensorsHexEUWHOAQI != undefined) {
-                    d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
-                    d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+                    d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+                    d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
                 }
             }
 
             if (user_selected_value === "AQIus") {
                 if (arrayCountSensorsHexEUWHOAQI != undefined) {
-                    d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
-                    d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+                    d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
+                    d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
                 }
             }
 
@@ -775,31 +774,31 @@ window.onload = function () {
                 if (user_selected_value == "Temperature") {
                     if (arrayCountSensorsHexT != undefined) {
                         //
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexT));
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexT.length);
+                        d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexT));
+                        d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexT.length);
                     }
 
                 }
                 if (user_selected_value == "Humidity") {
                     if (arrayCountSensorsHexH != undefined) {
                         //
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexH));
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexH.length);
+                        d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexH));
+                        d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexH.length);
                     }
                 }
                 if (user_selected_value == "Pressure") {
                     if (arrayCountSensorsHexP != undefined) {
                         //
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexP));
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexP.length);
+                        d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexP));
+                        d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexP.length);
                     }
                 }
 
             }
             if (user_selected_value === "Noise") {
                 if (arrayCountSensorsHexNoise != undefined) {
-                    d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexNoise));
-                    d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexNoise.length);
+                    d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexNoise));
+                    d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexNoise.length);
                 }
             }
         }
