@@ -417,7 +417,6 @@ window.onload = function () {
                 return {o: d, point: point};
             });
 
-
             // Select the hex group for the current zoom level. This has
             // the effect of recreating the group if the zoom level has changed
             let join = selection.selectAll("g.hexbin").data([zoom], (d) => d);
@@ -592,31 +591,30 @@ window.onload = function () {
     }
 
     function LatLngMapper(array, selector) {
+        const locations = array.map(e => new L.LatLng(e.latitude, e.longitude));
 
-        if (selector == "PM") {
-            arrayCountSensorsHexPM = array.map(e => new L.LatLng(e.latitude, e.longitude));
+        switch (selector) {
+            case "PM":
+                arrayCountSensorsHexPM = locations;
+                break;
+            case "EUWHOAQI":
+                arrayCountSensorsHexEUWHOAQI = locations;
+                break;
+            case "Temperature":
+                arrayCountSensorsHexT = array.filter(e => !isNaN(e.data.Temperature)).map(e => new L.LatLng(e.latitude, e.longitude));
+                break;
+            case "Humidity":
+                arrayCountSensorsHexH = array.filter(e => !isNaN(e.data.Humidity)).map(e => new L.LatLng(e.latitude, e.longitude));
+                break;
+            case "Pressure":
+                arrayCountSensorsHexP = array.filter(e => !isNaN(e.data.Pressure)).map(e => new L.LatLng(e.latitude, e.longitude));
+                break;
+            case "Noise":
+                arrayCountSensorsHexNoise = locations;
+                break;
+            default:
+                console.error("Invalid selector provided:", selector);
         }
-
-        if (selector == "EUWHOAQI") {
-            arrayCountSensorsHexEUWHOAQI = array.map(e => new L.LatLng(e.latitude, e.longitude));
-        }
-
-        if (selector == "Temperature") {
-            arrayCountSensorsHexT = array.filter(e => !isNaN(e.data.Temperature)).map(e => new L.LatLng(e.latitude, e.longitude));
-        }
-
-        if (selector == "Humidity") {
-            arrayCountSensorsHexH = array.filter(e => !isNaN(e.data.Humidity)).map(e => new L.LatLng(e.latitude, e.longitude));
-        }
-
-        if (selector == "Pressure") {
-            arrayCountSensorsHexP = array.filter(e => !isNaN(e.data.Pressure)).map(e => new L.LatLng(e.latitude, e.longitude));
-        }
-
-        if (selector == "Noise") {
-            arrayCountSensorsHexNoise = array.map(e => new L.LatLng(e.latitude, e.longitude));
-        }
-
     }
 
     function ready(vizType) {
@@ -667,31 +665,14 @@ window.onload = function () {
             ["Temperature", "Humidity", "Pressure"].includes(user_selected_value)
         ) {
             hexagonheatmap.initialize(config.scale_options[user_selected_value]);
-            hexagonheatmap.data(
-                hmhexa_t_h_p.filter(function (value) {
-                    return api.checkValues(
-                        value.data[user_selected_value],
-                        user_selected_value
-                    );
-                })
-            );
-
-            if (user_selected_value == "Temperature") {
-                d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexT));
-                d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexT.length);
-            }
-
-
-            if (user_selected_value == "Humidity") {
-                d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexH));
-                d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexH.length);
-            }
-
-
-            if (user_selected_value == "Pressure") {
-                d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexP));
-                d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexP.length);
-            }
+            hexagonheatmap.data(hmhexa_t_h_p.filter(value => api.checkValues(value.data[user_selected_value], user_selected_value)));
+            const sensorCountArray = {
+                Temperature: arrayCountSensorsHexT,
+                Humidity: arrayCountSensorsHexH,
+                Pressure: arrayCountSensorsHexP,
+            };
+            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(sensorCountArray[user_selected_value]));
+            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(sensorCountArray[user_selected_value].length);
         }
 
         if (vizType === "noise" && user_selected_value === "Noise") {
@@ -743,7 +724,6 @@ window.onload = function () {
             drawCircles();
             stationsPoints.bringToFront();
             sensorsPoints.bringToFront();
-// document.getElementById("loading_layer").style.display ="none";
             document.getElementById("radiocontainer").style.display = "block";
         }
 
@@ -751,7 +731,6 @@ window.onload = function () {
     }
 
     retrieveData();
-
 
     map.on('move', function () {
         circleRadii.clearLayers()
@@ -852,7 +831,7 @@ window.onload = function () {
 
     map.on("zoomend", function () {
         let zl = map.getZoom();
-        if (mobile == false && zl <= 9) {
+        if (mobile === false && zl <= 9) {
             if (map.hasLayer(dataPointsNO2)) {
                 dataPointsNO2.setStyle({radius: 0.1});
             }
@@ -887,7 +866,7 @@ window.onload = function () {
                 sensorsPoints.setStyle({radius: 10});
             }
         }
-        if (mobile == true && zl <= 9) {
+        if (mobile === true && zl <= 9) {
 
             if (map.hasLayer(dataPointsNO2)) {
                 dataPointsNO2.setStyle({radius: 5});
