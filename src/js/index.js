@@ -154,7 +154,6 @@ document.querySelector("#dateNO2").addEventListener('change', function() {
       return L.circleMarker(latlng, {
         radius: responsiveRadius(mobile),
         fillColor: colorScale(feature.properties.value),
-        stroke: true,
         weight: 2,
         stroke: false,
         fillOpacity: 1,
@@ -165,7 +164,6 @@ document.querySelector("#dateNO2").addEventListener('change', function() {
       return L.circleMarker(latlng, {
         radius: responsiveRadius(mobile),
         fillColor: colorScale(feature.properties.value),
-        stroke: true,
         weight: 2,
         stroke: false,
         fillOpacity: 1,
