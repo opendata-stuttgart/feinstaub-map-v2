@@ -1,4 +1,4 @@
-import * as translations from './translations.js';
+import * as translations from '../data/translations.js';
 
 export function getFirstBrowserLanguage() {
     var nav = window.navigator,
@@ -37,4 +37,3 @@ export function tr(lang, text) {
         return text;
     }
 };
-

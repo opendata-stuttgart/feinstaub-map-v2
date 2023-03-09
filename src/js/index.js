@@ -29,9 +29,9 @@ import * as config from "./config.js";
 import * as places from "./places.js";
 import * as zooms from "./zooms.js";
 import * as translate from "./translate.js";
-import * as no2data from "./no2.json";
-import * as stations from "./stations.json";
-import * as s2s_data from "./s2s_data.json";
+import * as no2data from "../data/no2.json";
+import * as stations from "../data/stations.json";
+import * as s2s_data from "../data/s2s_data.json";
 
 console.log(no2data.default);
 console.log(stations.default);
