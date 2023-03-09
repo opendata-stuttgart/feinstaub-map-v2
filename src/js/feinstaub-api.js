@@ -3,17 +3,17 @@ import 'whatwg-fetch'
 
 let api = {
     pm_sensors: {
-        "SDS011": true, 
-        "SDS021": true, 
-        "PMS1003": true, 
-        "PMS3003": true, 
-        "PMS5003": true, 
-        "PMS6003": true, 
-        "PMS7003": true, 
-        "HPM": true, 
+        "SDS011": true,
+        "SDS021": true,
+        "PMS1003": true,
+        "PMS3003": true,
+        "PMS5003": true,
+        "PMS6003": true,
+        "PMS7003": true,
+        "HPM": true,
         "SPS30": true,
-        "NextPM":true,
-        "IPS-7100":true,
+        "NextPM": true,
+        "IPS-7100": true,
     },
 
     thp_sensors: {
@@ -131,9 +131,6 @@ let api = {
                 let timestamp_data = '';
                 let timestamp_from = '';
                 if (vizType === "pmDefault") {
-                    
-                    
-
 
 
                     let cells = _.chain(json)
@@ -144,7 +141,8 @@ let api = {
                                 timestamp_from = "data.dust.min";
                             }
                             const data_in = {
-                                PM10: parseInt(getRightValue(values.sensordatavalues, "P1")), PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
+                                PM10: parseInt(getRightValue(values.sensordatavalues, "P1")),
+                                PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
                             }
                             return {
                                 data: {
@@ -159,13 +157,29 @@ let api = {
                         .value();
 
 
-                        let cells2 = _.chain(json)
-						.map((values) => {
-							return {"type":"Feature","properties":{"id":values.sensor.id,"indoor":values.location.indoor,"type":values.sensor.sensor_type.name},"geometry":{"type":"Point","coordinates":[values.location.longitude,values.location.latitude]}}})
-						.value();
+                    let cells2 = _.chain(json)
+                        .map((values) => {
+                            return {
+                                "type": "Feature",
+                                "properties": {
+                                    "id": values.sensor.id,
+                                    "indoor": values.location.indoor,
+                                    "type": values.sensor.sensor_type.name
+                                },
+                                "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [values.location.longitude, values.location.latitude]
+                                }
+                            }
+                        })
+                        .value();
 
-
-                    return Promise.resolve({cells: cells, cells2 : {"type":"FeatureCollection","features":cells2}, timestamp: timestamp_data, timestamp_from: timestamp_from});
+                    return Promise.resolve({
+                        cells: cells,
+                        cells2: {"type": "FeatureCollection", "features": cells2},
+                        timestamp: timestamp_data,
+                        timestamp_from: timestamp_from
+                    });
                 } else if (vizType === "tempHumPress") {
                     let cells = _.chain(json)
                         .filter((sensor) => typeof api.thp_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.thp_sensors[sensor.sensor.sensor_type.name])
@@ -217,7 +231,8 @@ let api = {
                                 timestamp_from = "data.24h"
                             }
                             const data_in = {
-                                PM10: parseInt(getRightValue(values.sensordatavalues, "P1")), PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
+                                PM10: parseInt(getRightValue(values.sensordatavalues, "P1")),
+                                PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
                             };
 
                             const data_out = api.officialAQIus(data_in);
