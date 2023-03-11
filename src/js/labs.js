@@ -24,7 +24,7 @@ let labs = {
                 .then((response) => response.json())
                 .then((data) => {
                     for (var i = 0; i < data.length; i++) {
-                        var lab_popuptext = "<h3>" + data[i].title + "</h3><br/>";
+                        var lab_popuptext = "<b>" + data[i].title + "</b><br/><br/>";
                         if (typeof data[i].meetings != 'undefined') {
                             lab_popuptext += "<b>";
                             if (typeof data[i].meetings_title != 'undefined') {
@@ -87,7 +87,6 @@ let labs = {
                             lab_popuptext += "<tr><td class='labsSocialIcon labs_telegram'></td><td><a href='https://t.me/" + data[i].telegram_group + "' target='_blank' rel='noreferrer'>" + data[i].telegram_group + "</a></td></tr>";
                         }
                         lab_popuptext += "</table>";
-                        lab_popuptext += "<hr>";
                         lab_popuptext += "<br />Your location is missing? Add it <a href='https://github.com/opendata-stuttgart/luftdaten-local-labs' target='_blank' rel='noreferrer'>here</a>."
                         L.marker([data[i].lat, data[i].lon], {
                             icon: new labelRight(), riseOnHover: true, pane: 'markerPane1'
@@ -96,7 +95,7 @@ let labs = {
                             .addTo(map);
                     }
                 })
-                .then(()=>dataRetrieved = true)
+                .then(() => dataRetrieved = true)
                 .catch(function (error) {
                     console.log('request failed', error)
                 })
