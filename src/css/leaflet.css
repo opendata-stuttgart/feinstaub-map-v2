@@ -170,7 +170,30 @@
     background-color: white;
     border-radius: 5px;
     z-index: 100;
-    padding: 0.5em
+    padding: 0.5em;
+}
+
+.leaflet-popup-content-wrapper {
+    font-size: 0.8em;
+    width: 23em;
+}
+
+.leaflet-popup-content {
+    margin: 1em;
+}
+
+.leaflet-popup-close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 8px 8px 0 0;
+    font-size: 1.5em;
+    font-weight: bold;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    background: transparent;
+    border: 0;
 }
 
 .leaflet-zoom-animated {
@@ -253,7 +276,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
   */
 
 
-
 /* colorize leaflet map */
 img.leaflet-tile {
     filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
@@ -264,3 +286,14 @@ img.leaflet-tile {
 
     stroke:red;
   }  */
+
+
+.leaflet-touch .leaflet-geosearch-bar form {
+    margin-top: 7.25em !important;
+    border-radius: 10px;
+    border: 1px solid #c2c2c2;
+}
+
+.leaflet-touch .leaflet-geosearch-bar .reset {
+    background-color: transparent;
+}

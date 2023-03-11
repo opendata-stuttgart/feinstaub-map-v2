@@ -173,24 +173,9 @@ document.querySelector("#dateNO2").addEventListener('change', function () {
         .bringToFront();
 });
 
-
-const scale_options = {
-    NO2: {
-        valueDomain: [0, 20, 30, 40, 50, 200],
-        colorRange: [
-            "#4B8246",
-            "#4B8246",
-            "#9FD08C",
-            "#EFEDB4",
-            "#F47A70",
-            "#8C161E",
-        ],
-    },
-};
-
 var colorScale = scaleLinear()
-    .domain(scale_options.NO2.valueDomain)
-    .range(scale_options.NO2.colorRange)
+    .domain(config.scale_options.NO2.valueDomain)
+    .range(config.scale_options.NO2.colorRange)
     .interpolate(interpolateRgb);
 
 
@@ -629,7 +614,7 @@ window.onload =/**
         const getOffsetHours = date.getTimezoneOffset() * 60000;
         const logTimestamp = dateParser(timestamp_data).getTime();
         const lastUpdateTimestamp = logTimestamp + -getOffsetHours;
-        const dateFormater = locale.format("%d.%m.%Y %H:%M:%S");
+        const dateFormater = locale.format("%d.%m.%Y %H:%M");
 
         document.querySelector("#lastUpdate").innerText =
             translate.tr(lang, "Last update") +
@@ -705,7 +690,7 @@ window.onload =/**
                     return L.circleMarker(latlng, {
                         className: 'sensor',
                         radius: responsiveRadius(mobile),
-                        fillColor: 'red',
+                        fillColor: '#084945',
                         stroke: false,
                         fillOpacity: 1
                     })
@@ -717,7 +702,7 @@ window.onload =/**
                     } else {
                         position = "indoor"
                     }
-                    var popupContent = "<h1>Sensor.Community #" + feature.properties.id + "</h1><p><b>Type: </b>" + feature.properties.type + "</p><p><b>Position: </b>" + position + "</p>";
+                    var popupContent = "<h3>Sensor.Community #" + feature.properties.id + "</h3><p><b>Type: </b>" + feature.properties.type + "</p><p><b>Position: </b>" + position + "</p>";
                     layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
                 }
             }).addTo(map);
@@ -932,21 +917,22 @@ window.onload =/**
                         return L.circleMarker(latlng, {
                             className: 'station',
                             radius: responsiveRadius(mobile),
-                            fillColor: 'blue',
+                            fillColor: '#E83559',
                             stroke: false,
                             fillOpacity: 1
                         })
                     },
                     onEachFeature: function (feature, layer) {
+                        let popupContent;
                         if (feature.properties.Source == "EEA") {
-                            var popupContent = "<h1>Official EU Station</h1><p><b>City: </b>" + feature.properties.Name + "</p><p><b>Area Classification: </b> " + feature.properties.AreaClassification + "</p><p><b>Station Classification ID: </b>" + feature.properties.StationClassification + "</p>";
+                            popupContent = "<h3>Official EU Station</h3><ul><li><b>City: </b>" + feature.properties.Name + "</li><li><b>Area Classification: </b> " + feature.properties.AreaClassification + "</li><li><b>Station Classification ID: </b>" + feature.properties.StationClassification + "</li></ul>";
                         }
                         if (feature.properties.Source == "AQMD") {
                             var monitorString = "";
                             feature.properties.monitors.forEach(function (e) {
                                 monitorString += e + "<br>"
                             });
-                            var popupContent = "<h1>Official AQMD Station</h1><p><b>Name: </b>" + feature.properties.siteName + "</p><p><b>Monitoring: </b> " + monitorString + "</p>";
+                            popupContent = "<h3>Official AQMD Station</h3><p><b>Name: </b>" + feature.properties.siteName + "</p><p><b>Monitoring: </b> " + monitorString + "</p>";
                         }
                         layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
                     }
@@ -960,19 +946,19 @@ window.onload =/**
                         return L.circleMarker(latlng, {
                             className: 'sensor',
                             radius: responsiveRadius(mobile),
-                            fillColor: 'red',
+                            fillColor: '#084945',
                             stroke: false,
                             fillOpacity: 1
                         })
                     },
                     onEachFeature: function (feature, layer) {
-                        var position;
+                        let position;
                         if (feature.properties.indoor == 0) {
                             position = "outdoor"
                         } else {
                             position = "indoor"
                         }
-                        var popupContent = "<h1>Sensor.Community #" + feature.properties.id + "</h1><p><b>Type: </b>" + feature.properties.type + "</p><p><b>Position: </b>" + position + "</p>";
+                        let popupContent = "<h3>Sensor.Community #" + feature.properties.id + "</h3><p><b>Type: </b>" + feature.properties.type + "</p><p><b>Position: </b>" + position + "</p>";
                         layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
                     }
                 }).addTo(map);
@@ -1017,7 +1003,7 @@ window.onload =/**
                     onEachFeature: function (feature, layer) {
                         var popupContent;
                         if (feature.properties.campaign == "DUH") {
-                            popupContent = "<h2>DUH</h2><p><b>City</b> : " + feature.properties.city + "</p><p><b>Info</b> : " + feature.properties.info + "</p><p><b>Timespan</b> : " + feature.properties.start + " - " + feature.properties.stop + "</p><b>Value</b> : " + feature.properties.value + " µg\/m&sup3; (average concentration for the month)</p>";
+                            popupContent = "<h3>DUH</h3><p><b>City</b> : " + feature.properties.city + "</p><p><b>Info</b> : " + feature.properties.info + "</p><p><b>Timespan</b> : " + feature.properties.start + " - " + feature.properties.stop + "</p><b>Value</b> : " + feature.properties.value + " µg\/m&sup3; (average concentration for the month)</p>";
 
                         }
                         if (feature.properties.campaign == "SC") {
@@ -1029,9 +1015,9 @@ window.onload =/**
                                 traficLevel = "high"
                             }
                             if (feature.properties.value != 0 && feature.properties.remark == "") {
-                                popupContent = "<h2>Sensor.Community</h2><p><b>City</b> : " + feature.properties.city + "</p><p><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='" + feature.properties.link + "'>" + feature.properties.group + "</a></p><p><b>Tube ID</b> : " + feature.properties.tubeId + "</p><p><b>Height</b> : " + feature.properties.height + " m</p><p><b>Trafic</b> : " + traficLevel + "</p><p><b>Information</b> : " + feature.properties.info + "<br><br><b>Value</b> : " + feature.properties.value + " µg\/m&sup3; (average concentration for the month)</p>";
+                                popupContent = "<h3>Sensor.Community</h3><p><b>City</b> : " + feature.properties.city + "</p><p><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='" + feature.properties.link + "'>" + feature.properties.group + "</a></p><p><b>Tube ID</b> : " + feature.properties.tubeId + "</p><p><b>Height</b> : " + feature.properties.height + " m</p><p><b>Trafic</b> : " + traficLevel + "</p><p><b>Information</b> : " + feature.properties.info + "<br><br><b>Value</b> : " + feature.properties.value + " µg\/m&sup3; (average concentration for the month)</p>";
                             } else {
-                                popupContent = "<h2>Sensor.Community</h2><p><b>City</b> : " + feature.properties.city + "</p><p><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='" + feature.properties.link + "'>" + feature.properties.group + "</a></p><p><b>Tube ID</b> : " + feature.properties.tubeId + "</p><p><b>Height</b> : " + feature.properties.height + " m</p><p><b>Trafic</b> : " + traficLevel + "</p><p><b>Information</b> : " + feature.properties.info + "<br><br><b>Remark</b> : " + feature.properties.remark + "</p>";
+                                popupContent = "<h3>Sensor.Community</h3><p><b>City</b> : " + feature.properties.city + "</p><p><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='" + feature.properties.link + "'>" + feature.properties.group + "</a></p><p><b>Tube ID</b> : " + feature.properties.tubeId + "</p><p><b>Height</b> : " + feature.properties.height + " m</p><p><b>Trafic</b> : " + traficLevel + "</p><p><b>Information</b> : " + feature.properties.info + "<br><br><b>Remark</b> : " + feature.properties.remark + "</p>";
                             }
                         }
                         layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
@@ -1404,6 +1390,7 @@ function boundsCountSensors(object) {
     document.getElementById("sensorsCountRef").textContent = sensorsInBounds.length;
 }
 
+
 /**
  * Count the number of sensors in a 250m or 1000m radius around each station
  */
@@ -1418,11 +1405,12 @@ function countDistance() {
                 e.count1000 += 1;
             }
             if (dist > prev) {
-                return; // break out of inner loop to save calculation time
+                return; // break out of inner loop
             }
         });
     });
 }
+
 
 /**
  * The function will draw radius circles that will display the number of sensors in the circle.
@@ -1484,7 +1472,6 @@ function setColor(val1, val2) {
     return `#${((r << 16) + (g << 8) + b).toString(16).padStart(6, '0')}`;
 }
 
-
 const popupMaker = (coo) => {
     const filtered = sensorsInBounds.filter((i) => {
         return prev === 250 ? i._latlng.distanceTo(coo) <= 250 : i._latlng.distanceTo(coo) <= 1000;
@@ -1492,9 +1479,9 @@ const popupMaker = (coo) => {
 
     const sensorCount = filtered.length;
     if (sensorCount === 0) {
-        return `<h1>No S.C Sensor in ${prev} m radius</h1>`;
+        return `<h3>No S.C Sensor in ${prev} m radius</h3>`;
     }
 
     const sensorsTable = filtered.map((e) => `<tr><td>${e.feature.properties.id}</td></tr>`).join('');
-    return `<table><tr><th><h1>${sensorCount} S.C Sensor(s) in ${prev} m radius</h1></th></tr>${sensorsTable}</table>`;
+    return `<table><tr><th><h3>${sensorCount} Sensor Community Sensor/s in ${prev} m radius</h3></th></tr>${sensorsTable}</table>`;
 };

@@ -25,7 +25,7 @@
             <button id="asia" value="asia">Asia</button>
             <button id="oceania" value="oceania">Oceania</button>
         </div>
-         <div class="lowerItems">
+        <div class="lowerItems">
             <div class="item" id='lastUpdate'>Timestamp</div>
             <div class="item textCount"><span class="sensorsCount">12345</span> visible sensors out of <span
                     class="sensorsCountTotal">12345</span></div>
@@ -49,8 +49,8 @@
                 <div class="label" style="bottom: 20%;"><b>25</b></div>
                 <div class="label" style="bottom: 1%;"><b>0</b> &micro;g/m&sup3;</div>
             </div>
+            <div class="chevron">&#171;</div>
         </div>
-        <div class="chevron">&#171;</div>
     </div>
 
     <div id="legend_PM25">
@@ -199,7 +199,6 @@
     </div>
 
     <div id="legend_NO2">
-
         <div id="dateSelector">
             <!-- <label for="dateNO2">Date</label> -->
             <select name="dateNO2" id="dateNO2">
@@ -265,29 +264,25 @@
         </div>
     </div>
 
-
     <div id="legend_Reference">
-        <div id="radios">
-            <input checked id="250m" name="radius" type="radio" value="250">
-            <label for="250m">250 m</label>
-            <input id="1000m" name="radius" type="radio" value="1000">
-            <label for="1000m">1000 m</label>
-        </div>
-        <div class="cercle" id="cercle1"></div>
-        <p id="textCountRefStation"><span id="stationsCountRef"></span> Reference stations</p>
-        <br>
-        <div class="cercle" id="cercle2"></div>
-        <p id="textCountRefSensor"><span id="sensorsCountRef"></span> Community sensors</p>
-
-
         <div class="legend">
-            <div class="gradient"></div>
-            <div class="labels">
-                <div class="label" id="max" style="bottom:5em"><b></b></div>
-                <div class="label" id="min" style="bottom: 1%;"><b></b></div>
+            <div>
+                <div class="radio-button">
+                    <input type="radio" id="radio1" name="radios" value="250" checked>
+                    <label for="radio1">250m</label>
+                    <input type="radio" id="radio2" name="radios" value="1000">
+                    <label for="radio2">1000m</label>
+                </div>
+                <p>Reference stations: <span id="stationsCountRef"></span></p>
+                <hr>
+                <p>Community sensors: <span id="sensorsCountRef"></span></p>
+                <hr>
+                <p>Sensors intersect: <span id="max"></span></p>
             </div>
         </div>
-
+        <div class="labels">
+            <div class="label" id="min" style="bottom: 1%;"></div>
+        </div>
     </div>
 </div>
 

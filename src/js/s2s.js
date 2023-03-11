@@ -24,7 +24,7 @@ let s2s = {
 
                         console.log(data.default[i].title);
 
-                        var school_popuptext = "<b>" + data.default[i].title + "</b><br/><br/>";
+                        var school_popuptext = "<h3>" + data.default[i].title + "</h3><br/><br/>";
                         if (typeof data.default[i].contacts != 'undefined') {
                             school_popuptext += "<b>";
                             if (typeof data.default[i].contacts_title != 'undefined') {
