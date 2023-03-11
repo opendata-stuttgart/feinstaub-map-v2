@@ -26,9 +26,9 @@ import * as config from "./config.js";
 import * as places from "../data/places.js";
 import * as zooms from "../data/zooms.js";
 import * as translate from "./translate.js";
-import * as no2data from "../data/no2.json";
-import * as stations from "../data/stations.json";
-import * as s2s_data from "../data/s2s_data.json";
+// import * as no2data from "../data/no2.json";
+// import * as stations from "../data/stations.json";
+import * as s2s_data from "../data/s2s.json";
 
 import "../images/labMarker.svg";
 import "../images/schoolMarker.svg";
