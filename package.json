@@ -21,7 +21,6 @@
   "homepage": "https://github.com/opendata-stuttgart/feinstaub-map-v2#readme",
   "devDependencies": {
     "@webpack-cli/serve": "^2.0.1",
-    "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.3",
     "file-loader": "^6.2.0",
     "gh-pages": "^4.0.0",
@@ -34,6 +33,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
+    "copy-webpack-plugin": "^11.0.0",
     "d3-array": "^2.12.1",
     "d3-geo": "^2.0.2",
     "d3-hexbin": "^0.2.2",

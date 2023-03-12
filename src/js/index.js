@@ -65,36 +65,12 @@ map.attributionControl.setPosition("bottomleft");
 
 map.createPane('markerPane1');
 map.createPane('markerPane2');
+let arrayCountSensorsHexPM, arrayCountSensorsHexEUWHOAQI, arrayCountSensorsHexT, arrayCountSensorsHexH,
+    arrayCountSensorsHexP, arrayCountSensorsHexNoise, windLayerRetrieved = false, labsLayerRetrieved = false, noiseData,
+    dataPointsNO2, stationsPoints, sensorsPoints, sensorsLocations, circleRadii = new L.layerGroup().addTo(map),
+    coo = [], stationsInBounds, sensorsInBounds, sensorsInBoundsHex, mapBounds, max = 0, min = 0,
+    radios = document.querySelectorAll('input[type=radio]'), prev = 250;
 
-let arrayCountSensorsHexPM;
-let arrayCountSensorsHexEUWHOAQI;
-let arrayCountSensorsHexT;
-let arrayCountSensorsHexH;
-let arrayCountSensorsHexP;
-let arrayCountSensorsHexNoise;
-
-let windLayerRetrieved = false;
-let labsLayerRetrieved = false;
-
-let dataPointsNO2;
-let stationsPoints;
-let sensorsPoints;
-let sensorsLocations;
-let circleRadii = new L.layerGroup().addTo(map);
-let coo = [];
-
-let stationsInBounds;
-let sensorsInBounds;
-
-let sensorsInBoundsHex;
-
-let mapBounds;
-
-let max = 0;
-let min = 0;
-
-let radios = document.querySelectorAll('input[type=radio]')
-let prev = 250;
 
 for (var i = 0; i < radios.length; i++) {
     radios[i].addEventListener('change', function () {
@@ -510,71 +486,112 @@ window.onload =
                     ready("pmDefault");
                 });
 
-            await api
-                .getData(config.data_host + "/data/v2/data.24h.json")
-                .then(function (result) {
-                    if (document.querySelector("#indoor").checked) {
-                        hmhexaPM_WHO = result.cells;
+            const pm24Button = document.querySelectorAll('div[value="PM25who"], div[value="PM10who"],div[value="PM25eu"], div[value="PM10eu"], div[value="AQIus"]');
+            pm24Button.forEach(button => {
+                button.addEventListener('click', () => {
+                    let lastFetchTime;
+                    // check if the data has been fetched within the last 2.5 minutes
+                    const now = new Date();
+                    if (!lastFetchTime || now - lastFetchTime >= 2.5 * 60 * 1000) {
+                        // fetch the data
+                        api
+                            .getData(config.data_host + "/data/v2/data.24h.json")
+                            .then(function (result) {
+                                if (document.querySelector("#indoor").checked) {
+                                    hmhexaPM_WHO = result.cells;
+                                } else {
+                                    hmhexaPM_WHO = result.cells.filter(e => e.indoor == 0);
+                                }
+                                if (document.querySelector("#indoor").checked) {
+                                    hmhexaPM_EU = result.cells;
+                                } else {
+                                    hmhexaPM_EU = result.cells.filter(e => e.indoor == 0);
+                                }
+                                if (document.querySelector("#indoor").checked) {
+                                    hmhexaPM_AQI = result.cells;
+                                } else {
+                                    hmhexaPM_AQI = result.cells.filter(e => e.indoor == 0);
+                                }
+                                LatLngMapper(hmhexaPM_WHO, "EUWHOAQI");
+                                if (result.timestamp > timestamp_data) {
+                                    timestamp_data = result.timestamp;
+                                    timestamp_from = result.timestamp_from;
+                                }
+                            })
+                            .then(function () {
+                                ready("pmWHO");
+                                ready("pmEU");
+                                ready("aqi");
+                            });
                     } else {
-                        hmhexaPM_WHO = result.cells.filter(e => e.indoor == 0);
+                        // use the cached data
+                        LatLngMapper(hmhexaPM_aktuell, "PM");
                     }
-                    if (document.querySelector("#indoor").checked) {
-                        hmhexaPM_EU = result.cells;
-                    } else {
-                        hmhexaPM_EU = result.cells.filter(e => e.indoor == 0);
-                    }
-                    if (document.querySelector("#indoor").checked) {
-                        hmhexaPM_AQI = result.cells;
-                    } else {
-                        hmhexaPM_AQI = result.cells.filter(e => e.indoor == 0);
-                    }
-                    LatLngMapper(hmhexaPM_WHO, "EUWHOAQI");
-                    if (result.timestamp > timestamp_data) {
-                        timestamp_data = result.timestamp;
-                        timestamp_from = result.timestamp_from;
-                    }
-                })
-                .then(function () {
-                    ready("pmWHO");
-                    ready("pmEU");
-                    ready("aqi");
                 });
+            });
 
-            await api
-                .getData(config.data_host + "/data/v2/data.temp.min.json", "tempHumPress")
-                .then(function (result) {
-                    //hmhexa_t_h_p = result.cells;
-                    if (document.querySelector("#indoor").checked) {
-                        hmhexa_t_h_p = result.cells;
-                    } else {
-                        hmhexa_t_h_p = result.cells.filter(e => e.indoor == 0);
-                    }
-                    LatLngMapper(hmhexa_t_h_p, "Temperature");
-                    LatLngMapper(hmhexa_t_h_p, "Humidity");
-                    LatLngMapper(hmhexa_t_h_p, "Pressure");
-                    if (result.timestamp > timestamp_data) {
-                        timestamp_data = result.timestamp;
-                        timestamp_from = result.timestamp_from;
-                    }
-                })
-                .then(() => ready("tempHumPress"));
+            const tempButton = document.querySelectorAll('div[value="Temperature"], div[value="Humidity"], div[value="Pressure"]');
+            tempButton.forEach(button => {
+                button.addEventListener('click', () => {
+                    let lastFetchTime;
+                    // check if the data has been fetched within the last 2.5 minutes
+                    const now = new Date();
+                    if (!lastFetchTime || now - lastFetchTime >= 2.5 * 60 * 1000) {
+                        // fetch the data
+                        api.getData(config.data_host + "/data/v2/data.temp.min.json", "tempHumPress")
+                            .then(function (result) {
+                                //hmhexa_t_h_p = result.cells;
+                                if (document.querySelector("#indoor").checked) {
+                                    hmhexa_t_h_p = result.cells;
+                                } else {
+                                    hmhexa_t_h_p = result.cells.filter(e => e.indoor == 0);
+                                }
+                                LatLngMapper(hmhexa_t_h_p, "Temperature");
+                                LatLngMapper(hmhexa_t_h_p, "Humidity");
+                                LatLngMapper(hmhexa_t_h_p, "Pressure");
+                                if (result.timestamp > timestamp_data) {
+                                    timestamp_data = result.timestamp;
+                                    timestamp_from = result.timestamp_from;
+                                }
+                            })
+                            .then(() => ready("tempHumPress"));
 
-            await api
-                .getData(config.data_host + "/data/v1/data.noise.json", "noise")
-                .then(function (result) {
-                    //hmhexa_noise = result.cells;
-                    if (document.querySelector("#indoor").checked) {
-                        hmhexa_noise = result.cells;
                     } else {
-                        hmhexa_noise = result.cells.filter(e => e.indoor == 0);
+                        // use the cached data
+                        LatLngMapper(hmhexa_t_h_p, "Temperature");
                     }
+                });
+            });
+
+            const noiseButton = document.querySelector('div[value="Noise"]');
+            noiseButton.addEventListener('click', () => {
+                let lastFetchTime;
+                // check if the data has been fetched within the last 2.5 minutes
+                const now = new Date();
+                if (!lastFetchTime || now - lastFetchTime >= 2.5 * 60 * 1000) {
+                    // fetch the data
+                    api.getData(config.data_host + "/data/v1/data.noise.json", "noise")
+                        .then(function (result) {
+                            //hmhexa_noise = result.cells;
+                            if (document.querySelector("#indoor").checked) {
+                                hmhexa_noise = result.cells;
+                            } else {
+                                hmhexa_noise = result.cells.filter(e => e.indoor == 0);
+                            }
+                            LatLngMapper(hmhexa_noise, "Noise");
+                            if (result.timestamp > timestamp_data) {
+                                timestamp_data = result.timestamp;
+                                timestamp_from = result.timestamp_from;
+                            }
+                            lastFetchTime = now;
+                        })
+                        .then(() => ready("noise"));
+                } else {
+                    // use the cached data
                     LatLngMapper(hmhexa_noise, "Noise");
-                    if (result.timestamp > timestamp_data) {
-                        timestamp_data = result.timestamp;
-                        timestamp_from = result.timestamp_from;
-                    }
-                })
-                .then(() => ready("noise"));
+                }
+            });
+
         }
 
         function LatLngMapper(array, selector) {
