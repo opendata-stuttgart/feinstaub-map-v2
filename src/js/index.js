@@ -751,14 +751,12 @@ window.onload =
                     arrayCountSensorsHex = arrayCountSensorsHexPM;
                 } else if (user_selected_value === "PM10eu" || user_selected_value === "PM25eu" || user_selected_value === "PM10who" || user_selected_value === "PM25who" || user_selected_value === "AQIus") {
                     arrayCountSensorsHex = arrayCountSensorsHexEUWHOAQI;
-                } else if (["Temperature", "Humidity", "Pressure"].includes(user_selected_value)) {
-                    if (user_selected_value == "Temperature") {
-                        arrayCountSensorsHex = arrayCountSensorsHexT;
-                    } else if (user_selected_value == "Humidity") {
-                        arrayCountSensorsHex = arrayCountSensorsHexH;
-                    } else if (user_selected_value == "Pressure") {
-                        arrayCountSensorsHex = arrayCountSensorsHexP;
-                    }
+                } else if (user_selected_value == "Temperature") {
+                    arrayCountSensorsHex = arrayCountSensorsHexT;
+                } else if (user_selected_value == "Humidity") {
+                    arrayCountSensorsHex = arrayCountSensorsHexH;
+                } else if (user_selected_value == "Pressure") {
+                    arrayCountSensorsHex = arrayCountSensorsHexP;
                 } else if (user_selected_value === "Noise") {
                     arrayCountSensorsHex = arrayCountSensorsHexNoise;
                 }
@@ -838,92 +836,66 @@ window.onload =
             document.querySelectorAll("path.hexbin-hexagon").forEach(function (d) {
                 d.remove();
             });
-
             if (map.hasLayer(dataPointsNO2)) map.removeLayer(dataPointsNO2);
             if (map.hasLayer(stationsPoints)) map.removeLayer(stationsPoints);
             if (map.hasLayer(sensorsPoints)) map.removeLayer(sensorsPoints);
             if (map.hasLayer(circleRadii)) circleRadii.clearLayers();
-            if (val !== "NO2" && val !== "Reference") {
-                hexagonheatmap.initialize(config.scale_options[val]);
-                if (val === "PM10" || val === "PM25") {
+            switch (val) {
+                case "PM10":
+                case "PM25":
+                    hexagonheatmap.initialize(config.scale_options[val]);
                     hexagonheatmap.data(hmhexaPM_aktuell);
-                } else if (val === "PM10eu" || val === "PM25eu") {
+                    break;
+                case "PM10eu":
+                case "PM25eu":
+                    hexagonheatmap.initialize(config.scale_options[val]);
                     hexagonheatmap.data(hmhexaPM_EU);
-                } else if (val === "PM10who" || val === "PM25who") {
+                    break;
+                case "PM10who":
+                case "PM25who":
+                    hexagonheatmap.initialize(config.scale_options[val]);
                     hexagonheatmap.data(hmhexaPM_WHO);
-                } else if (val === "AQIus") {
+                    break;
+                case "AQIus":
+                    hexagonheatmap.initialize(config.scale_options[val]);
                     hexagonheatmap.data(hmhexaPM_AQI);
-                } else if (["Temperature", "Humidity", "Pressure"].includes(val)) {
+                    break;
+                case "Pressure":
+                    hexagonheatmap.initialize(config.scale_options[val]);
                     hexagonheatmap.data(
                         hmhexa_t_h_p.filter(function (value) {
-                            return api.checkValues(
-                                value.data[user_selected_value],
-                                user_selected_value
-                            );
+                            return api.checkValues(value.data[user_selected_value], user_selected_value);
                         })
                     );
-                } else if (val === "Noise") {
+                    break;
+                case "Noise":
+                    hexagonheatmap.initialize(config.scale_options[val]);
                     hexagonheatmap.data(hmhexa_noise);
-                }
-                switchLegend(val);
+                    break;
+            }
 
-                if (val === "PM10" || val === "PM25") {
-                    if (arrayCountSensorsHexPM != undefined) {
-                        //
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexPM));
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexPM.length);
-                    }
-                } else if (val === "PM10eu" || val === "PM25eu") {
-                    if (arrayCountSensorsHexEUWHOAQI != undefined) {
-                        //
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
-                    }
-                } else if (val === "PM10who" || val === "PM25who") {
-                    if (arrayCountSensorsHexEUWHOAQI != undefined) {
-                        //
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
-                    }
-                } else if (val === "AQIus") {
-                    if (arrayCountSensorsHexEUWHOAQI != undefined) {
-                        //
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
-                    }
-                } else if (["Temperature", "Humidity", "Pressure"].includes(val)) {
-                    if (val == "Temperature") {
-                        if (arrayCountSensorsHexT != undefined) {
-                            //
-                            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexT));
-                            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexT.length);
-                        }
+            switchLegend(val);
 
-                    }
-                    if (val == "Humidity") {
-                        if (arrayCountSensorsHexH != undefined) {
-                            //
-                            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexH));
-                            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexH.length);
-                        }
-                    }
-                    if (val == "Pressure") {
-                        if (arrayCountSensorsHexP != undefined) {
-                            //
-                            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexP));
-                            d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexP.length);
-                        }
-                    }
+            // TODO: move to top and replace in other functions
+            const lookup = {
+                "PM10": arrayCountSensorsHexPM,
+                "PM25": arrayCountSensorsHexPM,
+                "PM10eu": arrayCountSensorsHexEUWHOAQI,
+                "PM25eu": arrayCountSensorsHexEUWHOAQI,
+                "PM10who": arrayCountSensorsHexEUWHOAQI,
+                "PM25who": arrayCountSensorsHexEUWHOAQI,
+                "AQIus": arrayCountSensorsHexEUWHOAQI,
+                "Temperature": arrayCountSensorsHexT,
+                "Humidity": arrayCountSensorsHexH,
+                "Pressure": arrayCountSensorsHexP,
+                "Noise": arrayCountSensorsHexNoise,
+            };
 
-                } else if (val === "Noise") {
-                    if (arrayCountSensorsHexNoise != undefined) {
-                        //
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexNoise));
-                        d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexNoise.length);
-                    }
-                }
+            const arrayCountSensorsHex = lookup[val];
+            if (arrayCountSensorsHex != undefined) {
+                d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHex));
+                d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHex.length);
             } else {
-
                 if (val === "Reference") {
                     stationsPoints = L.geoJSON(stations.default, {
                         pointToLayer: function (feature, latlng) {
@@ -988,12 +960,10 @@ window.onload =
                 }
 
                 if (val === "NO2") {
-
                     dataPointsNO2 = L.geoJSON(no2data.default, {
                         pointToLayer: function (feature, latlng) {
 
                             if (dateNO2 === "all") {
-
                                 return L.circleMarker(latlng, {
                                     radius: responsiveRadius(mobile),
                                     fillColor: colorScale(feature.properties.value),
@@ -1012,13 +982,11 @@ window.onload =
                                 });
 
                             }
-
                         },
                         onEachFeature: function (feature, layer) {
                             let popupContent;
                             if (feature.properties.campaign == "DUH") {
                                 popupContent = "<h3>DUH</h3><ul><li><b>City</b> : " + feature.properties.city + "</li><li><b>Info</b> : " + feature.properties.info + "</li><li><b>Timespan</b> : " + feature.properties.start + " - " + feature.properties.stop + "</li><li><b>Value</b> : " + feature.properties.value + " µg\/m&sup3; (average concentration for the month)</p>";
-
                             }
                             if (feature.properties.campaign == "SC") {
                                 let traficLevel;
@@ -1264,7 +1232,7 @@ window.onload =
 
         document.querySelector("#menuButton").onclick = toggleMenu
 
-        // Load lab and windlayer, init checkboxes
+// Load lab and windlayer, init checkboxes
         document.querySelector("#cb_labs").checked = false
         document.querySelector("#cb_s2s").checked = false
         document.querySelector("#cb_wind").checked = false
@@ -1280,7 +1248,7 @@ window.onload =
         document.querySelector("#cb_wind").addEventListener("change", switchWindLayer)
         document.querySelector("#indoor").addEventListener("change", switchIndoorLayer)
 
-        // translate AQI values
+// translate AQI values
         document.querySelector("#AQI_Good").innerText = translate.tr(lang, "Good")
         document.querySelector("#AQI_Moderate").innerText = translate.tr(lang, "Moderate")
         document.querySelector("#AQI_Unhealthy_Sensitive").innerText = translate.tr(lang, "Unhealthy for sensitive")
@@ -1288,7 +1256,7 @@ window.onload =
         document.querySelector("#AQI_Very_Unhealthy").innerText = translate.tr(lang, "Very Unhealthy")
         document.querySelector("#AQI_Hazardous").innerText = translate.tr(lang, "Hazardous")
 
-        // translate menu links
+// translate menu links
         document.querySelector("#website").innerText = translate.tr(lang, "Website")
         document.querySelector("#forum").innerText = translate.tr(lang, "Forum")
         document.querySelector("#explanation").innerText = translate.tr(lang, "Explanation")
@@ -1303,7 +1271,7 @@ window.onload =
         <p>Map values are <strong>refreshed every 5 minutes</strong> to fit with the measurement frequency of the multiple airRohr sensors.</p>"
         )
 
-        // refresh data every 5 minutes
+// refresh data every 5 minutes
         setInterval(function () {
             document.querySelectorAll("path.hexbin-hexagon").forEach((e) => e.remove())
             windLayerRetrieved = labsLayerRetrieved = false;
@@ -1319,10 +1287,7 @@ window.onload =
         document.querySelector("#africa").innerText = translate.tr(lang, "Africa")
         document.querySelector("#oceania").innerText = translate.tr(lang, "Oceania")
         document.querySelector("#explanation").innerText = translate.tr(lang, "Explanation")
-        document
-            .querySelectorAll(".selectCountry button")
-            .forEach((d) => d.addEventListener("click", countrySelector));
-
+        document.querySelectorAll(".selectCountry button").forEach((d) => d.addEventListener("click", countrySelector));
         document.querySelectorAll(".select-items div").forEach(function (d) {
             d.addEventListener("click", function () {
                 user_selected_value = this.getAttribute("value");
@@ -1343,7 +1308,7 @@ window.onload =
         } else {
             document.querySelector("#share").style.display = "none";
         }
-    };
+    }
 
 // add searchbox
 new GeoSearch.GeoSearchControl({
