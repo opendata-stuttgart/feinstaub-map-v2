@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const TerserJSPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -22,23 +23,34 @@ module.exports = {
         rules: [{
             test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader'],
         }, {
-            test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/, include: /node_modules/, use: ['file-loader']
+            test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/, exclude: /node_modules/, use: ['file-loader']
         }, {
             test: /\.(jpe?g|png|gif|svg|ico|xml|webmanifest)$/i, include: /images/, loader: "file-loader", options: {
                 outputPath: 'images/', publicPath: 'images/', name: '[name].[ext]'
             }
         }, {
-            test: /\.(txt)$/i, loader: "file-loader?name=/[name].[ext]"
+            test: /\.json$/, include: path.resolve(__dirname, 'data'),
+            loader: 'json-loader', type: 'javascript/auto'
         }]
     },
 
     // https://webpack.js.org/concepts/plugins/
-    plugins: [new HtmlWebpackPlugin({
-        template: './src/index.html', inject: true, //			chunks: ['index'],
-        filename: 'index.html'
-    }), new MiniCssExtractPlugin({
-        filename: '[name].css', chunkFilename: '[name].css',
-    }),], output: {
-        filename: 'main.js', path: path.resolve(__dirname, 'dist')
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './src/index.html', inject: true,
+            filename: 'index.html'
+        }),
+        new MiniCssExtractPlugin({
+            filename: '[name].css', chunkFilename: '[name].css',
+        }),
+        new CopyWebpackPlugin({
+            patterns: [{
+                from: 'src/data', to: 'data', globOptions: {ignore: ['.*'],},},
+            ],
+        }),
+    ],
+    output: {
+        filename: 'main.js', path: path.resolve(__dirname, 'dist'),
+        publicPath: '/',
     }
 };
