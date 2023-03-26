@@ -9,11 +9,11 @@ import "leaflet-geosearch/dist/geosearch.css";
 import * as d3_Hexbin from "d3-hexbin";
 import * as d3_Selection from "d3-selection";
 import * as d3_Transition from "d3-transition";
-import { scaleLinear, scaleTime } from "d3-scale";
-import { geoPath, geoTransform } from "d3-geo";
-import { timeFormatLocale, timeParse } from "d3-time-format";
-import { interpolateRgb } from "d3-interpolate";
-import { median } from "d3-array";
+import {scaleLinear, scaleTime} from "d3-scale";
+import {geoPath, geoTransform} from "d3-geo";
+import {timeFormatLocale, timeParse} from "d3-time-format";
+import {interpolateRgb} from "d3-interpolate";
+import {median} from "d3-array";
 import "whatwg-fetch";
 
 const d3 = Object.assign({}, d3_Selection, d3_Hexbin);
@@ -144,7 +144,7 @@ document.querySelector("#dateNO2").addEventListener('change', function () {
                     popupContent = "<h2>Sensor.Community</h2><ul><li><b>City</b> : " + feature.properties.city + "</li><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='" + feature.properties.link + "'>" + feature.properties.group + "</a></li><b>Tube ID</b> : " + feature.properties.tubeId + "</li><b>Height</b> : " + feature.properties.height + " m</li><b>Trafic</b> : " + traficLevel + "</li><b>Information</b> : " + feature.properties.info + "<br><br><b>Remark</b> : " + feature.properties.remark + "</li></ul>"
                 }
             }
-            layer.bindPopup(popupContent, { closeButton: true, maxWidth: "auto" });
+            layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
         }
 
     })
@@ -296,7 +296,7 @@ window.onload =
                 };
 
                 this.projection.pathFromGeojson = geoPath().projection(
-                    geoTransform({ point: this.projection._projectPoint })
+                    geoTransform({point: this.projection._projectPoint})
                 );
                 this.projection.latLngToLayerFloatPoint =
                     this.projection.latLngToLayerPoint;
@@ -378,7 +378,7 @@ window.onload =
                     let lng = this.options.lng(d);
                     let lat = this.options.lat(d);
                     let point = projection.latLngToLayerPoint([lat, lng]);
-                    return { o: d, point: point };
+                    return {o: d, point: point};
                 });
 
                 // Select the hex group for the current zoom level. This has
@@ -545,7 +545,7 @@ window.onload =
                         //         break;
                         // }      
                         LatLngMapper(hmhexaPM_aktuell, "PM");
-                        
+
                     }
                 });
             });
@@ -742,30 +742,6 @@ window.onload =
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         function LatLngMapper(array, selector) {
             const locations = array.map(e => new L.LatLng(e.latitude, e.longitude));
 
@@ -888,7 +864,7 @@ window.onload =
                             position = "indoor"
                         }
                         let popupContent = "<h3>Sensor.Community #" + feature.properties.id + "</h3><ul><li><b>Type: </b>" + feature.properties.type + "</li><li><b>Position: </b>" + position + "</li></ul>";
-                        layer.bindPopup(popupContent, { closeButton: true, maxWidth: "auto" });
+                        layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
                     }
                 }).addTo(map);
 
@@ -964,30 +940,30 @@ window.onload =
         map.on("zoomend", function () {
             let zl = map.getZoom();
             if (mobile === false && zl <= 9) {
-                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({ radius: 0.1 });
-                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({ radius: 0.1 });
-                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({ radius: 0.1 });
+                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({radius: 0.1});
+                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({radius: 0.1});
+                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({radius: 0.1});
             } else if (mobile == false && zl < 12 && zl > 9) {
-                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({ radius: 5 });
-                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({ radius: 5 });
-                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({ radius: 5 });
+                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({radius: 5});
+                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({radius: 5});
+                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({radius: 5});
             } else if (mobile == false) {
-                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({ radius: 10 });
-                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({ radius: 10 });
-                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({ radius: 10 });
+                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({radius: 10});
+                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({radius: 10});
+                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({radius: 10});
             }
             if (mobile === true && zl <= 9) {
-                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({ radius: 5 });
-                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({ radius: 5 });
-                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({ radius: 5 });
+                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({radius: 5});
+                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({radius: 5});
+                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({radius: 5});
             } else if (mobile == true && zl < 12 && zl > 9) {
-                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({ radius: 15 });
-                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({ radius: 15 });
-                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({ radius: 15 });
+                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({radius: 15});
+                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({radius: 15});
+                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({radius: 15});
             } else if (mobile == true) {
-                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({ radius: 20 });
-                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({ radius: 20 });
-                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({ radius: 20 });
+                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({radius: 20});
+                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({radius: 20});
+                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({radius: 20});
             }
         });
 
@@ -1101,7 +1077,7 @@ window.onload =
                                         });
                                         popupContent = "<h3>Official AQMD Station</h3><ul><li><b>Name: </b>" + feature.properties.siteName + "</li><li><b>Monitoring: </b> " + monitorString + "</li></ul>";
                                     }
-                                    layer.bindPopup(popupContent, { closeButton: true, maxWidth: "auto" });
+                                    layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
                                 }
                             }).addTo(map);
 
@@ -1127,7 +1103,7 @@ window.onload =
                                     }
                                     let popupContent = "<h3>Sensor.Community #" + feature.properties.id + "</h3><ul><li><b>Type:" +
                                         " </b>" + feature.properties.type + "</li><li><b>Position: </b>" + position + "</li></ul>";
-                                    layer.bindPopup(popupContent, { closeButton: true, maxWidth: "auto" });
+                                    layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
                                 }
                             }).addTo(map);
 
@@ -1143,8 +1119,6 @@ window.onload =
 
                         });
                 }
-
-
 
 
                 if (val === "NO2") {
@@ -1197,7 +1171,7 @@ window.onload =
                                             popupContent = "<h3>Sensor.Community</h3><ul><li>><b>City</b> : " + feature.properties.city + "</li>><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='" + feature.properties.link + "'>" + feature.properties.group + "</a></li>><b>Tube ID</b> : " + feature.properties.tubeId + "</li>><b>Height</b> : " + feature.properties.height + " m</li>><b>Trafic</b> : " + traficLevel + "</li>><b>Information</b> : " + feature.properties.info + "<br><br><b>Remark</b> : " + feature.properties.remark + "</li> </ul>"
                                         }
                                     }
-                                    layer.bindPopup(popupContent, { closeButton: true, maxWidth: "auto" });
+                                    layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
                                 }
                             })
                                 .addTo(map)
@@ -1293,8 +1267,8 @@ window.onload =
                 document.querySelector("#" + iframeID).innerHTML =
                     (config.panelIDs[user_selected_value][0] > 0
                         ? panel_str
-                            .replace("<PANELID>", config.panelIDs[user_selected_value][0])
-                            .replace("<SENSOR>", sens_id) + "<br/>"
+                        .replace("<PANELID>", config.panelIDs[user_selected_value][0])
+                        .replace("<SENSOR>", sens_id) + "<br/>"
                         : "") +
                     (config.panelIDs[user_selected_value][1] > 0
                         ? panel_str
