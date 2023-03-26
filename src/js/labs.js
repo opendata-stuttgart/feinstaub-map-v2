@@ -18,6 +18,7 @@ let labs = {
         let labelRight = L.Icon.extend({
             options: labelBaseOptions
         });
+        
         if (!dataRetrieved) {
             fetch(URL)
                 .then(checkStatus)
