@@ -28,9 +28,6 @@ import * as config from "./config.js";
 import * as places from "../data/places.js";
 import * as zooms from "../data/zooms.js";
 import * as translate from "./translate.js";
-// import * as no2data from "../data/no2.json";
-//import * as stations from "../data/stations.json";
-//import * as s2s_data from "../data/s2s.json";
 
 import "../images/labMarker.svg";
 import "../images/schoolMarker.svg";
@@ -38,17 +35,8 @@ import "../images/favicon.ico";
 import "../css/style.css";
 import "../css/leaflet.css";
 
-let hexagonheatmap,
-    hmhexaPM_aktuell,
-    hmhexaPM_AQI,
-    hmhexa_t_h_p,
-    hmhexa_noise,
-    hmhexaPM_WHO,
-    hmhexaPM_EU;
-
-let mobile = mobileCheck();
-
 const lang = translate.getFirstBrowserLanguage().substring(0, 2); // save browser lanuage for translation
+let mobile = mobileCheck();
 let openedGraph1 = [];
 let timestamp_data = ""; // needs to be global to work over all 4 data streams
 let timestamp_from = ""; // needs to be global to work over all 4 data streams
@@ -67,7 +55,8 @@ map.attributionControl.setPosition("bottomleft");
 
 map.createPane('markerPane1');
 map.createPane('markerPane2');
-let arrayCountSensorsHexPM, arrayCountSensorsHexEUWHOAQI, arrayCountSensorsHexT, arrayCountSensorsHexH,
+let hexagonheatmap, hmhexaPM_aktuell, hmhexaPM_AQI, hmhexa_t_h_p, hmhexa_noise, hmhexaPM_WHO, hmhexaPM_EU,
+    arrayCountSensorsHexPM, arrayCountSensorsHexEUWHOAQI, arrayCountSensorsHexT, arrayCountSensorsHexH,
     arrayCountSensorsHexP, arrayCountSensorsHexNoise, windLayerRetrieved = false, labsLayerRetrieved = false, noiseData,
     dataPointsNO2, stationsPoints, sensorsPoints, sensorsLocations, circleRadii = new L.layerGroup().addTo(map),
     coo = [], stationsInBounds, sensorsInBounds, sensorsInBoundsHex, mapBounds, max = 0, min = 0,
@@ -702,10 +691,6 @@ window.onload =
                             hmhexa_noise = result.cells.filter(e => e.indoor == 0);
                         }
                         LatLngMapper(hmhexa_noise, "Noise");
-
-                        console.log(result.timestamp);
-                        console.log(result.timestamp_from);
-
                         if (result.timestamp > timestamp_data) {
                             timestamp_data = result.timestamp;
                             timestamp_from = result.timestamp_from;
@@ -1007,16 +992,8 @@ window.onload =
                 d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHex.length);
             } else {
                 if (val === "Reference") {
-
-                    // FETCH ICI
-
-                    // stations = stations.getData("data/stations.json");
-
                     stations.getData("data/stations.json")
                         .then(function (result) {
-                            console.log(result);
-
-
                             stationsPoints = L.geoJSON(result.cells, {
                                 pointToLayer: function (feature, latlng) {
                                     return L.circleMarker(latlng, {
@@ -1084,8 +1061,6 @@ window.onload =
                 if (val === "NO2") {
                     no2.getData("data/no2.json")
                         .then(function (result) {
-                            console.log(result);
-
                             dataPointsNO2 = L.geoJSON(result.cells, {
                                 pointToLayer: function (feature, latlng) {
 
@@ -1256,7 +1231,6 @@ window.onload =
         }
 
         function switchTo(user_selected_value) {
-            console.log(user_selected_value);
             let elem = document.querySelector(`div[value='${user_selected_value}']`);
             document.querySelector(".selected").classList.remove("selected"); // remove class selected
             elem.classList.add("selected");
