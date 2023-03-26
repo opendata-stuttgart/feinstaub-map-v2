@@ -1,7 +1,4 @@
 import 'whatwg-fetch'
-//import checkStatus from './utils'
-
-let dataRetrieved = false
 
 let no2 = {
     getData: async function (URL) {
