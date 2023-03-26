@@ -466,11 +466,22 @@ window.onload =
             config.scale_options[user_selected_value]
         ).addTo(map);
 
-        async function retrieveData() {
+        function lastUpdateTimestamp(timestamp_data) {
+            const date = new Date();
+            const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
+            const getOffsetHours = date.getTimezoneOffset() * 60000;
+            const logTimestamp = dateParser(timestamp_data).getTime();
+            const lastUpdateTimestamp = logTimestamp - getOffsetHours;
+            const dateFormater = locale.format("%d.%m.%Y %H:%M");
 
-            //AJOUTER SUR BOUTON + LASTFETCHTIME
-            await api
-                .getData(config.data_host + "/data/v2/data.dust.min.json", "pmDefault")
+            const lastUpdateText = translate.tr(lang, "Last update") + " " + dateFormater(lastUpdateTimestamp);
+            document.querySelector("#lastUpdate").innerText = lastUpdateText;
+            document.querySelector("#menuButton").innerText = document.querySelector(".selected").innerText;
+        }
+
+
+        async function retrieveData() {
+            await api.getData(config.data_host + "/data/v2/data.dust.min.json", "pmDefault")
                 .then(function (result) {
                     if (document.querySelector("#indoor").checked) {
                         hmhexaPM_aktuell = result.cells;
@@ -527,23 +538,6 @@ window.onload =
                                 ready("aqi");
                             });
                     } else {
-                        // switch (user_selected_value) {
-                        //     case 'PM25who':
-                        //         LatLngMapper(hmhexaPM_aktuell, "EUWHOAQI");
-                        //         break;
-                        //     case 'PM10who':
-                        //         LatLngMapper(hmhexaPM_aktuell, "EUWHOAQI");
-                        //         break;
-                        //     case 'PM25eu':
-                        //         LatLngMapper(hmhexaPM_aktuell, "EUWHOAQI");
-                        //         break;
-                        //     case 'PM10eu':
-                        //         LatLngMapper(hmhexaPM_aktuell, "EUWHOAQI");
-                        //         break;
-                        //     case 'AQIus':
-                        //         LatLngMapper(hmhexaPM_aktuell, "EUWHOAQI");
-                        //         break;
-                        // }      
                         LatLngMapper(hmhexaPM_aktuell, "PM");
 
                     }
@@ -616,10 +610,6 @@ window.onload =
 
 
         async function retrieveDataReload() {
-
-            console.log("retrieveDataReload()");
-            console.log(user_selected_value);
-
             let lastFetchTime;
             const now = new Date();
 
@@ -725,22 +715,8 @@ window.onload =
                     .then(() => ready("noise"));
             }
 
-            const date = new Date();
-            const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
-            const getOffsetHours = date.getTimezoneOffset() * 60000;
-            const logTimestamp = dateParser(timestamp_data).getTime();
-            const lastUpdateTimestamp = logTimestamp + -getOffsetHours;  //COMPRENDS PAS!!!
-            const dateFormater = locale.format("%d.%m.%Y %H:%M");
-
-            document.querySelector("#lastUpdate").innerText =
-                translate.tr(lang, "Last update") +
-                " " +
-                dateFormater(lastUpdateTimestamp);
-            document.querySelector("#menuButton").innerText =
-                document.querySelector(".selected").innerText;
-
+            lastUpdateTimestamp(timestamp_data)
         }
-
 
         function LatLngMapper(array, selector) {
             const locations = array.map(e => new L.LatLng(e.latitude, e.longitude));
@@ -770,20 +746,7 @@ window.onload =
         }
 
         function ready(vizType) {
-            const date = new Date();
-            const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
-            const getOffsetHours = date.getTimezoneOffset() * 60000;
-            const logTimestamp = dateParser(timestamp_data).getTime();
-            const lastUpdateTimestamp = logTimestamp + -getOffsetHours;  //COMPRENDS PAS!!!
-            const dateFormater = locale.format("%d.%m.%Y %H:%M");
-
-            document.querySelector("#lastUpdate").innerText =
-                translate.tr(lang, "Last update") +
-                " " +
-                dateFormater(lastUpdateTimestamp);
-            document.querySelector("#menuButton").innerText =
-                document.querySelector(".selected").innerText;
-
+            lastUpdateTimestamp(timestamp_data);
 
             if (
                 vizType === "pmWHO" &&
@@ -1024,7 +987,6 @@ window.onload =
 
             switchLegend(val);
 
-            // TODO: move to top and replace in other functions
             const lookup = {
                 "PM10": arrayCountSensorsHexPM,
                 "PM25": arrayCountSensorsHexPM,
@@ -1115,16 +1077,11 @@ window.onload =
                             drawCircles();
                             stationsPoints.bringToFront();
                             sensorsPoints.bringToFront();
-
-
                         });
                 }
 
 
                 if (val === "NO2") {
-
-                    //FETCH ICI
-
                     no2.getData("data/no2.json")
                         .then(function (result) {
                             console.log(result);
@@ -1365,14 +1322,20 @@ window.onload =
         }
 
         function closeMenu() {
-            document.getElementById("modal").style.display = "none";
-            document.getElementById("mainContainer").style.display = "none";
+            const modal = document.getElementById("modal");
+            const mainContainer = document.getElementById("mainContainer");
+            const menuButton = document.querySelector("#menuButton");
+            const selected = document.querySelector(".selected");
+            const results = document.querySelector("#results");
+
+            modal.style.display = "none";
+            mainContainer.style.display = "none";
             closeExplanation();
-            document.querySelector("#menuButton").innerText =
-                document.querySelector(".selected").innerText;
-            document.querySelector("#results")
-                ? document.querySelector("#results").remove()
-                : null;
+            menuButton.innerText = selected.innerText;
+
+            if (results) {
+                results.remove();
+            }
         }
 
         function toggleMenu() {
@@ -1403,34 +1366,47 @@ window.onload =
 
         document.querySelector("#menuButton").onclick = toggleMenu
 
+        /*
+        * Add new translation to the translationMap
+        */
+        const translationMap = {
+            "#label_local_labs": "Local labs",
+            "#label_sensor_school": "Sensor2School",
+            "#label_wind_layer": "Wind layer",
+            "#label_indoor": "Show indoor sensors",
+            "#AQI_Good": "Good",
+            "#AQI_Moderate": "Moderate",
+            "#AQI_Unhealthy_Sensitive": "Unhealthy for sensitive",
+            "#AQI_Unhealthy": "Unhealthy",
+            "#AQI_Very_Unhealthy": "Very Unhealthy",
+            "#AQI_Hazardous": "Hazardous",
+            "#website": "Website",
+            "#forum": "Forum",
+            "#explanation": "Explanation",
+            "#world": "World",
+            "#europe": "Europe",
+            "#northamerica": "North America",
+            "#southamerica": "South America",
+            "#asia": "Asia",
+            "#africa": "Africa",
+            "#oceania": "Oceania"
+        };
+
+        Object.entries(translationMap).forEach(([selector, translation]) => {
+            document.querySelector(selector).innerText = translate.tr(lang, translation);
+        });
+
         // Load lab and windlayer, init checkboxes
         document.querySelector("#cb_labs").checked = false
         document.querySelector("#cb_s2s").checked = false
         document.querySelector("#cb_wind").checked = false
         document.querySelector("#indoor").checked = false
 
-        document.querySelector("#label_local_labs").innerText = translate.tr(lang, "Local labs")
-        document.querySelector("#label_sensor_school").innerText = translate.tr(lang, "Sensor2School")
-        document.querySelector("#label_wind_layer").innerText = translate.tr(lang, "Wind layer")
-        document.querySelector("#label_indoor").innerText = translate.tr(lang, "Show indoor sensors")
-
         document.querySelector("#cb_labs").addEventListener("change", switchLabLayer)
         document.querySelector("#cb_s2s").addEventListener("change", switchS2SLayer)
         document.querySelector("#cb_wind").addEventListener("change", switchWindLayer)
         document.querySelector("#indoor").addEventListener("change", switchIndoorLayer)
 
-        // translate AQI values
-        document.querySelector("#AQI_Good").innerText = translate.tr(lang, "Good")
-        document.querySelector("#AQI_Moderate").innerText = translate.tr(lang, "Moderate")
-        document.querySelector("#AQI_Unhealthy_Sensitive").innerText = translate.tr(lang, "Unhealthy for sensitive")
-        document.querySelector("#AQI_Unhealthy").innerText = translate.tr(lang, "Unhealthy")
-        document.querySelector("#AQI_Very_Unhealthy").innerText = translate.tr(lang, "Very Unhealthy")
-        document.querySelector("#AQI_Hazardous").innerText = translate.tr(lang, "Hazardous")
-
-        // translate menu links
-        document.querySelector("#website").innerText = translate.tr(lang, "Website")
-        document.querySelector("#forum").innerText = translate.tr(lang, "Forum")
-        document.querySelector("#explanation").innerText = translate.tr(lang, "Explanation")
         document
             .querySelector("#explanation")
             .addEventListener("click", toggleExplanation);
@@ -1468,19 +1444,28 @@ window.onload =
                 ) && switchTo(user_selected_value);
             });
         });
+
+        /**
+         * Initializes and handles the share button functionality using the Web Share API.
+         * If not supported, the button is hidden.
+         */
+        const shareButton = document.querySelector("#share");
+
         if (navigator.share) {
-            document.querySelector("#share").addEventListener("click", function () {
+            const {href} = document.location;
+            const shareHandler = () => {
                 navigator.share({
                     title: "Maps.Sensor.Community",
                     text: "Maps is a free web app to monitor air quality in your area. You can find more information on Sensor.Community.",
-                    url: document.location.href,
+                    url: href,
                 });
-            });
+            };
+            shareButton.addEventListener("click", shareHandler);
         } else {
-            document.querySelector("#share").style.display = "none";
+            shareButton.style.display = "none";
         }
-    }
 
+    }
 // add searchbox
 new GeoSearch.GeoSearchControl({
     style: "bar",
