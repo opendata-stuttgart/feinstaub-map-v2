@@ -1,6 +1,5 @@
 import 'whatwg-fetch'
 import 'leaflet-velocity'
-import checkStatus from './utils'
 
 let dataRetrieved = false
 
@@ -9,7 +8,6 @@ let wind = {
         // check if json has already been retrieved
         if (!dataRetrieved) {
             fetch(URL)
-                .then(checkStatus)
                 .then((response) => response.json())
                 .then((data) => {
                     L.velocityLayer({
