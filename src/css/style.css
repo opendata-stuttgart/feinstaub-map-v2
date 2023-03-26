@@ -4,12 +4,8 @@ html {
     height: 100%;
 }
 
-body, ul, li {
-    margin: 0;
-    padding: 0;
-}
-
 body {
+    margin: 0;
     padding: 8px;
     box-sizing: border-box;
     font-family: -apple-system, sans-serif;
@@ -31,6 +27,11 @@ button {
 
 hr {
     border: 1px solid #eaeaea;
+}
+
+ul, li {
+    margin: 0;
+    padding: 0;
 }
 
 ul {
@@ -616,7 +617,6 @@ input[type="radio"]:checked {
     );
     background: linear-gradient(to top, #8bf3ff 0%, #fff148 50%, #ff5353 100%);
 }
-
 
 #legend_Temperature .gradient {
     background: -webkit-linear-gradient(
