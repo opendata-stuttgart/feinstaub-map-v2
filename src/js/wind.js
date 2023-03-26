@@ -4,33 +4,31 @@ import checkStatus from './utils'
 
 let dataRetrieved = false
 
-async function fetchAndAddWindData(URL, map, switchLayer) {
-    try {
-        const response = await fetch(URL);
-        checkStatus(response);
-        const data = await response.json();
-        L.velocityLayer({
-            displayValues: false,
-            displayOptions: false,
-            data,
-            velocityScale: 0.015,
-            colorScale: ["#71C3F2", "#447591"],
-            minVelocity: 1,
-            maxVelocity: 10,
-            overlayName: 'wind_layer',
-            onAdd: switchLayer,
-        }).addTo(map);
-        dataRetrieved = true;
-    } catch (error) {
-        console.log('request failed', error);
-    }
-}
-
 let wind = {
-    getData: function (URL, map, switchLayer) {
+    getData: async function (URL, map, switchLayer) {
+        // check if json has already been retrieved
         if (!dataRetrieved) {
-            fetchAndAddWindData(URL, map, switchLayer);
+            fetch(URL)
+                .then(checkStatus)
+                .then((response) => response.json())
+                .then((data) => {
+                    L.velocityLayer({
+                        displayValues: false,
+                        displayOptions: false,
+                        data: data,
+                        velocityScale: 0.015,
+                        colorScale: ["#71C3F2", "#447591"],
+                        minVelocity: 1,
+                        maxVelocity: 10,
+                        overlayName: 'wind_layer',
+                        onAdd: switchLayer,
+                    }).addTo(map);
+                }).then(() => dataRetrieved = true)
+                .catch(function (error) {
+                    console.log('request failed', error)
+                })
         }
     }
 }
-export default wind;
+
+export default wind
