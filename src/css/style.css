@@ -635,7 +635,6 @@ input[type="checkbox"]:checked {
     );
 }
 
-
 #legend_AQIus {
     display: none;
 }
@@ -661,7 +660,7 @@ input[type="checkbox"]:checked {
     vertical-align: middle;
 }
 
-.labs_facebook:before {
+.labsSocialIcon.labs_facebook:before {
     content: url("../images/facebook.svg");
 }
 

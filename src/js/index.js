@@ -598,6 +598,7 @@ window.onload =
         }
 
 
+        /* TODO: get rid of this function */
         async function retrieveDataReload() {
             let lastFetchTime;
             const now = new Date();
@@ -1282,7 +1283,6 @@ window.onload =
         }
 
         function switchLegend(val) {
-
             document
                 .querySelectorAll("[id^=legend_]")
                 .forEach((d) => (d.style.display = "none"));
