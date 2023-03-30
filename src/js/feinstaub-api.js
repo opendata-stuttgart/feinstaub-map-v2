@@ -165,9 +165,12 @@ let api = {
                         })
                         .value();
 
+                        //strictly filter indoor
+    
 
                     let cells2 = _.chain(json)
                         .map((values) => {
+
                             return {
                                 "type": "Feature",
                                 "properties": {
@@ -185,7 +188,7 @@ let api = {
 
                     return Promise.resolve({
                         cells: cells,
-                        cells2: {"type": "FeatureCollection", "features": cells2},
+                        cells2: {"type": "FeatureCollection", "features": cells2.filter(feature => feature.properties.indoor == 0)},
                         timestamp: timestamp_data,
                         timestamp_from: timestamp_from
                     });

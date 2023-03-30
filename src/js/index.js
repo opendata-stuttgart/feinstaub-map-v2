@@ -39,7 +39,9 @@ import "../css/style.css";
 import "../css/leaflet.css";
 
 let hexagonheatmap,
+    hexagonheatmap_indoor,
     hmhexaPM_aktuell,
+    hmhexaPM_aktuell_indoor,
     hmhexaPM_AQI,
     hmhexa_t_h_p,
     hmhexa_noise,
@@ -67,7 +69,7 @@ map.attributionControl.setPosition("bottomleft");
 
 map.createPane('markerPane1');
 map.createPane('markerPane2');
-let arrayCountSensorsHexPM, arrayCountSensorsHexEUWHOAQI, arrayCountSensorsHexT, arrayCountSensorsHexH,
+let arrayCountSensorsHexPM, arrayCountSensorsHexEUWHO, arrayCountSensorsHexAQI, arrayCountSensorsHexT, arrayCountSensorsHexH,
     arrayCountSensorsHexP, arrayCountSensorsHexNoise, windLayerRetrieved = false, labsLayerRetrieved = false, noiseData,
     dataPointsNO2, stationsPoints, sensorsPoints, sensorsLocations, circleRadii = new L.layerGroup().addTo(map),
     coo = [], stationsInBounds, sensorsInBounds, sensorsInBoundsHex, mapBounds, max = 0, min = 0,
@@ -466,6 +468,10 @@ window.onload =
             config.scale_options[user_selected_value]
         ).addTo(map);
 
+        hexagonheatmap_indoor = L.hexbinLayer(
+            config.scale_options[user_selected_value]
+        ).addTo(map);
+
         async function retrieveData() {
 
             //AJOUTER SUR BOUTON + LASTFETCHTIME
@@ -474,6 +480,7 @@ window.onload =
                 .then(function (result) {
                     if (document.querySelector("#indoor").checked) {
                         hmhexaPM_aktuell = result.cells;
+                        //hmhexaPM_aktuell_indoor = result.cells.filter(e => e.indoor == 1);
                     } else {
                         hmhexaPM_aktuell = result.cells.filter(e => e.indoor == 0);
                     }
@@ -489,7 +496,12 @@ window.onload =
                     ready("pmDefault");
                 });
 
-            const pm24Button = document.querySelectorAll('div[value="PM25who"], div[value="PM10who"],div[value="PM25eu"], div[value="PM10eu"], div[value="AQIus"]');
+
+                //Corriger 24h/1h
+                //24hfor AQIUS
+                //1h for EU / WHO
+
+            const pm24Button = document.querySelectorAll('div[value="AQIus"]');
             pm24Button.forEach(button => {
                 button.addEventListener('click', () => {
                     let lastFetchTime;
@@ -500,22 +512,40 @@ window.onload =
                         api
                             .getData(config.data_host + "/data/v2/data.24h.json")
                             .then(function (result) {
-                                if (document.querySelector("#indoor").checked) {
-                                    hmhexaPM_WHO = result.cells;
-                                } else {
-                                    hmhexaPM_WHO = result.cells.filter(e => e.indoor == 0);
-                                }
-                                if (document.querySelector("#indoor").checked) {
-                                    hmhexaPM_EU = result.cells;
-                                } else {
-                                    hmhexaPM_EU = result.cells.filter(e => e.indoor == 0);
-                                }
-                                if (document.querySelector("#indoor").checked) {
-                                    hmhexaPM_AQI = result.cells;
-                                } else {
                                     hmhexaPM_AQI = result.cells.filter(e => e.indoor == 0);
+
+                                LatLngMapper(hmhexaPM_AQI, "AQI");
+                                if (result.timestamp > timestamp_data) {
+                                    timestamp_data = result.timestamp;
+                                    timestamp_from = result.timestamp_from;
                                 }
-                                LatLngMapper(hmhexaPM_WHO, "EUWHOAQI");
+                            })
+                            .then(function () {
+                                ready("aqi");
+                            });
+                    } else {   
+                        LatLngMapper(hmhexaPM_aktuell, "PM");
+                        
+                    }
+                });
+            });
+
+
+            const pm1Button = document.querySelectorAll('div[value="PM25who"], div[value="PM10who"],div[value="PM25eu"], div[value="PM10eu"]');
+            pm1Button.forEach(button => {
+                button.addEventListener('click', () => {
+                    let lastFetchTime;
+                    // check if the data has been fetched within the last 2.5 minutes
+                    const now = new Date();
+                    if (!lastFetchTime || now - lastFetchTime >= 2.5 * 60 * 1000) {
+                        // fetch the data
+                        api
+                            .getData(config.data_host + "/data/v2/data.1h.json")
+                            .then(function (result) {
+   
+                                    hmhexaPM_WHO = result.cells.filter(e => e.indoor == 0);
+                                    hmhexaPM_EU = result.cells.filter(e => e.indoor == 0);
+                                LatLngMapper(hmhexaPM_WHO, "EUWHO");
                                 if (result.timestamp > timestamp_data) {
                                     timestamp_data = result.timestamp;
                                     timestamp_from = result.timestamp_from;
@@ -524,31 +554,15 @@ window.onload =
                             .then(function () {
                                 ready("pmWHO");
                                 ready("pmEU");
-                                ready("aqi");
                             });
-                    } else {
-                        // switch (user_selected_value) {
-                        //     case 'PM25who':
-                        //         LatLngMapper(hmhexaPM_aktuell, "EUWHOAQI");
-                        //         break;
-                        //     case 'PM10who':
-                        //         LatLngMapper(hmhexaPM_aktuell, "EUWHOAQI");
-                        //         break;
-                        //     case 'PM25eu':
-                        //         LatLngMapper(hmhexaPM_aktuell, "EUWHOAQI");
-                        //         break;
-                        //     case 'PM10eu':
-                        //         LatLngMapper(hmhexaPM_aktuell, "EUWHOAQI");
-                        //         break;
-                        //     case 'AQIus':
-                        //         LatLngMapper(hmhexaPM_aktuell, "EUWHOAQI");
-                        //         break;
-                        // }      
+                    } else {   
                         LatLngMapper(hmhexaPM_aktuell, "PM");
                         
                     }
                 });
             });
+
+
 
             const tempButton = document.querySelectorAll('div[value="Temperature"], div[value="Humidity"], div[value="Pressure"]');
             tempButton.forEach(button => {
@@ -629,6 +643,7 @@ window.onload =
                     .then(function (result) {
                         if (document.querySelector("#indoor").checked) {
                             hmhexaPM_aktuell = result.cells;
+                            //hmhexaPM_aktuell = result.cells.filter(e => e.indoor == 1);
                         } else {
                             hmhexaPM_aktuell = result.cells.filter(e => e.indoor == 0);
                         }
@@ -646,25 +661,37 @@ window.onload =
                     });
             }
 
-            if (user_selected_value == "PM25who" || user_selected_value == "PM10who" || user_selected_value == "PM25eu" || user_selected_value == "PM10eu" || user_selected_value == "AQIus") {
+            if ( user_selected_value == "AQIus") {
 
                 await api
                     .getData(config.data_host + "/data/v2/data.24h.json")
                     .then(function (result) {
-                        if (document.querySelector("#indoor").checked) {
-                            hmhexaPM_WHO = result.cells;
-                        } else {
-                            hmhexaPM_WHO = result.cells.filter(e => e.indoor == 0);
+
+                            hmhexaPM_AQI = result.cells.filter(e => e.indoor == 0);
+                        LatLngMapper(hmhexaPM_AQI, "AQI");
+                        if (result.timestamp > timestamp_data) {
+                            timestamp_data = result.timestamp;
+                            timestamp_from = result.timestamp_from;
                         }
+                        lastFetchTime = now;
+                    })
+                    .then(function () {
+                        ready("aqi");
+                    });
+            }
+
+            if (user_selected_value == "PM25who" || user_selected_value == "PM10who" || user_selected_value == "PM25eu" || user_selected_value == "PM10eu") {
+
+                await api
+                    .getData(config.data_host + "/data/v2/data.1h.json")
+                    .then(function (result) {
+
+                            hmhexaPM_WHO = result.cells.filter(e => e.indoor == 0);
+                        
                         if (document.querySelector("#indoor").checked) {
                             hmhexaPM_EU = result.cells;
                         } else {
                             hmhexaPM_EU = result.cells.filter(e => e.indoor == 0);
-                        }
-                        if (document.querySelector("#indoor").checked) {
-                            hmhexaPM_AQI = result.cells;
-                        } else {
-                            hmhexaPM_AQI = result.cells.filter(e => e.indoor == 0);
                         }
                         LatLngMapper(hmhexaPM_WHO, "EUWHOAQI");
                         if (result.timestamp > timestamp_data) {
@@ -676,10 +703,8 @@ window.onload =
                     .then(function () {
                         ready("pmWHO");
                         ready("pmEU");
-                        ready("aqi");
                     });
             }
-
 
             if (user_selected_value == "Pressure" || user_selected_value == "Humidity" || user_selected_value == "Temperature") {
                 api.getData(config.data_host + "/data/v2/data.temp.min.json", "tempHumPress")
@@ -773,9 +798,12 @@ window.onload =
                 case "PM":
                     arrayCountSensorsHexPM = locations;
                     break;
-                case "EUWHOAQI":
-                    arrayCountSensorsHexEUWHOAQI = locations;
+                case "AQI":
+                    arrayCountSensorsHexAQI = locations;
                     break;
+                case "EUWHO":
+                    arrayCountSensorsHexEUWHO = locations;
+                        break;
                 case "Temperature":
                     arrayCountSensorsHexT = array.filter(e => !isNaN(e.data.Temperature)).map(e => new L.LatLng(e.latitude, e.longitude));
                     break;
@@ -815,8 +843,8 @@ window.onload =
             ) {
                 hexagonheatmap.initialize(config.scale_options[user_selected_value]);
                 hexagonheatmap.data(hmhexaPM_WHO);
-                d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
-                d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+                d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHO));
+                d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHO.length);
             }
 
             if (
@@ -825,15 +853,15 @@ window.onload =
             ) {
                 hexagonheatmap.initialize(config.scale_options[user_selected_value]);
                 hexagonheatmap.data(hmhexaPM_EU);
-                d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
-                d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+                d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHO));
+                d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHO.length);
             }
 
             if (vizType === "aqi" && user_selected_value === "AQIus") {
                 hexagonheatmap.initialize(config.scale_options[user_selected_value]);
                 hexagonheatmap.data(hmhexaPM_AQI);
-                d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexEUWHOAQI));
-                d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexEUWHOAQI.length);
+                d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexAQI));
+                d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexAQI.length);
             }
 
             if (
@@ -861,11 +889,16 @@ window.onload =
             if (vizType === "pmDefault" && (user_selected_value === "PM25" || user_selected_value === "PM10")) {
                 hexagonheatmap.initialize(config.scale_options[user_selected_value]);
                 hexagonheatmap.data(hmhexaPM_aktuell);
+                hexagonheatmap_indoor.data(hmhexaPM_aktuell_indoor);
                 d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexPM));
                 d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexPM.length);
             }
 
             if (vizType === "Reference" && user_selected_value === "Reference") {
+
+                // document.getElementById('textCount').style.display = 'none';
+
+                console.log(d3.select("#textCount"));
 
                 sensorsPoints = L.geoJSON(sensorsLocations, {
                     pointToLayer: function (feature, latlng) {
@@ -921,8 +954,10 @@ window.onload =
                 let arrayCountSensorsHex;
                 if (user_selected_value === "PM10" || user_selected_value === "PM25") {
                     arrayCountSensorsHex = arrayCountSensorsHexPM;
-                } else if (user_selected_value === "PM10eu" || user_selected_value === "PM25eu" || user_selected_value === "PM10who" || user_selected_value === "PM25who" || user_selected_value === "AQIus") {
-                    arrayCountSensorsHex = arrayCountSensorsHexEUWHOAQI;
+                } else if (user_selected_value === "PM10eu" || user_selected_value === "PM25eu" || user_selected_value === "PM10who" || user_selected_value === "PM25who") {
+                    arrayCountSensorsHex = arrayCountSensorsHexEUWHO;
+                } else if ( user_selected_value === "AQIus") {
+                    arrayCountSensorsHex = arrayCountSensorsHexAQI;
                 } else if (user_selected_value == "Temperature") {
                     arrayCountSensorsHex = arrayCountSensorsHexT;
                 } else if (user_selected_value == "Humidity") {
@@ -999,12 +1034,17 @@ window.onload =
 
             let d_temp = data
                 .filter((d) => !d.o.indoor)
+                // .filter(function(d){if(!d.o.indoor){console.log(d);return d}})
                 .map((o) => o.o.data[user_selected_value])
                 .sort(sort_num);
+
+            // console.log(data);
+            
             return median(d_temp);
         }
 
         function reloadMap(val) {
+            d3.select("#textCount").style("display", "block");
             document.querySelectorAll("path.hexbin-hexagon").forEach(function (d) {
                 d.remove();
             });
@@ -1052,11 +1092,11 @@ window.onload =
             const lookup = {
                 "PM10": arrayCountSensorsHexPM,
                 "PM25": arrayCountSensorsHexPM,
-                "PM10eu": arrayCountSensorsHexEUWHOAQI,
-                "PM25eu": arrayCountSensorsHexEUWHOAQI,
-                "PM10who": arrayCountSensorsHexEUWHOAQI,
-                "PM25who": arrayCountSensorsHexEUWHOAQI,
-                "AQIus": arrayCountSensorsHexEUWHOAQI,
+                "PM10eu": arrayCountSensorsHexEUWHO,
+                "PM25eu": arrayCountSensorsHexEUWHO,
+                "PM10who": arrayCountSensorsHexEUWHO,
+                "PM25who": arrayCountSensorsHexEUWHO,
+                "AQIus": arrayCountSensorsHexAQI,
                 "Temperature": arrayCountSensorsHexT,
                 "Humidity": arrayCountSensorsHexH,
                 "Pressure": arrayCountSensorsHexP,
@@ -1073,6 +1113,8 @@ window.onload =
                     // FETCH ICI
 
                     // stations = stations.getData("data/stations.json");
+
+                    d3.select("#textCount").style("display", "none");
 
                     stations.getData("data/stations.json")
                         .then(function (result) {
@@ -1150,6 +1192,8 @@ window.onload =
                 if (val === "NO2") {
 
                     //FETCH ICI
+
+                    d3.select("#textCount").style("display", "none");
 
                     no2.getData("data/no2.json")
                         .then(function (result) {
@@ -1354,7 +1398,15 @@ window.onload =
         }
 
         function switchIndoorLayer() {
+        
+            if (user_selected_value != "PM25who" && user_selected_value != "PM10who" && user_selected_value != "PM25eu" && user_selected_value != "PM10eu" && user_selected_value != "AQIus" && user_selected_value != "NO2" && user_selected_value != "Reference"){
+
+            document.querySelectorAll("path.hexbin-hexagon").forEach(function (d) {
+                d.remove();
+            });
+            
             retrieveData();
+        }
         }
 
         function switchS2SLayer() {
