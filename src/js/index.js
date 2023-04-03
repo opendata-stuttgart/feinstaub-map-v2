@@ -48,6 +48,9 @@ let hexagonheatmap,
     hmhexaPM_WHO,
     hmhexaPM_EU;
 
+let api_stock_pm,api_stock_thp;
+let lastFetchTimeMain,lastFetchTime24h,lastFetchTime1h,lastFetchTimeNoise,lastFetchTimeTHP;
+
 let mobile = mobileCheck();
 
 const lang = translate.getFirstBrowserLanguage().substring(0, 2); // save browser lanuage for translation
@@ -474,7 +477,10 @@ window.onload =
 
         async function retrieveData() {
 
-            //AJOUTER SUR BOUTON + LASTFETCHTIME
+            console.log("retrieveData()");
+            console.log(lastFetchTimeMain);
+            const now = new Date();
+            if (!lastFetchTimeMain || now - lastFetchTimeMain >= 2.5 * 60 * 1000) { //150000 ou 300000?
             await api
                 .getData(config.data_host + "/data/v2/data.dust.min.json", "pmDefault")
                 .then(function (result) {
@@ -484,30 +490,43 @@ window.onload =
                     } else {
                         hmhexaPM_aktuell = result.cells.filter(e => e.indoor == 0);
                     }
+                    api_stock_pm = result.cells;
                     LatLngMapper(hmhexaPM_aktuell, "PM");
                     sensorsLocations = result.cells2;
                     if (result.timestamp > timestamp_data) {
                         timestamp_data = result.timestamp;
                         timestamp_from = result.timestamp_from;
                     }
+                lastFetchTimeMain = now;
+                console.log(lastFetchTimeMain);
                 })
                 .then(function () {
                     ready("reference");
                     ready("pmDefault");
                 });
+            }else{
+            if (document.querySelector("#indoor").checked) {
+                console.log("indoor");
+                    hmhexaPM_aktuell = api_stock_pm;
+                //hmhexaPM_aktuell_indoor = result.cells.filter(e => e.indoor == 1);
 
+            } else {
+                hmhexaPM_aktuell = api_stock_pm.filter(e => e.indoor == 0);;
 
-                //Corriger 24h/1h
-                //24hfor AQIUS
-                //1h for EU / WHO
+            }
+            
+            ready("reference");
+            ready("pmDefault");
+
+            };
+
 
             const pm24Button = document.querySelectorAll('div[value="AQIus"]');
             pm24Button.forEach(button => {
                 button.addEventListener('click', () => {
-                    let lastFetchTime;
                     // check if the data has been fetched within the last 2.5 minutes
                     const now = new Date();
-                    if (!lastFetchTime || now - lastFetchTime >= 2.5 * 60 * 1000) {
+                    if (!lastFetchTime24h || now - lastFetchTime24h >= 2.5 * 60 * 1000) {
                         // fetch the data
                         api
                             .getData(config.data_host + "/data/v2/data.24h.json")
@@ -519,13 +538,13 @@ window.onload =
                                     timestamp_data = result.timestamp;
                                     timestamp_from = result.timestamp_from;
                                 }
+                            lastFetchTime24h = now;
                             })
                             .then(function () {
                                 ready("aqi");
                             });
                     } else {   
                         LatLngMapper(hmhexaPM_aktuell, "PM");
-                        
                     }
                 });
             });
@@ -537,7 +556,7 @@ window.onload =
                     let lastFetchTime;
                     // check if the data has been fetched within the last 2.5 minutes
                     const now = new Date();
-                    if (!lastFetchTime || now - lastFetchTime >= 2.5 * 60 * 1000) {
+                    if (!lastFetchTime1h || now - lastFetchTime1h >= 2.5 * 60 * 1000) {
                         // fetch the data
                         api
                             .getData(config.data_host + "/data/v2/data.1h.json")
@@ -550,6 +569,7 @@ window.onload =
                                     timestamp_data = result.timestamp;
                                     timestamp_from = result.timestamp_from;
                                 }
+                                lastFetchTime1h = now;
                             })
                             .then(function () {
                                 ready("pmWHO");
@@ -570,7 +590,7 @@ window.onload =
                     let lastFetchTime;
                     // check if the data has been fetched within the last 2.5 minutes
                     const now = new Date();
-                    if (!lastFetchTime || now - lastFetchTime >= 2.5 * 60 * 1000) {
+                    if (!lastFetchTimeTHP || now - lastFetchTimeTHP >= 2.5 * 60 * 1000) {
                         // fetch the data
                         api.getData(config.data_host + "/data/v2/data.temp.min.json", "tempHumPress")
                             .then(function (result) {
@@ -580,6 +600,7 @@ window.onload =
                                 } else {
                                     hmhexa_t_h_p = result.cells.filter(e => e.indoor == 0);
                                 }
+                                api_stock_thp = result.cells;
                                 LatLngMapper(hmhexa_t_h_p, "Temperature");
                                 LatLngMapper(hmhexa_t_h_p, "Humidity");
                                 LatLngMapper(hmhexa_t_h_p, "Pressure");
@@ -587,12 +608,28 @@ window.onload =
                                     timestamp_data = result.timestamp;
                                     timestamp_from = result.timestamp_from;
                                 }
+                                lastFetchTimeTHP = now;
                             })
                             .then(() => ready("tempHumPress"));
 
                     } else {
                         // use the cached data
+                        //LatLngMapper(hmhexa_t_h_p, "Temperature");
+
+                        if (document.querySelector("#indoor").checked) {
+                            console.log("indoor");
+                            hmhexa_t_h_p = api_stock_thp;
+                            //hmhexaPM_aktuell_indoor = result.cells.filter(e => e.indoor == 1);
+            
+                        } else {
+                            hmhexa_t_h_p = api_stock_thp.filter(e => e.indoor == 0);;
+            
+                        }
+
                         LatLngMapper(hmhexa_t_h_p, "Temperature");
+                        LatLngMapper(hmhexa_t_h_p, "Humidity");
+                        LatLngMapper(hmhexa_t_h_p, "Pressure");
+                        ready("tempHumPress")
                     }
                 });
             });
@@ -602,7 +639,7 @@ window.onload =
                 let lastFetchTime;
                 // check if the data has been fetched within the last 2.5 minutes
                 const now = new Date();
-                if (!lastFetchTime || now - lastFetchTime >= 2.5 * 60 * 1000) {
+                if (!lastFetchTimeNoise || now - lastFetchTimeNoise >= 2.5 * 60 * 1000) {
                     // fetch the data
                     api.getData(config.data_host + "/data/v1/data.noise.json", "noise")
                         .then(function (result) {
@@ -617,7 +654,7 @@ window.onload =
                                 timestamp_data = result.timestamp;
                                 timestamp_from = result.timestamp_from;
                             }
-                            lastFetchTime = now;
+                            lastFetchTimeNoise = now;
                         })
                         .then(() => ready("noise"));
                 } else {
@@ -634,7 +671,6 @@ window.onload =
             console.log("retrieveDataReload()");
             console.log(user_selected_value);
 
-            let lastFetchTime;
             const now = new Date();
 
             if (user_selected_value == "PM25" || user_selected_value == "PM10") {
@@ -649,11 +685,12 @@ window.onload =
                         }
                         LatLngMapper(hmhexaPM_aktuell, "PM");
                         sensorsLocations = result.cells2;
+
                         if (result.timestamp > timestamp_data) {
                             timestamp_data = result.timestamp;
                             timestamp_from = result.timestamp_from;
                         }
-                        lastFetchTime = now;
+                        lastFetchTimeMain = now;
                     })
                     .then(function () {
                         ready("reference");
@@ -673,7 +710,7 @@ window.onload =
                             timestamp_data = result.timestamp;
                             timestamp_from = result.timestamp_from;
                         }
-                        lastFetchTime = now;
+                        lastFetchTime24h = now;
                     })
                     .then(function () {
                         ready("aqi");
@@ -698,7 +735,7 @@ window.onload =
                             timestamp_data = result.timestamp;
                             timestamp_from = result.timestamp_from;
                         }
-                        lastFetchTime = now;
+                        lastFetchTime1h = now;
                     })
                     .then(function () {
                         ready("pmWHO");
@@ -722,7 +759,7 @@ window.onload =
                             timestamp_data = result.timestamp;
                             timestamp_from = result.timestamp_from;
                         }
-                        lastFetchTime = now;
+                        lastFetchTimeTHP = now;
                     })
                     .then(() => ready("tempHumPress"));
             }
@@ -745,7 +782,7 @@ window.onload =
                             timestamp_data = result.timestamp;
                             timestamp_from = result.timestamp_from;
                         }
-                        lastFetchTime = now;
+                        lastFetchTimeNoise = now;
                     })
                     .then(() => ready("noise"));
             }
@@ -767,30 +804,6 @@ window.onload =
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         function LatLngMapper(array, selector) {
             const locations = array.map(e => new L.LatLng(e.latitude, e.longitude));
 
@@ -806,12 +819,15 @@ window.onload =
                         break;
                 case "Temperature":
                     arrayCountSensorsHexT = array.filter(e => !isNaN(e.data.Temperature)).map(e => new L.LatLng(e.latitude, e.longitude));
+                    console.log(arrayCountSensorsHexT);
                     break;
                 case "Humidity":
                     arrayCountSensorsHexH = array.filter(e => !isNaN(e.data.Humidity)).map(e => new L.LatLng(e.latitude, e.longitude));
+                    console.log(arrayCountSensorsHexH);
                     break;
                 case "Pressure":
                     arrayCountSensorsHexP = array.filter(e => !isNaN(e.data.Pressure)).map(e => new L.LatLng(e.latitude, e.longitude));
+                    console.log(arrayCountSensorsHexP);
                     break;
                 case "Noise":
                     arrayCountSensorsHexNoise = locations;
@@ -875,6 +891,7 @@ window.onload =
                     Humidity: arrayCountSensorsHexH,
                     Pressure: arrayCountSensorsHexP,
                 };
+
                 d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(sensorCountArray[user_selected_value]));
                 d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(sensorCountArray[user_selected_value].length);
             }
@@ -1104,6 +1121,9 @@ window.onload =
             };
 
             const arrayCountSensorsHex = lookup[val];
+
+            console.log(arrayCountSensorsHexNoise);
+
             if (arrayCountSensorsHex != undefined) {
                 d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHex));
                 d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHex.length);
@@ -1405,7 +1425,8 @@ window.onload =
                 d.remove();
             });
             
-            retrieveData();
+            //retrieveDataReload(); 
+            retrieveData();  //REVOIR LE SUPPORT DU RELOAD
         }
         }
 
@@ -1525,7 +1546,7 @@ window.onload =
             document.querySelectorAll("path.hexbin-hexagon").forEach((e) => e.remove())
             windLayerRetrieved = labsLayerRetrieved = false;
             retrieveDataReload()
-        }, 300000)
+        }, 120000)
 
         // translate elements
         document.querySelector("#world").innerText = translate.tr(lang, "World")
@@ -1600,6 +1621,7 @@ function boundsCountStations(object) {
 }
 
 function boundsCountSensorsHex(array) {
+    console.log(array);
     mapBounds = map.getBounds();
     sensorsInBoundsHex = array.filter(function (e) {
         if (mapBounds.contains(e)) {
