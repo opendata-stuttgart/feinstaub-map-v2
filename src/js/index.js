@@ -76,13 +76,14 @@ let arrayCountSensorsHexPM, arrayCountSensorsHexEUWHO, arrayCountSensorsHexAQI, 
     arrayCountSensorsHexP, arrayCountSensorsHexNoise, windLayerRetrieved = false, labsLayerRetrieved = false, noiseData,
     dataPointsNO2, stationsPoints, sensorsPoints, sensorsLocations, circleRadii = new L.layerGroup().addTo(map),
     coo = [], stationsInBounds, sensorsInBounds, sensorsInBoundsHex, mapBounds, max = 0, min = 0,
-    radios = document.querySelectorAll('input[type=radio]'), prev = 250;
+    radios = document.querySelectorAll('input[type=radio]'), prev = 250, stationsPointsCount, sensorsLocationsCount;
 
 
 for (var i = 0; i < radios.length; i++) {
     radios[i].addEventListener('change', function () {
         if (this !== prev) {
             prev = this.value;
+            console.log(prev);
             //  document.getElementById('legend_Reference').style.diplay = 'none';
             circleRadii.clearLayers();
             if (map.hasLayer(stationsPoints) && map.hasLayer(sensorsPoints) && (prev == 250 && zoomLevel > 12) || (prev == 1000 && zoomLevel > 10)) {
@@ -357,12 +358,11 @@ window.onload =
                     this.draw();
                     this._enableLeafletRounding();
                 }
-
             },
             _moveChange: function () {
 
-                // if(zoomDetect == false){
-                let mapZoom = map.getZoom();
+                if (user_selected_value !== "NO2" && user_selected_value !== "Reference") {
+                    let mapZoom = map.getZoom();
                 this._disableLeafletRounding();
                 let newZoom = this._undef(mapZoom) ? this.map._zoom : mapZoom;
                 this._zoomDiff = newZoom - this._zoom;
@@ -376,6 +376,7 @@ window.onload =
                 this._rootGroup.attr("transform", shift.concat(scale).join(""));
                 this.draw();
                 this._enableLeafletRounding();
+            }
             },
             _redraw(selection, projection, zoom) {
                 // Generate the mapped version of the data
@@ -480,7 +481,7 @@ window.onload =
             console.log("retrieveData()");
             console.log(lastFetchTimeMain);
             const now = new Date();
-            if (!lastFetchTimeMain || now - lastFetchTimeMain >= 2.5 * 60 * 1000) { //150000 ou 300000?
+            if (!lastFetchTimeMain || now - lastFetchTimeMain >= 5 * 60 * 1000) { //150000 ou 300000?
             await api
                 .getData(config.data_host + "/data/v2/data.dust.min.json", "pmDefault")
                 .then(function (result) {
@@ -493,6 +494,7 @@ window.onload =
                     api_stock_pm = result.cells;
                     LatLngMapper(hmhexaPM_aktuell, "PM");
                     sensorsLocations = result.cells2;
+                    sensorsLocationsCount = result.cells2.features.length;
                     if (result.timestamp > timestamp_data) {
                         timestamp_data = result.timestamp;
                         timestamp_from = result.timestamp_from;
@@ -685,6 +687,7 @@ window.onload =
                         }
                         LatLngMapper(hmhexaPM_aktuell, "PM");
                         sensorsLocations = result.cells2;
+                        sensorsLocationsCount = result.cells2.features.length;
 
                         if (result.timestamp > timestamp_data) {
                             timestamp_data = result.timestamp;
@@ -1122,25 +1125,17 @@ window.onload =
 
             const arrayCountSensorsHex = lookup[val];
 
-            console.log(arrayCountSensorsHexNoise);
-
             if (arrayCountSensorsHex != undefined) {
                 d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHex));
                 d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHex.length);
             } else {
                 if (val === "Reference") {
 
-                    // FETCH ICI
-
-                    // stations = stations.getData("data/stations.json");
-
                     d3.select("#textCount").style("display", "none");
 
                     stations.getData("data/stations.json")
                         .then(function (result) {
-                            console.log(result);
-
-
+                            stationsPointsCount = result.cells.features.length;
                             stationsPoints = L.geoJSON(result.cells, {
                                 pointToLayer: function (feature, latlng) {
                                     return L.circleMarker(latlng, {
@@ -1546,7 +1541,7 @@ window.onload =
             document.querySelectorAll("path.hexbin-hexagon").forEach((e) => e.remove())
             windLayerRetrieved = labsLayerRetrieved = false;
             retrieveDataReload()
-        }, 120000)
+        }, 300000)
 
         // translate elements
         document.querySelector("#world").innerText = translate.tr(lang, "World")
@@ -1617,8 +1612,9 @@ function boundsCountStations(object) {
         e.count1000 = 0
     });
 
-    document.getElementById("stationsCountRef").innerHTML = stationsInBounds.length;
+    document.getElementById("stationsCountRef").innerHTML = stationsInBounds.length + " / " + stationsPointsCount;
 }
+
 
 function boundsCountSensorsHex(array) {
     console.log(array);
@@ -1637,7 +1633,7 @@ function boundsCountSensors(object) {
         return mapBounds.contains(e._latlng);
     });
 
-    document.getElementById("sensorsCountRef").textContent = sensorsInBounds.length;
+    document.getElementById("sensorsCountRef").textContent = sensorsInBounds.length + " / " + sensorsLocationsCount;
 }
 
 
@@ -1687,7 +1683,7 @@ function drawCircles() {
                 new L.circle(e._latlng, {
                     className: 'radius',
                     radius: prev,
-                    fillColor,
+                    fillColor:fillColor,
                     stroke: true,
                     color: fillColor,
                     opacity: 1,
@@ -1702,24 +1698,53 @@ function drawCircles() {
 /**
  * Returns the color code for a given value
  */
-function setColor(val1, val2) {
-    const base = max - min;
-    let perc = prev === 250 ? val1 : val2;
+// function setColor(val1, val2) {
+//     const base = max - min;
+//     let perc = prev === 250 ? val1 : val2;
 
-    if (base === 0 && max !== 0 && min !== 0) {
-        perc = 100;
-    } else if (base === 0 && max === 0) {
-        perc = 0;
-    } else {
-        perc = (perc - min) / base * 100;
+//     if (base === 0 && max !== 0 && min !== 0) {
+//         perc = 100;
+//     } else if (base === 0 && max === 0) {
+//         perc = 0;
+//     } else {
+//         perc = (perc - min) / base * 100;
+//     }
+
+//     const r = perc === 0 ? 255 : Math.round(510 - 5.10 * perc);
+//     const g = perc === 0 ? Math.round(5.1 * perc) : 255;
+//     const b = 0;
+
+//     return `#${((r << 16) + (g << 8) + b).toString(16).padStart(6, '0')}`;
+// }
+
+
+function setColor(val1,val2){
+  
+    var base = (max - min);
+
+    if (prev == 250) {var perc = val1;};
+    if (prev == 1000) {var perc = val2;};
+        
+    if (base == 0 && max!= 0  && min!=0) { console.log('min=max'); perc = 100;}
+    else if (base == 0 && max== 0) { console.log('min=max=0');perc = 0; }
+    else {
+        console.log('calculate');
+        perc = (perc - min) / base * 100; 
     }
 
-    const r = perc === 0 ? 255 : Math.round(510 - 5.10 * perc);
-    const g = perc === 0 ? Math.round(5.1 * perc) : 255;
-    const b = 0;
+    var r, g, b = 0;
 
-    return `#${((r << 16) + (g << 8) + b).toString(16).padStart(6, '0')}`;
-}
+    if (perc == 0) {
+        r = 255;
+        g = Math.round(5.1 * perc);
+    }
+    else {
+        g = 255;
+        r = Math.round(510 - 5.10 * perc);
+    }
+    var h = r * 0x10000 + g * 0x100 + b * 0x1;
+    return '#' + ('000000' + h.toString(16)).slice(-6); 
+  }
 
 const popupMaker = (coo) => {
     const filtered = sensorsInBounds.filter((i) => {

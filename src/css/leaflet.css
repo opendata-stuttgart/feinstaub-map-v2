@@ -246,6 +246,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     background: none;
     margin: 0;
     font-size: 0.7em;
+    pointer-events:all;
 }
 
 .leaflet-control-attribution,
@@ -297,3 +298,4 @@ img.leaflet-tile {
 .leaflet-touch .leaflet-geosearch-bar .reset {
     background-color: transparent;
 }
+
