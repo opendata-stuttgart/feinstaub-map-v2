@@ -1,11 +1,7 @@
-let utils = {
-    checkStatus(response) {
-        if (!response.ok) {
-            const message = `An error has occured: ${response.status}`;
-            throw new Error(message)
-        } else {
-            return response
-        }
-    },
+const utils = {
+  checkStatus(response) {
+    return response.ok ? response : Promise.reject(`An error has occurred: ${response.status}`);
+  }
 };
-export default utils
+
+export default utils;
