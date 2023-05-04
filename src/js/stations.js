@@ -1,12 +1,13 @@
-import 'whatwg-fetch'
+import 'whatwg-fetch';
 
-let stations = {
-    getData: async function (URL) {
-        return await fetch(URL)
-            .then((resp) => resp.json())
-            .then((geojson) => {
-                return Promise.resolve({cells: geojson});
-            })
-    }
-}
-export default stations
+let dataRetrieved = false;
+
+const stations = {
+  getData: async function (URL) {
+    return fetch(URL)
+      .then((resp) => resp.json())
+      .then((geojson) => ({ cells: geojson }));
+  }
+};
+
+export default stations;

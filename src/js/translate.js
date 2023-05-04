@@ -1,26 +1,31 @@
 import * as translations from '../data/translations.js';
 
 export function getFirstBrowserLanguage() {
-    const nav = window.navigator;
-    const browserLanguagePropertyKeys = ['language', 'browserLanguage', 'systemLanguage', 'userLanguage'];
+  const nav = window.navigator;
+  const browserLanguagePropertyKeys = ['language', 'browserLanguage', 'systemLanguage', 'userLanguage'];
 
-    for (const lang of nav.languages) {
-        if (lang.length > 0) {
-            return lang;
-        }
+  if (Array.isArray(nav.languages)) {
+    for (const language of nav.languages) {
+      if (language.length) {
+        return language;
+      }
     }
+  }
 
-    for (const property of browserLanguagePropertyKeys) {
-        const lang = nav[property];
-        if (lang.length > 0) {
-            return lang;
-        }
+  for (const property of browserLanguagePropertyKeys) {
+    const language = nav[property];
+    if (language.length) {
+      return language;
     }
+  }
 
-    return '';
+  return '';
 }
 
 export function tr(lang, text) {
-    const langExists = translations[text] && translations[text][lang];
-    return langExists ? translations[text][lang] : text;
+  if (translations && text in translations && lang in translations[text]) {
+    return translations[text][lang];
+  }
+
+  return text;
 }

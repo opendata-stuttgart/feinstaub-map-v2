@@ -1,13 +1,13 @@
-import 'whatwg-fetch'
+import 'whatwg-fetch';
 
-let no2 = {
-    getData: async function (URL) {
+let dataRetrieved = false;
 
-    return await fetch(URL)
-    .then((resp) => resp.json())
-    .then((geojson) => {
-        return Promise.resolve({cells: geojson});
-    })
-    }
-}
-export default no2
+const no2 = {
+  getData: async function (URL) {
+    return fetch(URL)
+      .then((resp) => resp.json())
+      .then((geojson) => ({ cells: geojson }));
+  }
+};
+
+export default no2;
