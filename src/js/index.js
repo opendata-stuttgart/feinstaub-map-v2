@@ -586,13 +586,13 @@ window.onload =
 			});
 		}
 
-        async function retrieveDataReload() {
+		async function retrieveDataReload() {
 
-            console.log("retrieveDataReload()");
-            console.log(user_selected_value);
+			console.log("retrieveDataReload()");
+			console.log(user_selected_value);
 
-            let lastFetchTime;
-            const now = new Date();
+			let lastFetchTime;
+			const now = new Date();
 
 			if (user_selected_value == "PM25" || user_selected_value == "PM10") {
 				await api
@@ -618,7 +618,6 @@ window.onload =
 			}
 
 			if (user_selected_value == "PM25who" || user_selected_value == "PM10who" || user_selected_value == "PM25eu" || user_selected_value == "PM10eu" || user_selected_value == "AQIus") {
-
 				await api
 					.getData(config.data_host + "/data/v2/data.24h.json")
 					.then(function (result) {
@@ -651,7 +650,6 @@ window.onload =
 					});
 			}
 
-
 			if (user_selected_value == "Pressure" || user_selected_value == "Humidity" || user_selected_value == "Temperature") {
 				api.getData(config.data_host + "/data/v2/data.temp.min.json", "tempHumPress")
 					.then(function (result) {
@@ -673,72 +671,44 @@ window.onload =
 					.then(() => ready("tempHumPress"));
 			}
 
-            if (user_selected_value == "Noise") {
-                api.getData(config.data_host + "/data/v1/data.noise.json", "noise")
-                    .then(function (result) {
-                        //hmhexa_noise = result.cells;
-                        if (document.querySelector("#indoor").checked) {
-                            hmhexa_noise = result.cells;
-                        } else {
-                            hmhexa_noise = result.cells.filter(e => e.indoor == 0);
-                        }
-                        LatLngMapper(hmhexa_noise, "Noise");
+			if (user_selected_value == "Noise") {
+				api.getData(config.data_host + "/data/v1/data.noise.json", "noise")
+					.then(function (result) {
+						//hmhexa_noise = result.cells;
+						if (document.querySelector("#indoor").checked) {
+							hmhexa_noise = result.cells;
+						} else {
+							hmhexa_noise = result.cells.filter(e => e.indoor == 0);
+						}
+						LatLngMapper(hmhexa_noise, "Noise");
 
-                        console.log(result.timestamp);
-                        console.log(result.timestamp_from);
+						if (result.timestamp > timestamp_data) {
+							timestamp_data = result.timestamp;
+							timestamp_from = result.timestamp_from;
+						}
+						lastFetchTime = now;
+					})
+					.then(() => ready("noise"));
+			}
 
-                        if (result.timestamp > timestamp_data) {
-                            timestamp_data = result.timestamp;
-                            timestamp_from = result.timestamp_from;
-                        }
-                        lastFetchTime = now;
-                    })
-                    .then(() => ready("noise"));
-            }
+			const date = new Date();
+			const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
+			const getOffsetHours = date.getTimezoneOffset() * 60000;
+			const logTimestamp = dateParser(timestamp_data).getTime();
+			const lastUpdateTimestamp = logTimestamp + -getOffsetHours;  //COMPRENDS PAS!!!
+			const dateFormater = locale.format("%d.%m.%Y %H:%M");
 
-            const date = new Date();
-            const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
-            const getOffsetHours = date.getTimezoneOffset() * 60000;
-            const logTimestamp = dateParser(timestamp_data).getTime();
-            const lastUpdateTimestamp = logTimestamp + -getOffsetHours;  //COMPRENDS PAS!!!
-            const dateFormater = locale.format("%d.%m.%Y %H:%M");
-
-            document.querySelector("#lastUpdate").innerText =
-                translate.tr(lang, "Last update") +
-                " " +
-                dateFormater(lastUpdateTimestamp);
-            document.querySelector("#menuButton").innerText =
-                document.querySelector(".selected").innerText;
-
-        }
+			document.querySelector("#lastUpdate").innerText =
+				translate.tr(lang, "Last update") +
+				" " +
+				dateFormater(lastUpdateTimestamp);
+			document.querySelector("#menuButton").innerText =
+				document.querySelector(".selected").innerText;
+		}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        function LatLngMapper(array, selector) {
-            const locations = array.map(e => new L.LatLng(e.latitude, e.longitude));
+		function LatLngMapper(array, selector) {
+			const locations = array.map(e => new L.LatLng(e.latitude, e.longitude));
 
 			switch (selector) {
 				case "PM":
@@ -764,20 +734,20 @@ window.onload =
 			}
 		}
 
-        function ready(vizType) {
-            const date = new Date();
-            const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
-            const getOffsetHours = date.getTimezoneOffset() * 60000;
-            const logTimestamp = dateParser(timestamp_data).getTime();
-            const lastUpdateTimestamp = logTimestamp + -getOffsetHours;  //COMPRENDS PAS!!!
-            const dateFormater = locale.format("%d.%m.%Y %H:%M");
+		function ready(vizType) {
+			const date = new Date();
+			const dateParser = timeParse("%Y-%m-%d %H:%M:%S");
+			const getOffsetHours = date.getTimezoneOffset() * 60000;
+			const logTimestamp = dateParser(timestamp_data).getTime();
+			const lastUpdateTimestamp = logTimestamp + -getOffsetHours;  //COMPRENDS PAS!!!
+			const dateFormater = locale.format("%d.%m.%Y %H:%M");
 
-            document.querySelector("#lastUpdate").innerText =
-                translate.tr(lang, "Last update") +
-                " " +
-                dateFormater(lastUpdateTimestamp);
-            document.querySelector("#menuButton").innerText =
-                document.querySelector(".selected").innerText;
+			document.querySelector("#lastUpdate").innerText =
+				translate.tr(lang, "Last update") +
+				" " +
+				dateFormater(lastUpdateTimestamp);
+			document.querySelector("#menuButton").innerText =
+				document.querySelector(".selected").innerText;
 
 
 			if (
@@ -843,25 +813,25 @@ window.onload =
 
 						coo.push(latlng);
 
-                        return L.circleMarker(latlng, {
-                            className: 'sensor',
-                            radius: responsiveRadius(mobile),
-                            fillColor: '#084945',
-                            stroke: false,
-                            fillOpacity: 1
-                        })
-                    },
-                    onEachFeature: function (feature, layer) {
-                        let position;
-                        if (feature.properties.indoor == 0) {
-                            position = "outdoor"
-                        } else {
-                            position = "indoor"
-                        }
-                        let popupContent = "<h3>Sensor.Community #" + feature.properties.id + "</h3><ul><li><b>Type: </b>" + feature.properties.type + "</li><li><b>Position: </b>" + position + "</li></ul>";
-                        layer.bindPopup(popupContent, { closeButton: true, maxWidth: "auto" });
-                    }
-                }).addTo(map);
+						return L.circleMarker(latlng, {
+							className: 'sensor',
+							radius: responsiveRadius(mobile),
+							fillColor: '#084945',
+							stroke: false,
+							fillOpacity: 1
+						})
+					},
+					onEachFeature: function (feature, layer) {
+						let position;
+						if (feature.properties.indoor == 0) {
+							position = "outdoor"
+						} else {
+							position = "indoor"
+						}
+						let popupContent = "<h3>Sensor.Community #" + feature.properties.id + "</h3><ul><li><b>Type: </b>" + feature.properties.type + "</li><li><b>Position: </b>" + position + "</li></ul>";
+						layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
+					}
+				}).addTo(map);
 
 				boundsCountSensors(sensorsPoints._layers);
 				if ((prev == 250 && zoomLevel > 12) || (prev == 1000 && zoomLevel > 10)) {
@@ -932,35 +902,35 @@ window.onload =
 		});
 
 
-        map.on("zoomend", function () {
-            let zl = map.getZoom();
-            if (mobile === false && zl <= 9) {
-                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({ radius: 0.1 });
-                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({ radius: 0.1 });
-                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({ radius: 0.1 });
-            } else if (mobile == false && zl < 12 && zl > 9) {
-                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({ radius: 5 });
-                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({ radius: 5 });
-                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({ radius: 5 });
-            } else if (mobile == false) {
-                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({ radius: 10 });
-                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({ radius: 10 });
-                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({ radius: 10 });
-            }
-            if (mobile === true && zl <= 9) {
-                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({ radius: 5 });
-                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({ radius: 5 });
-                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({ radius: 5 });
-            } else if (mobile == true && zl < 12 && zl > 9) {
-                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({ radius: 15 });
-                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({ radius: 15 });
-                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({ radius: 15 });
-            } else if (mobile == true) {
-                if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({ radius: 20 });
-                if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({ radius: 20 });
-                if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({ radius: 20 });
-            }
-        });
+		map.on("zoomend", function () {
+			let zl = map.getZoom();
+			if (mobile === false && zl <= 9) {
+				if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({radius: 0.1});
+				if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({radius: 0.1});
+				if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({radius: 0.1});
+			} else if (mobile == false && zl < 12 && zl > 9) {
+				if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({radius: 5});
+				if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({radius: 5});
+				if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({radius: 5});
+			} else if (mobile == false) {
+				if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({radius: 10});
+				if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({radius: 10});
+				if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({radius: 10});
+			}
+			if (mobile === true && zl <= 9) {
+				if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({radius: 5});
+				if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({radius: 5});
+				if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({radius: 5});
+			} else if (mobile == true && zl < 12 && zl > 9) {
+				if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({radius: 15});
+				if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({radius: 15});
+				if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({radius: 15});
+			} else if (mobile == true) {
+				if (map.hasLayer(dataPointsNO2)) dataPointsNO2.setStyle({radius: 20});
+				if (map.hasLayer(stationsPoints)) stationsPoints.setStyle({radius: 20});
+				if (map.hasLayer(sensorsPoints)) sensorsPoints.setStyle({radius: 20});
+			}
+		});
 
 		function data_median(data) {
 			function sort_num(a, b) {
@@ -1019,115 +989,98 @@ window.onload =
 
 			switchLegend(val);
 
-            // TODO: move to top and replace in other functions
-            const lookup = {
-                "PM10": arrayCountSensorsHexPM,
-                "PM25": arrayCountSensorsHexPM,
-                "PM10eu": arrayCountSensorsHexEUWHOAQI,
-                "PM25eu": arrayCountSensorsHexEUWHOAQI,
-                "PM10who": arrayCountSensorsHexEUWHOAQI,
-                "PM25who": arrayCountSensorsHexEUWHOAQI,
-                "AQIus": arrayCountSensorsHexEUWHOAQI,
-                "Temperature": arrayCountSensorsHexT,
-                "Humidity": arrayCountSensorsHexH,
-                "Pressure": arrayCountSensorsHexP,
-                "Noise": arrayCountSensorsHexNoise,
-            };
+			// TODO: move to top and replace in other functions
+			const lookup = {
+				"PM10": arrayCountSensorsHexPM,
+				"PM25": arrayCountSensorsHexPM,
+				"PM10eu": arrayCountSensorsHexEUWHOAQI,
+				"PM25eu": arrayCountSensorsHexEUWHOAQI,
+				"PM10who": arrayCountSensorsHexEUWHOAQI,
+				"PM25who": arrayCountSensorsHexEUWHOAQI,
+				"AQIus": arrayCountSensorsHexEUWHOAQI,
+				"Temperature": arrayCountSensorsHexT,
+				"Humidity": arrayCountSensorsHexH,
+				"Pressure": arrayCountSensorsHexP,
+				"Noise": arrayCountSensorsHexNoise,
+			};
 
-            const arrayCountSensorsHex = lookup[val];
-            if (arrayCountSensorsHex != undefined) {
-                d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHex));
-                d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHex.length);
-            } else {
-                if (val === "Reference") {
+			const arrayCountSensorsHex = lookup[val];
+			if (arrayCountSensorsHex != undefined) {
+				d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHex));
+				d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHex.length);
+			} else {
+				if (val === "Reference") {
+					stations.getData("data/stations.json")
+						.then(function (result) {
 
-                    // FETCH ICI
-
-                    // stations = stations.getData("data/stations.json");
-
-                    stations.getData("data/stations.json")
-                        .then(function (result) {
-                            console.log(result);
-
-
-                            stationsPoints = L.geoJSON(result.cells, {
-                                pointToLayer: function (feature, latlng) {
-                                    return L.circleMarker(latlng, {
-                                        className: 'station',
-                                        radius: responsiveRadius(mobile),
-                                        fillColor: '#E83559',
-                                        stroke: false,
-                                        fillOpacity: 1
-                                    })
-                                },
-                                onEachFeature: function (feature, layer) {
-                                    let popupContent;
-                                    if (feature.properties.Source == "EEA") {
-                                        popupContent = "<h3>Official EU Station</h3><ul><li><b>City: </b>" + feature.properties.Name + "</li><li><b>Area Classification: </b> " + feature.properties.AreaClassification + "</li><li><b>Station Classification ID: </b>" + feature.properties.StationClassification + "</li></ul>";
-                                    }
-                                    if (feature.properties.Source == "AQMD") {
-                                        var monitorString = "";
-                                        feature.properties.monitors.forEach(function (e) {
-                                            monitorString += e + "<br>"
-                                        });
-                                        popupContent = "<h3>Official AQMD Station</h3><ul><li><b>Name: </b>" + feature.properties.siteName + "</li><li><b>Monitoring: </b> " + monitorString + "</li></ul>";
-                                    }
-                                    layer.bindPopup(popupContent, { closeButton: true, maxWidth: "auto" });
-                                }
-                            }).addTo(map);
+							stationsPoints = L.geoJSON(result.cells, {
+								pointToLayer: function (feature, latlng) {
+									return L.circleMarker(latlng, {
+										className: 'station',
+										radius: responsiveRadius(mobile),
+										fillColor: '#E83559',
+										stroke: false,
+										fillOpacity: 1
+									})
+								},
+								onEachFeature: function (feature, layer) {
+									let popupContent;
+									if (feature.properties.Source == "EEA") {
+										popupContent = "<h3>Official EU Station</h3><ul><li><b>City: </b>" + feature.properties.Name + "</li><li><b>Area Classification: </b> " + feature.properties.AreaClassification + "</li><li><b>Station Classification ID: </b>" + feature.properties.StationClassification + "</li></ul>";
+									}
+									if (feature.properties.Source == "AQMD") {
+										var monitorString = "";
+										feature.properties.monitors.forEach(function (e) {
+											monitorString += e + "<br>"
+										});
+										popupContent = "<h3>Official AQMD Station</h3><ul><li><b>Name: </b>" + feature.properties.siteName + "</li><li><b>Monitoring: </b> " + monitorString + "</li></ul>";
+									}
+									layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
+								}
+							}).addTo(map);
 
 							sensorsPoints = L.geoJSON(sensorsLocations, {
 								pointToLayer: function (feature, latlng) {
 
 									coo.push(latlng);
 
-                                    return L.circleMarker(latlng, {
-                                        className: 'sensor',
-                                        radius: responsiveRadius(mobile),
-                                        fillColor: '#084945',
-                                        stroke: false,
-                                        fillOpacity: 1
-                                    })
-                                },
-                                onEachFeature: function (feature, layer) {
-                                    let position;
-                                    if (feature.properties.indoor == 0) {
-                                        position = "outdoor"
-                                    } else {
-                                        position = "indoor"
-                                    }
-                                    let popupContent = "<h3>Sensor.Community #" + feature.properties.id + "</h3><ul><li><b>Type:" +
-                                        " </b>" + feature.properties.type + "</li><li><b>Position: </b>" + position + "</li></ul>";
-                                    layer.bindPopup(popupContent, { closeButton: true, maxWidth: "auto" });
-                                }
-                            }).addTo(map);
+									return L.circleMarker(latlng, {
+										className: 'sensor',
+										radius: responsiveRadius(mobile),
+										fillColor: '#084945',
+										stroke: false,
+										fillOpacity: 1
+									})
+								},
+								onEachFeature: function (feature, layer) {
+									let position;
+									if (feature.properties.indoor == 0) {
+										position = "outdoor"
+									} else {
+										position = "indoor"
+									}
+									let popupContent = "<h3>Sensor.Community #" + feature.properties.id + "</h3><ul><li><b>Type:" +
+										" </b>" + feature.properties.type + "</li><li><b>Position: </b>" + position + "</li></ul>";
+									layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
+								}
+							}).addTo(map);
 
-                            boundsCountStations(stationsPoints._layers);
-                            boundsCountSensors(sensorsPoints._layers);
-                            if ((prev == 250 && zoomLevel > 12) || (prev == 1000 && zoomLevel > 10)) {
-                                countDistance();
-                            }
-                            drawCircles();
-                            stationsPoints.bringToFront();
-                            sensorsPoints.bringToFront();
+							boundsCountStations(stationsPoints._layers);
+							boundsCountSensors(sensorsPoints._layers);
+							if ((prev == 250 && zoomLevel > 12) || (prev == 1000 && zoomLevel > 10)) {
+								countDistance();
+							}
+							drawCircles();
+							stationsPoints.bringToFront();
+							sensorsPoints.bringToFront();
+						});
+				}
 
-
-                        });
-                }
-
-
-
-
-                if (val === "NO2") {
-
-                    //FETCH ICI
-
-                    no2.getData("data/no2.json")
-                        .then(function (result) {
-                            console.log(result);
-
-                            dataPointsNO2 = L.geoJSON(result.cells, {
-                                pointToLayer: function (feature, latlng) {
+				if (val === "NO2") {
+					no2.getData("data/no2.json")
+						.then(function (result) {
+							dataPointsNO2 = L.geoJSON(result.cells, {
+								pointToLayer: function (feature, latlng) {
 
 									if (dateNO2 === "all") {
 										return L.circleMarker(latlng, {
@@ -1147,36 +1100,36 @@ window.onload =
 											fillOpacity: 1,
 										});
 
-                                    }
-                                },
-                                onEachFeature: function (feature, layer) {
-                                    let popupContent;
-                                    if (feature.properties.campaign == "DUH") {
-                                        popupContent = "<h3>DUH</h3><ul><li><b>City</b> : " + feature.properties.city + "</li><li><b>Info</b> : " + feature.properties.info + "</li><li><b>Timespan</b> : " + feature.properties.start + " - " + feature.properties.stop + "</li><li><b>Value</b> : " + feature.properties.value + " µg\/m&sup3; (average concentration for the month)</p>";
-                                    }
-                                    if (feature.properties.campaign == "SC") {
-                                        let traficLevel;
-                                        //
-                                        if (feature.properties.trafic == 0) {
-                                            traficLevel = "low"
-                                        } else {
-                                            traficLevel = "high"
-                                        }
-                                        if (feature.properties.value != 0 && feature.properties.remark == "") {
-                                            popupContent = "<h3>Sensor.Community</h3><ul><li>><b>City</b> : " + feature.properties.city + "</li>><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='" + feature.properties.link + "'>" + feature.properties.group + "</a></li>><b>Tube ID</b> : " + feature.properties.tubeId + "</li>><b>Height</b> : " + feature.properties.height + " m</li>><b>Trafic</b> : " + traficLevel + "</li>><b>Information</b> : " + feature.properties.info + "<br><br><b>Value</b> : " + feature.properties.value + " µg\/m&sup3; (average concentration for the month)</li> </ul>"
-                                        } else {
-                                            popupContent = "<h3>Sensor.Community</h3><ul><li>><b>City</b> : " + feature.properties.city + "</li>><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='" + feature.properties.link + "'>" + feature.properties.group + "</a></li>><b>Tube ID</b> : " + feature.properties.tubeId + "</li>><b>Height</b> : " + feature.properties.height + " m</li>><b>Trafic</b> : " + traficLevel + "</li>><b>Information</b> : " + feature.properties.info + "<br><br><b>Remark</b> : " + feature.properties.remark + "</li> </ul>"
-                                        }
-                                    }
-                                    layer.bindPopup(popupContent, { closeButton: true, maxWidth: "auto" });
-                                }
-                            })
-                                .addTo(map)
-                                .bringToFront();
-                        });
-                }
-            }
-        }
+									}
+								},
+								onEachFeature: function (feature, layer) {
+									let popupContent;
+									if (feature.properties.campaign == "DUH") {
+										popupContent = "<h3>DUH</h3><ul><li><b>City</b> : " + feature.properties.city + "</li><li><b>Info</b> : " + feature.properties.info + "</li><li><b>Timespan</b> : " + feature.properties.start + " - " + feature.properties.stop + "</li><li><b>Value</b> : " + feature.properties.value + " µg\/m&sup3; (average concentration for the month)</p>";
+									}
+									if (feature.properties.campaign == "SC") {
+										let traficLevel;
+										//
+										if (feature.properties.trafic == 0) {
+											traficLevel = "low"
+										} else {
+											traficLevel = "high"
+										}
+										if (feature.properties.value != 0 && feature.properties.remark == "") {
+											popupContent = "<h3>Sensor.Community</h3><ul><li>><b>City</b> : " + feature.properties.city + "</li>><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='" + feature.properties.link + "'>" + feature.properties.group + "</a></li>><b>Tube ID</b> : " + feature.properties.tubeId + "</li>><b>Height</b> : " + feature.properties.height + " m</li>><b>Trafic</b> : " + traficLevel + "</li>><b>Information</b> : " + feature.properties.info + "<br><br><b>Value</b> : " + feature.properties.value + " µg\/m&sup3; (average concentration for the month)</li> </ul>"
+										} else {
+											popupContent = "<h3>Sensor.Community</h3><ul><li>><b>City</b> : " + feature.properties.city + "</li>><b>Group</b> : <a target='_blank' rel='noopener noreferrer' href='" + feature.properties.link + "'>" + feature.properties.group + "</a></li>><b>Tube ID</b> : " + feature.properties.tubeId + "</li>><b>Height</b> : " + feature.properties.height + " m</li>><b>Trafic</b> : " + traficLevel + "</li>><b>Information</b> : " + feature.properties.info + "<br><br><b>Remark</b> : " + feature.properties.remark + "</li> </ul>"
+										}
+									}
+									layer.bindPopup(popupContent, {closeButton: true, maxWidth: "auto"});
+								}
+							})
+								.addTo(map)
+								.bringToFront();
+						});
+				}
+			}
+		}
 
 		function sensorNr(data) {
 			openMenu();
@@ -1241,25 +1194,25 @@ window.onload =
 			const sens_id = sens.replace("_indoor", "");
 			const sens_desc = sens.replace("_indoor", " (indoor)");
 
-            if (!openedGraph1.includes(sens_id)) {
-                openedGraph1.push(sens_id);
-                const iframeID = "frame_" + sens_id;
-                document
-                    .querySelector("#graph_" + sens_id)
-                    .appendChild(document.createElement("td"))
-                    .setAttribute("id", iframeID);
-                document.querySelector("#" + iframeID).setAttribute("colspan", "2");
-                document.querySelector("#" + iframeID).innerHTML =
-                    (config.panelIDs[user_selected_value][0] > 0
-                        ? panel_str
-                            .replace("<PANELID>", config.panelIDs[user_selected_value][0])
-                            .replace("<SENSOR>", sens_id) + "<br/>"
-                        : "") +
-                    (config.panelIDs[user_selected_value][1] > 0
-                        ? panel_str
-                            .replace("<PANELID>", config.panelIDs[user_selected_value][1])
-                            .replace("<SENSOR>", sens_id)
-                        : "");
+			if (!openedGraph1.includes(sens_id)) {
+				openedGraph1.push(sens_id);
+				const iframeID = "frame_" + sens_id;
+				document
+					.querySelector("#graph_" + sens_id)
+					.appendChild(document.createElement("td"))
+					.setAttribute("id", iframeID);
+				document.querySelector("#" + iframeID).setAttribute("colspan", "2");
+				document.querySelector("#" + iframeID).innerHTML =
+					(config.panelIDs[user_selected_value][0] > 0
+						? panel_str
+						.replace("<PANELID>", config.panelIDs[user_selected_value][0])
+						.replace("<SENSOR>", sens_id) + "<br/>"
+						: "") +
+					(config.panelIDs[user_selected_value][1] > 0
+						? panel_str
+							.replace("<PANELID>", config.panelIDs[user_selected_value][1])
+							.replace("<SENSOR>", sens_id)
+						: "");
 
 				document.querySelector("#id_" + sens).innerText = "(-) #" + sens_desc;
 			} else {
@@ -1283,15 +1236,14 @@ window.onload =
 			return array;
 		}
 
-        function switchTo(user_selected_value) {
-            console.log(user_selected_value);
-            let elem = document.querySelector(`div[value='${user_selected_value}']`);
-            document.querySelector(".selected").classList.remove("selected"); // remove class selected
-            elem.classList.add("selected");
-            reloadMap(user_selected_value);
-            switchLegend(user_selected_value);
-            closeMenu();
-        }
+		function switchTo(user_selected_value) {
+			let elem = document.querySelector(`div[value='${user_selected_value}']`);
+			document.querySelector(".selected").classList.remove("selected"); // remove class selected
+			elem.classList.add("selected");
+			reloadMap(user_selected_value);
+			switchLegend(user_selected_value);
+			closeMenu();
+		}
 
 		switchTo(user_selected_value);
 
@@ -1335,13 +1287,13 @@ window.onload =
 			}
 		}
 
-        function switchLegend(val) {
+		function switchLegend(val) {
 
-            document
-                .querySelectorAll("[id^=legend_]")
-                .forEach((d) => (d.style.display = "none"));
-            document.querySelector("#legend_" + val).style.display = "block";
-        }
+			document
+				.querySelectorAll("[id^=legend_]")
+				.forEach((d) => (d.style.display = "none"));
+			document.querySelector("#legend_" + val).style.display = "block";
+		}
 
 		function openMenu() {
 			document.getElementById("menuButton").innerHTML = "&#10006;";
@@ -1349,16 +1301,16 @@ window.onload =
 			document.getElementById("mainContainer").style.display = "block";
 		}
 
-        function closeMenu() {
-            document.getElementById("modal").style.display = "none";
-            document.getElementById("mainContainer").style.display = "none";
-            closeExplanation();
-            document.querySelector("#menuButton").innerText =
-                document.querySelector(".selected").innerText;
-            document.querySelector("#results")
-                ? document.querySelector("#results").remove()
-                : null;
-        }
+		function closeMenu() {
+			document.getElementById("modal").style.display = "none";
+			document.getElementById("mainContainer").style.display = "none";
+			closeExplanation();
+			document.querySelector("#menuButton").innerText =
+				document.querySelector(".selected").innerText;
+			document.querySelector("#results")
+				? document.querySelector("#results").remove()
+				: null;
+		}
 
 		function toggleMenu() {
 			document.getElementById("modal").style.display === "block" ? closeMenu() : openMenu();
@@ -1380,44 +1332,44 @@ window.onload =
 
 		document.querySelector("#menuButton").onclick = toggleMenu
 
-        // Load lab and windlayer, init checkboxes
-        document.querySelector("#cb_labs").checked = false
-        document.querySelector("#cb_s2s").checked = false
-        document.querySelector("#cb_wind").checked = false
-        document.querySelector("#indoor").checked = false
+		// Load lab and windlayer, init checkboxes
+		document.querySelector("#cb_labs").checked = false
+		document.querySelector("#cb_s2s").checked = false
+		document.querySelector("#cb_wind").checked = false
+		document.querySelector("#indoor").checked = false
 
-        document.querySelector("#label_local_labs").innerText = translate.tr(lang, "Local labs")
-        document.querySelector("#label_sensor_school").innerText = translate.tr(lang, "Sensor2School")
-        document.querySelector("#label_wind_layer").innerText = translate.tr(lang, "Wind layer")
-        document.querySelector("#label_indoor").innerText = translate.tr(lang, "Show indoor sensors")
+		document.querySelector("#label_local_labs").innerText = translate.tr(lang, "Local labs")
+		document.querySelector("#label_sensor_school").innerText = translate.tr(lang, "Sensor2School")
+		document.querySelector("#label_wind_layer").innerText = translate.tr(lang, "Wind layer")
+		document.querySelector("#label_indoor").innerText = translate.tr(lang, "Show indoor sensors")
 
-        document.querySelector("#cb_labs").addEventListener("change", switchLabLayer)
-        document.querySelector("#cb_s2s").addEventListener("change", switchS2SLayer)
-        document.querySelector("#cb_wind").addEventListener("change", switchWindLayer)
-        document.querySelector("#indoor").addEventListener("change", switchIndoorLayer)
+		document.querySelector("#cb_labs").addEventListener("change", switchLabLayer)
+		document.querySelector("#cb_s2s").addEventListener("change", switchS2SLayer)
+		document.querySelector("#cb_wind").addEventListener("change", switchWindLayer)
+		document.querySelector("#indoor").addEventListener("change", switchIndoorLayer)
 
-        // translate AQI values
-        document.querySelector("#AQI_Good").innerText = translate.tr(lang, "Good")
-        document.querySelector("#AQI_Moderate").innerText = translate.tr(lang, "Moderate")
-        document.querySelector("#AQI_Unhealthy_Sensitive").innerText = translate.tr(lang, "Unhealthy for sensitive")
-        document.querySelector("#AQI_Unhealthy").innerText = translate.tr(lang, "Unhealthy")
-        document.querySelector("#AQI_Very_Unhealthy").innerText = translate.tr(lang, "Very Unhealthy")
-        document.querySelector("#AQI_Hazardous").innerText = translate.tr(lang, "Hazardous")
+		// translate AQI values
+		document.querySelector("#AQI_Good").innerText = translate.tr(lang, "Good")
+		document.querySelector("#AQI_Moderate").innerText = translate.tr(lang, "Moderate")
+		document.querySelector("#AQI_Unhealthy_Sensitive").innerText = translate.tr(lang, "Unhealthy for sensitive")
+		document.querySelector("#AQI_Unhealthy").innerText = translate.tr(lang, "Unhealthy")
+		document.querySelector("#AQI_Very_Unhealthy").innerText = translate.tr(lang, "Very Unhealthy")
+		document.querySelector("#AQI_Hazardous").innerText = translate.tr(lang, "Hazardous")
 
-        // translate menu links
-        document.querySelector("#website").innerText = translate.tr(lang, "Website")
-        document.querySelector("#forum").innerText = translate.tr(lang, "Forum")
-        document.querySelector("#explanation").innerText = translate.tr(lang, "Explanation")
-        document
-            .querySelector("#explanation")
-            .addEventListener("click", toggleExplanation);
-        document.querySelector("#map-info").innerHTML = translate.tr(
-            lang,
-            "<p>The hexagons represent the median of the current sensor values included in this area, depending on you selected option (PM2.5, temperature,...).</p> \
-        <p>A hexagon will display a list of the corresponding sensors as a table. The first row will show you the amount of sensor and the median value.</p> \
-        <p>The plus symbol will display <i>individual measurements of the last 24 hours</i> and a <i>24 hours moving average for the last seven days</i>. </br> Due to technical reasons, the first day is blank.</p> \
-        <p>Map values are <strong>refreshed every 5 minutes</strong> to fit with the measurement frequency of the multiple airRohr sensors.</p>"
-        )
+		// translate menu links
+		document.querySelector("#website").innerText = translate.tr(lang, "Website")
+		document.querySelector("#forum").innerText = translate.tr(lang, "Forum")
+		document.querySelector("#explanation").innerText = translate.tr(lang, "Explanation")
+		document
+			.querySelector("#explanation")
+			.addEventListener("click", toggleExplanation);
+		document.querySelector("#map-info").innerHTML = translate.tr(
+			lang,
+			"<p>The hexagons represent the median of the current sensor values included in this area, depending on you selected option (PM2.5, temperature,...).</p> \
+		<p>A hexagon will display a list of the corresponding sensors as a table. The first row will show you the amount of sensor and the median value.</p> \
+		<p>The plus symbol will display <i>individual measurements of the last 24 hours</i> and a <i>24 hours moving average for the last seven days</i>. </br> Due to technical reasons, the first day is blank.</p> \
+		<p>Map values are <strong>refreshed every 5 minutes</strong> to fit with the measurement frequency of the multiple airRohr sensors.</p>"
+		)
 
 		// refresh data every 5 minutes
 		setInterval(function () {
@@ -1426,37 +1378,37 @@ window.onload =
 			retrieveDataReload()
 		}, 300000)
 
-        // translate elements
-        document.querySelector("#world").innerText = translate.tr(lang, "World")
-        document.querySelector("#europe").innerText = translate.tr(lang, "Europe")
-        document.querySelector("#northamerica").innerText = translate.tr(lang, "North America")
-        document.querySelector("#southamerica").innerText = translate.tr(lang, "South America")
-        document.querySelector("#asia").innerText = translate.tr(lang, "Asia")
-        document.querySelector("#africa").innerText = translate.tr(lang, "Africa")
-        document.querySelector("#oceania").innerText = translate.tr(lang, "Oceania")
-        document.querySelector("#explanation").innerText = translate.tr(lang, "Explanation")
-        document.querySelectorAll(".selectCountry button").forEach((d) => d.addEventListener("click", countrySelector));
-        document.querySelectorAll(".select-items div").forEach(function (d) {
-            d.addEventListener("click", function () {
-                user_selected_value = this.getAttribute("value");
-                !(
-                    user_selected_value ===
-                    document.querySelector(".selected").getAttribute("value")
-                ) && switchTo(user_selected_value);
-            });
-        });
-        if (navigator.share) {
-            document.querySelector("#share").addEventListener("click", function () {
-                navigator.share({
-                    title: "Maps.Sensor.Community",
-                    text: "Maps is a free web app to monitor air quality in your area. You can find more information on Sensor.Community.",
-                    url: document.location.href,
-                });
-            });
-        } else {
-            document.querySelector("#share").style.display = "none";
-        }
-    }
+		// translate elements
+		document.querySelector("#world").innerText = translate.tr(lang, "World")
+		document.querySelector("#europe").innerText = translate.tr(lang, "Europe")
+		document.querySelector("#northamerica").innerText = translate.tr(lang, "North America")
+		document.querySelector("#southamerica").innerText = translate.tr(lang, "South America")
+		document.querySelector("#asia").innerText = translate.tr(lang, "Asia")
+		document.querySelector("#africa").innerText = translate.tr(lang, "Africa")
+		document.querySelector("#oceania").innerText = translate.tr(lang, "Oceania")
+		document.querySelector("#explanation").innerText = translate.tr(lang, "Explanation")
+		document.querySelectorAll(".selectCountry button").forEach((d) => d.addEventListener("click", countrySelector));
+		document.querySelectorAll(".select-items div").forEach(function (d) {
+			d.addEventListener("click", function () {
+				user_selected_value = this.getAttribute("value");
+				!(
+					user_selected_value ===
+					document.querySelector(".selected").getAttribute("value")
+				) && switchTo(user_selected_value);
+			});
+		});
+		if (navigator.share) {
+			document.querySelector("#share").addEventListener("click", function () {
+				navigator.share({
+					title: "Maps.Sensor.Community",
+					text: "Maps is a free web app to monitor air quality in your area. You can find more information on Sensor.Community.",
+					url: document.location.href,
+				});
+			});
+		} else {
+			document.querySelector("#share").style.display = "none";
+		}
+	}
 
 // add searchbox
 new GeoSearch.GeoSearchControl({
@@ -1484,11 +1436,11 @@ function mobileCheck() {
 function boundsCountStations(object) {
 	let arrayConv = Object.values(object);
 	mapBounds = map.getBounds();
-    stationsInBounds = arrayConv.filter(function (e) {
-        if (mapBounds.contains(e._latlng)) {
-            return e
-        }
-    });
+	stationsInBounds = arrayConv.filter(function (e) {
+		if (mapBounds.contains(e._latlng)) {
+			return e
+		}
+	});
 
 	stationsInBounds.forEach(function (e) {
 		e.count250 = 0;
