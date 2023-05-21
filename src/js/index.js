@@ -238,6 +238,7 @@ window.onload =
 
             initialize(options) {
                 L.setOptions(this, options);
+                console.log(options);
                 this._data = [];
                 this._colorScale = scaleLinear()
                     .domain(this.options.valueDomain)
@@ -918,8 +919,6 @@ window.onload =
 
                 // document.getElementById('textCount').style.display = 'none';
 
-                console.log(d3.select("#textCount"));
-
                 sensorsPoints = L.geoJSON(sensorsLocations, {
                     pointToLayer: function (feature, latlng) {
 
@@ -1065,6 +1064,7 @@ window.onload =
 
         function reloadMap(val) {
             d3.select("#textCount").style("display", "block");
+            document.getElementById("textCount").innerHTML = "<span class='sensorsCount'></span> visible sensors out of <span class='sensorsCountTotal'></span></div>";
             document.querySelectorAll("path.hexbin-hexagon").forEach(function (d) {
                 d.remove();
             });
@@ -1126,12 +1126,18 @@ window.onload =
             const arrayCountSensorsHex = lookup[val];
 
             if (arrayCountSensorsHex != undefined) {
+
+                d3.select("#textCount").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHex));
+                d3.select("#textCount").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHex.length);
+
                 d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHex));
                 d3.select("#legend").select("div[style='display: block;']").select("span[class='sensorsCountTotal']").html(arrayCountSensorsHex.length);
             } else {
                 if (val === "Reference") {
 
-                    d3.select("#textCount").style("display", "none");
+                    //d3.select("#textCount").style("display", "none");
+                    console.log(d3.select("#legend_Reference").select(".legend"));
+                    d3.select("#legend_Reference").select(".legend").style("height", "6em");
 
                     stations.getData("data/stations.json")
                         .then(function (result) {
@@ -1612,7 +1618,7 @@ function boundsCountStations(object) {
         e.count1000 = 0
     });
 
-    document.getElementById("stationsCountRef").innerHTML = stationsInBounds.length + " / " + stationsPointsCount;
+    document.getElementById("textCount").innerHTML = stationsInBounds.length + " station(s) / " + stationsPointsCount;
 }
 
 
@@ -1633,7 +1639,10 @@ function boundsCountSensors(object) {
         return mapBounds.contains(e._latlng);
     });
 
-    document.getElementById("sensorsCountRef").textContent = sensorsInBounds.length + " / " + sensorsLocationsCount;
+    // document.getElementById("sensorsCountRef").textContent = sensorsInBounds.length + " / " + sensorsLocationsCount;
+    document.getElementById("textCount").innerHTML += "<br>" + sensorsInBounds.length + " sensor(s) / " + arrayCountSensorsHexPM.length;
+
+    //d3.select("#textCount").style("display", "block");
 }
 
 
@@ -1662,8 +1671,8 @@ function countDistance() {
  */
 function drawCircles() {
 
-    const minEl = document.getElementById('min');
-    const maxEl = document.getElementById('max');
+    // const minEl = document.getElementById('min');
+    // const maxEl = document.getElementById('max');
 
     if ((prev == 250 && zoomLevel > 12) || (prev == 1000 && zoomLevel > 10)) {
         const countProp = prev == 250 ? 'count250' : 'count1000';
@@ -1674,8 +1683,8 @@ function drawCircles() {
 
     if ((prev == 1000 && zoomLevel > 10 || prev == 250 && zoomLevel > 12) && Math.abs(min) !== Infinity && Math.abs(max) !== Infinity) {
         document.getElementById('legend_Reference').style.display = 'block';
-        minEl.innerHTML = min === max && min !== 0 ? "&emsp;" : "&emsp;" + min;
-        maxEl.innerHTML = max !== 0 ? "&emsp;" + max : "&emsp;";
+        // minEl.innerHTML = min === max && min !== 0 ? "&emsp;" : "&emsp;" + min;
+        // maxEl.innerHTML = max !== 0 ? "&emsp;" + max : "&emsp;";
 
         stationsInBounds.forEach(e => {
             const fillColor = setColor(e.count250, e.count1000);
@@ -1695,12 +1704,24 @@ function drawCircles() {
     }
 }
 
+
+//DAVID
+
 /**
  * Returns the color code for a given value
  */
 // function setColor(val1, val2) {
 //     const base = max - min;
 //     let perc = prev === 250 ? val1 : val2;
+
+//     if (perc == val1 && val1 == 0){
+//         return '#ff0000'
+//     }
+
+//     if (perc == val2 && val2 == 0){
+//         return '#ff0000'
+//     }
+
 
 //     if (base === 0 && max !== 0 && min !== 0) {
 //         perc = 100;
@@ -1718,17 +1739,37 @@ function drawCircles() {
 // }
 
 
+
+//PJ
+
 function setColor(val1,val2){
   
     var base = (max - min);
 
-    if (prev == 250) {var perc = val1;};
-    if (prev == 1000) {var perc = val2;};
+    if (prev == 250) {
+        if (val1 ==0 )
+        {
+            console.log("retun imm");
+            return '#ff0000';
+        }
+        else{
+        var perc = val1;
+    }
+    };
+    if (prev == 1000) {
+        if (val2 ==0 )
+        {
+            console.log("retun imm");
+            return '#ff0000';
+        }else{
+        var perc = val2;
+        }
+    };
         
     if (base == 0 && max!= 0  && min!=0) { console.log('min=max'); perc = 100;}
     else if (base == 0 && max== 0) { console.log('min=max=0');perc = 0; }
     else {
-        console.log('calculate');
+        // console.log('calculate');
         perc = (perc - min) / base * 100; 
     }
 
@@ -1736,11 +1777,15 @@ function setColor(val1,val2){
 
     if (perc == 0) {
         r = 255;
-        g = Math.round(5.1 * perc);
+        g = 255;
+        // g = Math.round(5.1 * perc + 300);
+        // g = Math.round(4.0 * perc);
+        // b =255;
     }
     else {
         g = 255;
         r = Math.round(510 - 5.10 * perc);
+        console.log(r);
     }
     var h = r * 0x10000 + g * 0x100 + b * 0x1;
     return '#' + ('000000' + h.toString(16)).slice(-6); 
