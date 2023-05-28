@@ -45,7 +45,7 @@ module.exports = {
         "shortMonths": ["Jan.", "Feb.", "Mar.", "Apr.", "Mai", "Jun.", "Jul.", "Aug.", "Sep.", "Okt.", "Nov.", "Dez."]
     },
     "scale_options": {
-        "PM10": {
+           "PM10": {
             valueDomain: [20, 40, 60, 100, 500], colorRange: ['#00796B', '#F9A825', '#E65100', '#DD2C00', '#960084']
         }, "PM25": {
             valueDomain: [10, 20, 40, 60, 100], colorRange: ['#00796B', '#F9A825', '#E65100', '#DD2C00', '#960084']
@@ -57,6 +57,8 @@ module.exports = {
             valueDomain: [0, 45, 150], colorRange: ['#8bf3ff', '#fff148', '#ff5353']
         }, "PM25who": {
             valueDomain: [0, 15, 75], colorRange: ['#8bf3ff', '#fff148', '#ff5353']
+        }, "AQIus": {
+            valueDomain: [0, 50, 100, 150, 200, 300], colorRange: ['#00E400', '#FFFF00', '#FF7E00','#FF0000','#8F3F97','#7E0023']
         }, "Temperature": {
             valueDomain: [-20, -10, 0, 10, 20, 30, 40], colorRange: ['#4050B0', '#5679f9', '#55cbd9', '#a2cf4a', '#fedb64', '#fe8f52', '#e6380f']
         }, "Humidity": {
@@ -66,6 +68,7 @@ module.exports = {
             colorRange: ["#dd2e97", "#6b3b8f", "#2979b9", "#02B9ed", "#13ae52", "#c9d841", "#fad635", "#f0a03d", "#892725"]
         }, "Noise": {
             valueDomain: [0, 20, 40, 60, 80, 100], colorRange: ['#00528f', '#6dbcff', '#aff474', '#f4e60b', '#f47a0b', '#c41a0a']
+        }, "NO2": {valueDomain: [0, 20, 30, 40, 50, 200],colorRange: ["#4B8246","#4B8246","#9FD08C","#EFEDB4","#F47A70","#8C161E",],
         },
     }
 }

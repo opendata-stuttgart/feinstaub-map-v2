@@ -13,17 +13,21 @@ body {
 }
 
 a {
-    color: #E83559;
+    color: #e83559;
     text-decoration: none;
 }
 
 button {
     font-size: 12px;
-    border-radius: 12px;
+    border-radius: 8px;
     padding: 6px 12px;
     cursor: pointer;
     background-color: white;
     border: solid white;
+}
+
+hr {
+    border: 1px solid #eaeaea;
 }
 
 ul {
@@ -34,21 +38,23 @@ ul {
 li {
     width: 100%;
     pointer-events: auto;
-    text-align: center;
+    list-style: disc;
+    margin-left: 15px;
+    /* text-align: center; */
 }
 
 table {
     border-collapse: collapse;
     text-align: center;
     padding: 8px;
-    margin: 10px;
+    margin: 8px;
     pointer-events: all;
     max-height: 90vh;
+    border: 1px solid #084945;
 }
 
-
 td {
-    border: 1px solid #858585;
+    border: 1px solid #084945;
     height: 1.5em;
     text-align: center;
     padding: 2px 0;
@@ -63,7 +69,7 @@ th {
 }
 
 tr {
-    border: 1px solid #858585;
+    border: 1px solid #084945;
     padding: 2px 0;
 }
 
@@ -78,23 +84,50 @@ tr {
     z-index: 10;
     background-color: white;
     border-radius: 12px;
-    border: 1px solid #C2C2C2;
+    border: 1px solid #c2c2c2;
+    align-content: center;
 }
 
-.countrySelected {
+.selectCountry {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 4px 2px;
+}
+
+.selectCountry button {
+    flex: auto;
+}
+
+
+.selectCountry .countrySelected {
     background-color: #084945;
     color: white;
     font-weight: bold;
+    justify-items: stretch;
+    flex: auto
 }
 
 .lowerItems {
     display: flex;
     justify-content: space-evenly;
     padding: 8px 6px;
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 0.75em;
     text-align: center;
-    border-top: 1px solid #C2C2C2;
+    border-top: 1px solid #c2c2c2;
+    font-weight: 700;
+}
+
+.lowerItems .item {
+    padding: 4px 8px;
+}
+
+.textCount {
+    border-left: 1px solid #c2c2c2;
+    border-right: 1px solid #c2c2c2;
+}
+
+.sensorsCount, .sensorsCountTotal {
+    padding: 0 3px;
 }
 
 #attribution {
@@ -107,16 +140,25 @@ tr {
     .selectCountry {
         display: none;
     }
-    .lowerItems{
+
+    .lowerItems {
         display: block;
         border-top: none;
+        padding: 6px 4px;
     }
-    #attribution{
+
+    #attribution {
         font-size: 1em;
     }
-    #lastUpdate{
-        margin-bottom: 5px;
+
+    #lastUpdate {
         font-size: 1.1em;
+        font-weight: bold;
+    }
+
+    .textCount {
+        border-left: none;
+        border-right: none;
     }
 }
 
@@ -148,7 +190,7 @@ tr {
     cursor: pointer;
     position: fixed;
     bottom: 20px;
-    left: 8em;
+    left: 8.5em;
     z-index: 50;
     display: flex;
     align-items: center;
@@ -175,6 +217,7 @@ tr {
         top: 0;
         left: 0;
     }
+
     #menuButton {
         left: unset;
         right: 15px;
@@ -182,14 +225,14 @@ tr {
 }
 
 @media only screen and (min-width: 768px) {
-    #modal {;
-        width: 400px;
+    #modal {
+        width: 420px;
         left: 9.5em;
         bottom: 65px;
         height: initial;
         max-height: calc(100vh - 10em);
         overflow-y: auto;
-        border: 1px solid #C2C2C2;
+        border: 1px solid #c2c2c2;
         border-radius: 10px;
     }
 }
@@ -197,7 +240,6 @@ tr {
 #mainContainer {
     margin: auto;
     padding: 0.8em;
-    font-size: 0.9em;
     bottom: 0;
     display: flex;
     flex-direction: column;
@@ -210,14 +252,15 @@ tr {
     vertical-align: middle;
 }
 
-.select-items{
+.select-items {
     display: flex;
     flex-direction: column;
 }
+
 .select-items > div {
     cursor: pointer;
-    padding: 0.8em;
-    border-bottom: #E0E0E0 solid 1px;
+    padding: 1em;
+    border-bottom: #e0e0e0 solid 1px;
     flex-grow: 1;
     flex-shrink: 1;
     flex-basis: auto;
@@ -234,12 +277,12 @@ tr {
     border-radius: 12px;
     display: flex;
     justify-content: space-evenly;
-    margin-top: 10px;
+    padding: 2px
 }
 
 .layerSelect li {
     line-height: 2em;
-    margin-left: 5px;
+    margin-left: 2px;
     display: flex;
     align-items: center;
 }
@@ -275,12 +318,12 @@ input[type="checkbox"]:checked {
 .legend {
     position: fixed;
     bottom: 20px;
-    height: 15em;
+    height: 16em;
     z-index: 5;
     padding: 20px;
-    max-width: 7em;
+    max-width: 8em;
     transition: all 0.3s;
-    border: 1px solid #C2C2C2;
+    border: 1px solid #c2c2c2;
     font-size: 0.8em;
     background-color: white;
     border-radius: 8px;
@@ -289,26 +332,25 @@ input[type="checkbox"]:checked {
 
 .legend .chevron {
     position: relative;
-    height: 24px;
+    height: 40px;
     width: 24px;
-    top: 0;
     right: -35px;
-    padding: 7px 0 0 16px;
+    padding: 10px 0 0 16px;
     background-color: white;
     border-radius: 8px;
+    font-size: 1.5em;
+    font-weight: bold;
 }
 
 @media only screen and (max-width: 768px) {
     .legend {
-        margin-left: -120px;
+        margin-left: -140px;
     }
 
-    .legend:active, .legend:focus, .legend:hover {
-        transform: translate3d(110px, 0, 0);
-    }
-    .select-items > div {
-        padding: 1em;
-        font-size: initial;
+    .legend:active,
+    .legend:focus,
+    .legend:hover {
+        transform: translate3d(120px, 0, 0);
     }
 }
 
@@ -345,57 +387,258 @@ input[type="checkbox"]:checked {
 }
 
 #legend .labels .label:before {
-    content: '\2013   ';
+    content: "\2013   ";
+}
+
+
+#legend_PM10 {
+    display: none;
 }
 
 #legend_PM10 .gradient {
-    background: -webkit-linear-gradient(bottom, #00796b 0%, #00796b 16%, #f9a825 32%, #e65100 48%, #dd2c00 72%, #dd2c00 80%, #8c0084 100%);
-    background: linear-gradient(to top, #00796b 0%, #00796b 16%, #f9a825 32%, #e65100 48%, #dd2c00 72%, #dd2c00 80%, #8c0084 100%);
+    background: -webkit-linear-gradient(
+            bottom,
+            #00796b 0%,
+            #00796b 16%,
+            #f9a825 32%,
+            #e65100 48%,
+            #dd2c00 72%,
+            #dd2c00 80%,
+            #8c0084 100%
+    );
+    background: linear-gradient(
+            to top,
+            #00796b 0%,
+            #00796b 16%,
+            #f9a825 32%,
+            #e65100 48%,
+            #dd2c00 72%,
+            #dd2c00 80%,
+            #8c0084 100%
+    );
 }
 
 #legend_PM25 .gradient {
-    background: -webkit-linear-gradient(bottom, #00796b 0%, #00796b 8%, #f9a825 16%, #e65100 32%, #dd2c00 48%, #dd2c00 72%, #8c0084 80%);
-    background: linear-gradient(to top, #00796b 0%, #00796b 8%, #f9a825 16%, #e65100 32%, #dd2c00 48%, #dd2c00 72%, #8c0084 80%);
+    background: -webkit-linear-gradient(
+            bottom,
+            #00796b 0%,
+            #00796b 8%,
+            #f9a825 16%,
+            #e65100 32%,
+            #dd2c00 48%,
+            #dd2c00 72%,
+            #8c0084 80%
+    );
+    background: linear-gradient(
+            to top,
+            #00796b 0%,
+            #00796b 8%,
+            #f9a825 16%,
+            #e65100 32%,
+            #dd2c00 48%,
+            #dd2c00 72%,
+            #8c0084 80%
+    );
+}
+
+#legend_PM10eu {
+    display: none;
 }
 
 #legend_PM10eu .gradient {
-    background: -webkit-linear-gradient(bottom, #50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 100%);
-    background: linear-gradient(to top, #50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 100%);
+    background: -webkit-linear-gradient(
+            bottom,
+            #50f0e6 0%,
+            #50f0e6 10%,
+            #50ccaa 30%,
+            #f0e641 50%,
+            #ff5050 67%,
+            #960032 81%,
+            #7d2181 100%
+    );
+    background: linear-gradient(
+            to top,
+            #50f0e6 0%,
+            #50f0e6 10%,
+            #50ccaa 30%,
+            #f0e641 50%,
+            #ff5050 67%,
+            #960032 81%,
+            #7d2181 100%
+    );
+}
+
+#legend_PM25eu {
+    display: none;
 }
 
 #legend_PM25eu .gradient {
-    background: -webkit-linear-gradient(bottom, #50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 87%);
-    background: linear-gradient(to top, #50F0E6 0%, #50F0E6 10%, #50CCAA 30%, #F0E641 50%, #FF5050 67%, #960032 81%, #7D2181 87%);
+    background: -webkit-linear-gradient(
+            bottom,
+            #50f0e6 0%,
+            #50f0e6 10%,
+            #50ccaa 30%,
+            #f0e641 50%,
+            #ff5050 67%,
+            #960032 81%,
+            #7d2181 87%
+    );
+    background: linear-gradient(
+            to top,
+            #50f0e6 0%,
+            #50f0e6 10%,
+            #50ccaa 30%,
+            #f0e641 50%,
+            #ff5050 67%,
+            #960032 81%,
+            #7d2181 87%
+    );
+}
+
+#legend_PM10who {
+    display: none;
 }
 
 #legend_PM10who .gradient {
-    background: -webkit-linear-gradient(bottom, #8bf3ff 0, #fff148 50%, #ff5353 100%);
+    background: -webkit-linear-gradient(
+            bottom,
+            #8bf3ff 0,
+            #fff148 50%,
+            #ff5353 100%
+    );
     background: linear-gradient(to top, #8bf3ff 0%, #fff148 50%, #ff5353 100%);
+}
+
+#legend_PM25who {
+    display: none;
 }
 
 #legend_PM25who .gradient {
-    background: -webkit-linear-gradient(bottom, #8bf3ff 0, #fff148 50%, #ff5353 100%);
+    background: -webkit-linear-gradient(
+            bottom,
+            #8bf3ff 0,
+            #fff148 50%,
+            #ff5353 100%
+    );
     background: linear-gradient(to top, #8bf3ff 0%, #fff148 50%, #ff5353 100%);
 }
 
-#legend_Temperature .gradient {
-    background: -webkit-linear-gradient(bottom, #4050B0 0%, #5679f9 16.6%, #55cbd9 33.3%, #a2cf4a 50%, #fedb64 66.6%, #fe8f52 83.3%, #e6380f 100%);
-    background: linear-gradient(to top, #4050B0 0%, #5679f9 16.6%, #55cbd9 33.3%, #a2cf4a 50%, #fedb64 66.6%, #fe8f52 83.3%, #e6380f 100%);
+
+#legend_Temperature {
+    display: none;
 }
 
+#legend_Temperature .gradient {
+    background: -webkit-linear-gradient(
+            bottom,
+            #4050b0 0%,
+            #5679f9 16.6%,
+            #55cbd9 33.3%,
+            #a2cf4a 50%,
+            #fedb64 66.6%,
+            #fe8f52 83.3%,
+            #e6380f 100%
+    );
+    background: linear-gradient(
+            to top,
+            #4050b0 0%,
+            #5679f9 16.6%,
+            #55cbd9 33.3%,
+            #a2cf4a 50%,
+            #fedb64 66.6%,
+            #fe8f52 83.3%,
+            #e6380f 100%
+    );
+}
+
+
+#legend_Humidity {
+    display: none;
+}
+
+
 #legend_Humidity .gradient {
-    background: -webkit-linear-gradient(bottom, #c41a0a 0%, #f47a0b 20%, #f4e60b 40%, #aff474 60%, #6dbcff 80%, #00528f 100%);
-    background: linear-gradient(to top, #c41a0a 0%, #f47a0b 20%, #f4e60b 40%, #aff474 60%, #6dbcff 80%, #00528f 100%);
+    background: -webkit-linear-gradient(
+            bottom,
+            #c41a0a 0%,
+            #f47a0b 20%,
+            #f4e60b 40%,
+            #aff474 60%,
+            #6dbcff 80%,
+            #00528f 100%
+    );
+    background: linear-gradient(
+            to top,
+            #c41a0a 0%,
+            #f47a0b 20%,
+            #f4e60b 40%,
+            #aff474 60%,
+            #6dbcff 80%,
+            #00528f 100%
+    );
+}
+
+
+#legend_Pressure {
+    display: none;
 }
 
 #legend_Pressure .gradient {
-    background: -webkit-linear-gradient(bottom, #dd2e97 0%, #6b3b8f 12.5%, #2979b9 25%, #02B9ed 37.5%, #13ae52 50%, #c9d841 62.5%, #fad635 75%, #f0a03d 87.5%, #892725 100%);
-    background: linear-gradient(to top, #dd2e97 0%, #6b3b8f 12.5%, #2979b9 25%, #02B9ed 37.5%, #13ae52 50%, #c9d841 62.5%, #fad635 75%, #f0a03d 87.5%, #892725 100%);
+    background: -webkit-linear-gradient(
+            bottom,
+            #dd2e97 0%,
+            #6b3b8f 12.5%,
+            #2979b9 25%,
+            #02b9ed 37.5%,
+            #13ae52 50%,
+            #c9d841 62.5%,
+            #fad635 75%,
+            #f0a03d 87.5%,
+            #892725 100%
+    );
+    background: linear-gradient(
+            to top,
+            #dd2e97 0%,
+            #6b3b8f 12.5%,
+            #2979b9 25%,
+            #02b9ed 37.5%,
+            #13ae52 50%,
+            #c9d841 62.5%,
+            #fad635 75%,
+            #f0a03d 87.5%,
+            #892725 100%
+    );
+}
+
+
+#legend_Noise {
+    display: none;
 }
 
 #legend_Noise .gradient {
-    background: -webkit-linear-gradient(bottom, #00528f 0%, #6dbcff 20%, #aff474 40%, #f4e60b 60%, #f47a0b 80%, #c41a0a 100%);
-    background: linear-gradient(to top, #00528f 0%, #6dbcff 20%, #aff474 40%, #f4e60b 60%, #f47a0b 80%, #c41a0a 100%);
+    background: -webkit-linear-gradient(
+            bottom,
+            #00528f 0%,
+            #6dbcff 20%,
+            #aff474 40%,
+            #f4e60b 60%,
+            #f47a0b 80%,
+            #c41a0a 100%
+    );
+    background: linear-gradient(
+            to top,
+            #00528f 0%,
+            #6dbcff 20%,
+            #aff474 40%,
+            #f4e60b 60%,
+            #f47a0b 80%,
+            #c41a0a 100%
+    );
+}
+
+
+#legend_AQIus {
+    display: none;
 }
 
 #legend_AQIus .AQI_color {
@@ -439,7 +682,6 @@ input[type="checkbox"]:checked {
     content: url("../images/mastodon.svg");
 }
 
-
 .labs_meetup:before {
     content: url("../images/meetup.svg");
 }
@@ -448,19 +690,101 @@ input[type="checkbox"]:checked {
     content: url("../images/telegram.svg");
 }
 
-.labs_sociallinks, .labs_sociallinks td, .labs_sociallinks tr {
+.labs_sociallinks,
+.labs_sociallinks td,
+.labs_sociallinks tr {
     border: none;
     width: auto;
     text-align: left;
     vertical-align: middle;
 }
 
-.leaflet-touch .leaflet-geosearch-bar form {
-    margin-top: 6.25em !important;
-    border-radius: 10px;
-    border: 1px solid #C2C2C2;
+#legend_NO2 {
+    display: none;
 }
 
-.leaflet-touch .leaflet-geosearch-bar .reset {
-    background-color: transparent;
+
+#legend_NO2 .gradient {
+    background: -webkit-linear-gradient(
+            bottom,
+            #4b8246 0%,
+            #4b8246 16%,
+            #9fd08c 32%,
+            #efedb4 48%,
+            #f47a70 72%,
+            #8c161e 80%,
+            #8c161e 100%
+    );
+    background: linear-gradient(
+            to top,
+            #4b8246 0%,
+            #4b8246 16%,
+            #9fd08c 32%,
+            #efedb4 48%,
+            #f47a70 72%,
+            #8c161e 80%,
+            #8c161e 100%
+    );
+    height: 12em;
+    bottom: 20px;
+    left: 10px;
+    position: absolute;
+}
+
+#dateSelector {
+    display: block;
+    position: absolute;
+    bottom: 215px;
+    left: 20px;
+    z-index: 20;
+}
+
+#legend_Reference p {
+    width: 100%;
+    text-align: left;
+    font-size: 1em;
+    margin-bottom: 2px;
+}
+
+#legend_Reference #min {
+    color: #fff;
+}
+
+#legend_Reference p {
+    line-height: 1.1em;
+    margin: 3px;
+}
+
+.radio-button {
+    line-height: 1.1;
+    font-size: 1.1em;
+    background-color: #EDFDFC;
+    display: grid;
+    grid-template-columns: 0.5em auto;
+    gap: 1em;
+    padding: 1em 0.35em;
+    margin-bottom: 10px;
+}
+
+.radio-button label {
+    margin-left: 5px;
+}
+
+
+input[type="radio"] {
+    appearance: none;
+    background-color: #fff;
+    margin: 0;
+    font: inherit;
+    color: currentColor;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid currentColor;
+    border-radius: 50%;
+    transform: translateX(0.25em);
+}
+
+input[type="radio"]:checked {
+    box-shadow: inset 0 0 0 3px #fff;
+    background-color: #084945;
 }

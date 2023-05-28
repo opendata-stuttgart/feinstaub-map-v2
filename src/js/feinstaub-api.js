@@ -3,18 +3,19 @@ import 'whatwg-fetch'
 
 let api = {
     pm_sensors: {
-      "SDS011": true,
-      "SDS021": true,
-      "PMS1003": true,
-      "PMS3003": true,
-      "PMS5003": true,
-      "PMS6003": true,
-      "PMS7003": true,
-      "HPM": true,
-      "SPS30": true,
-      "NextPM": true,
-      "IPS-7100": true,
+        "SDS011": true,
+        "SDS021": true,
+        "PMS1003": true,
+        "PMS3003": true,
+        "PMS5003": true,
+        "PMS6003": true,
+        "PMS7003": true,
+        "HPM": true,
+        "SPS30": true,
+        "NextPM": true,
+        "IPS-7100": true,
     },
+
     thp_sensors: {
         "DHT11": true,
         "DHT22": true,
@@ -37,69 +38,78 @@ let api = {
     },
 
     checkValues(obj, sel) {
-        let result = false;
-        if (obj !== undefined && typeof (obj) === 'number' && !isNaN(obj)) {
-            if ((sel === "Humidity") && (obj >= 0) && (obj <= 100)) {
-                result = true;
-            } else if ((sel === "Temperature") && (obj <= 70 && obj >= -50)) {
-                result = true;
-            } else if ((sel === "Pressure") && (obj >= 850) && (obj < 1200)) {
-                result = true;
-            } else if ((sel === "PM10") && (obj < 1900)) {
-                result = true;
-            } else if ((sel === "PM25") && (obj < 900)) {
-                result = true;
-            } else if (sel === "AQIus") {
-                result = true;
-            } else if (sel === "Noise") {
-                result = true;
-            }
+        if (typeof obj !== 'number' || isNaN(obj)) {
+            return false;
         }
-        return result;
+
+        switch (sel) {
+            case 'Humidity':
+                return obj >= 0 && obj <= 100;
+            case 'Temperature':
+                return obj >= -50 && obj <= 70;
+            case 'Pressure':
+                return obj >= 850 && obj < 1200;
+            case 'PM10':
+                return obj < 1900;
+            case 'PM25':
+                return obj < 900;
+            case 'AQIus':
+            case 'Noise':
+                return true;
+            default:
+                return false;
+        }
     },
 
     officialAQIus(data) {
-        function aqius(val, type) {
+        function aqius(value, type) {
+            const val = parseFloat(value);
             let index;
 
             if (val >= 0) {
-                if (type === 'PM10') {
-                    if (parseInt(val) <= 54) {
-                        index = calculate_aqi_us(50, 0, 54, 0, parseInt(val))
-                    } else if (parseInt(val) <= 154) {
-                        index = calculate_aqi_us(100, 51, 154, 55, parseInt(val))
-                    } else if (parseInt(val) <= 254) {
-                        index = calculate_aqi_us(150, 101, 254, 155, parseInt(val))
-                    } else if (parseInt(val) <= 354) {
-                        index = calculate_aqi_us(200, 151, 354, 255, parseInt(val))
-                    } else if (parseInt(val) <= 424) {
-                        index = calculate_aqi_us(300, 201, 424, 355, parseInt(val))
-                    } else if (parseInt(val) <= 504) {
-                        index = calculate_aqi_us(400, 301, 504, 425, parseInt(val))
-                    } else if (parseInt(val) <= 604) {
-                        index = calculate_aqi_us(500, 401, 604, 505, parseInt(val))
-                    } else {
-                        index = 500
+                switch (type) {
+                    case 'PM10': {
+                        if (val <= 54) {
+                            index = calculate_aqi_us(50, 0, 54, 0, val)
+                        } else if (val <= 154) {
+                            index = calculate_aqi_us(100, 51, 154, 55, val)
+                        } else if (val <= 254) {
+                            index = calculate_aqi_us(150, 101, 254, 155, val)
+                        } else if (val <= 354) {
+                            index = calculate_aqi_us(200, 151, 354, 255, val)
+                        } else if (val <= 424) {
+                            index = calculate_aqi_us(300, 201, 424, 355, val)
+                        } else if (val <= 504) {
+                            index = calculate_aqi_us(400, 301, 504, 425, val)
+                        } else if (val <= 604) {
+                            index = calculate_aqi_us(500, 401, 604, 505, val)
+                        } else {
+                            index = 500
+                        }
                     }
-                }
-                if (type === 'PM25') {
-                    if (val.toFixed(1) <= 12) {
-                        index = calculate_aqi_us(50, 0, 12, 0, val.toFixed(1))
-                    } else if (val.toFixed(1) <= 35.4) {
-                        index = calculate_aqi_us(100, 51, 35.4, 12.1, val.toFixed(1))
-                    } else if (val.toFixed(1) <= 55.4) {
-                        index = calculate_aqi_us(150, 101, 55.4, 35.5, val.toFixed(1))
-                    } else if (val.toFixed(1) <= 150.4) {
-                        index = calculate_aqi_us(200, 151, 150.4, 55.5, val.toFixed(1))
-                    } else if (val.toFixed(1) <= 250.4) {
-                        index = calculate_aqi_us(300, 201, 250.4, 150.5, val.toFixed(1))
-                    } else if (val.toFixed(1) <= 350.4) {
-                        index = calculate_aqi_us(400, 301, 350.4, 250.5, val.toFixed(1))
-                    } else if (val.toFixed(1) <= 500.4) {
-                        index = calculate_aqi_us(500, 401, 500.4, 350.5, val.toFixed(1))
-                    } else {
-                        index = 500
-                    }
+                        break;
+                    case 'PM25':
+                        const valRounded = val.toFixed(1);
+                        if (valRounded <= 12) {
+                            index = calculate_aqi_us(50, 0, 12, 0, valRounded)
+                        } else if (valRounded <= 35.4) {
+                            index = calculate_aqi_us(100, 51, 35.4, 12.1, valRounded)
+                        } else if (valRounded <= 55.4) {
+                            index = calculate_aqi_us(150, 101, 55.4, 35.5, valRounded)
+                        } else if (valRounded <= 150.4) {
+                            index = calculate_aqi_us(200, 151, 150.4, 55.5, valRounded)
+                        } else if (valRounded <= 250.4) {
+                            index = calculate_aqi_us(300, 201, 250.4, 150.5, valRounded)
+                        } else if (valRounded <= 350.4) {
+                            index = calculate_aqi_us(400, 301, 350.4, 250.5, valRounded)
+                        } else if (valRounded <= 500.4) {
+                            index = calculate_aqi_us(500, 401, 500.4, 350.5, valRounded)
+                        } else {
+                            index = 500
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
             return index;
@@ -130,6 +140,8 @@ let api = {
                 let timestamp_data = '';
                 let timestamp_from = '';
                 if (vizType === "pmDefault") {
+
+
                     let cells = _.chain(json)
                         .filter((sensor) => typeof api.pm_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.pm_sensors[sensor.sensor.sensor_type.name] && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P1")), "PM10") && api.checkValues(parseInt(getRightValue(sensor.sensordatavalues, "P2")), "PM25"))
                         .map((values) => {
@@ -138,7 +150,8 @@ let api = {
                                 timestamp_from = "data.dust.min";
                             }
                             const data_in = {
-                                PM10: parseInt(getRightValue(values.sensordatavalues, "P1")), PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
+                                PM10: parseInt(getRightValue(values.sensordatavalues, "P1")),
+                                PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
                             }
                             return {
                                 data: {
@@ -151,7 +164,34 @@ let api = {
                             }
                         })
                         .value();
-                    return Promise.resolve({cells: cells, timestamp: timestamp_data, timestamp_from: timestamp_from});
+
+                        //strictly filter indoor
+
+
+                    let cells2 = _.chain(json)
+                        .map((values) => {
+
+                            return {
+                                "type": "Feature",
+                                "properties": {
+                                    "id": values.sensor.id,
+                                    "indoor": values.location.indoor,
+                                    "type": values.sensor.sensor_type.name
+                                },
+                                "geometry": {
+                                    "type": "Point",
+                                    "coordinates": [values.location.longitude, values.location.latitude]
+                                }
+                            }
+                        })
+                        .value();
+
+                    return Promise.resolve({
+                        cells: cells,
+                        cells2: {"type": "FeatureCollection", "features": cells2.filter(feature => feature.properties.indoor == 0)},
+                        timestamp: timestamp_data,
+                        timestamp_from: timestamp_from
+                    });
                 } else if (vizType === "tempHumPress") {
                     let cells = _.chain(json)
                         .filter((sensor) => typeof api.thp_sensors[sensor.sensor.sensor_type.name] != "undefined" && api.thp_sensors[sensor.sensor.sensor_type.name])
@@ -203,7 +243,8 @@ let api = {
                                 timestamp_from = "data.24h"
                             }
                             const data_in = {
-                                PM10: parseInt(getRightValue(values.sensordatavalues, "P1")), PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
+                                PM10: parseInt(getRightValue(values.sensordatavalues, "P1")),
+                                PM25: parseInt(getRightValue(values.sensordatavalues, "P2"))
                             };
 
                             const data_out = api.officialAQIus(data_in);

@@ -3,6 +3,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name=viewport content="width=device-width,initial-scale=1"/>
+    <meta name="description"
+          content="Map of air quality sensors in the Sensor.Community network. Visit following URL sensor.community for more information">
     <link rel="preload" href="main.js" as="script"/>
     <link href='https://osmc1.maps.sensor.community' rel='preconnect' crossorigin/>
     <link href='https://osmc2.maps.sensor.community' rel='preconnect' crossorigin/>
@@ -36,9 +38,11 @@
             <button id="oceania" value="oceania">Oceania</button>
         </div>
         <div class="lowerItems">
-            <div id='lastUpdate'>Timestamp</div>
-            <div id='attribution'>Measurements by <a href="https://sensor.community/"
-                                                     target="_blank">Sensor.Community</a> contributors
+            <div class="item" id='lastUpdate'>Timestamp</div>
+            <div id="textCount" class="item textCount"><span class="sensorsCount">12345</span> visible sensors out of <span
+                    class="sensorsCountTotal">12345</span></div>
+            <div class="item" id='attribution'>Measurements by <a href="https://sensor.community/" target="_blank">Sensor.Community</a>
+                contributors
             </div>
         </div>
     </div>
@@ -57,8 +61,8 @@
                 <div class="label" style="bottom: 20%;"><b>25</b></div>
                 <div class="label" style="bottom: 1%;"><b>0</b> &micro;g/m&sup3;</div>
             </div>
+            <div class="chevron">&#171;</div>
         </div>
-        <div class="chevron">&#171;</div>
     </div>
 
     <div id="legend_PM25">
@@ -205,6 +209,93 @@
             <div class="chevron">&#171;</div>
         </div>
     </div>
+
+    <div id="legend_NO2">
+        <div id="dateSelector">
+            <!-- <label for="dateNO2">Date</label> -->
+            <select name="dateNO2" id="dateNO2">
+                <option value="all" selected>all</option>
+                <option value="2022-01">2022-01</option>
+                <option value="2021-12">2021-12</option>
+                <option value="2021-11">2021-11</option>
+                <option value="2021-10">2021-10</option>
+                <option value="2021-09">2021-09</option>
+                <option value="2021-08">2021-08</option>
+                <option value="2021-07">2021-07</option>
+                <option value="2021-06">2021-06</option>
+                <option value="2021-05">2021-05</option>
+                <option value="2021-04">2021-04</option>
+                <option value="2021-03">2021-03</option>
+                <option value="2021-02">2021-02</option>
+                <option value="2021-01">2021-01</option>
+                <option value="2020-11">2020-11</option>
+                <option value="2020-10">2020-10</option>
+                <option value="2020-09">2020-09</option>
+                <option value="2020-08">2020-08</option>
+                <option value="2020-07">2020-07</option>
+                <option value="2020-06">2020-06</option>
+                <option value="2020-05">2020-05</option>
+                <option value="2020-04">2020-04</option>
+                <option value="2020-03">2020-03</option>
+                <option value="2020-02">2020-02</option>
+                <option value="2020-01">2020-01</option>
+                <option value="2019-12">2019-12</option>
+                <option value="2019-11">2019-11</option>
+                <option value="2019-10">2019-10</option>
+                <option value="2019-09">2019-09</option>
+                <option value="2019-08">2019-08</option>
+                <option value="2019-07">2019-07</option>
+                <option value="2019-06">2019-06</option>
+                <option value="2019-05">2019-05</option>
+                <option value="2019-04">2019-04</option>
+                <option value="2019-03">2019-03</option>
+                <option value="2019-02">2019-02</option>
+                <option value="2018-12">2018-12</option>
+                <option value="2018-11">2018-11</option>
+                <option value="2018-06">2018-06</option>
+                <option value="2018-04">2018-04</option>
+                <option value="2018-03">2018-03</option>
+                <option value="2018-02">2018-02</option>
+                <option value="2018-01">2018-01</option>
+                <option value="2017-10">2017-10</option>
+                <option value="2017-09">2017-09</option>
+                <option value="2016-10">2016-10</option>
+            </select>
+        </div>
+        <div class="legend">
+            <div class="gradient"></div>
+            <div class="labels">
+                <div class="label" style="bottom: 80%;"><b>200</b></div>
+                <div class="label" style="bottom: 64%;"><b>50</b></div>
+                <div class="label" style="bottom: 48%;"><b>40</b></div>
+                <div class="label limit" style="bottom: 32%;"><b>30</b></div>
+                <div class="label" style="bottom: 16%;"><b>20</b></div>
+                <div class="label" style="bottom: 1%;"><b>0 &micro;g/m&sup3;</b></div>
+            </div>
+            <div class="chevron">&#171;</div>
+        </div>
+    </div>
+
+    <div id="legend_Reference">
+        <div class="legend">
+            <div>
+                <div class="radio-button">
+                    <input type="radio" id="radio1" name="radios" value="250" checked>
+                    <label for="radio1">250m</label>
+                    <input type="radio" id="radio2" name="radios" value="1000">
+                    <label for="radio2">1000m</label>
+                </div>
+                <!-- <p>Reference stations: <span id="stationsCountRef"></span></p>
+                <hr>
+                <p>Community sensors: <span id="sensorsCountRef"></span></p>
+                <hr>
+                <p>Sensors intersect: <span id="max"></span></p> -->
+            </div>
+        </div>
+        <!-- <div class="labels">
+            <div class="label" id="min" style="bottom: 1%;"></div>
+        </div> -->
+    </div>
 </div>
 
 <div id="modal">
@@ -222,6 +313,8 @@
                     <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"/>
                 </svg>
             </div>
+            <div value="NO2">NO2 (month. mean)</div>
+            <div value="Reference">Sensors at reference stations</div>
             <div value="Temperature">Temperature</div>
             <div value="Humidity">Rel. Humidity</div>
             <div value="Pressure">Pressure</div>
@@ -230,18 +323,26 @@
             <div value="PM10eu">PM10 (EU, 1 h. mean)</div>
             <div value="PM25eu">PM2.5 (EU, 1 h. mean)</div>
             <div value="PM10who">PM10 (WHO, 1 h. mean)</div>
-            <div value="PM25who">PM2.5 (WHO, 1 h. mean)</div>
+            <div value="PM25who">PM2.5 (WHO, 1 h. mean)</b></div>   
             <div value="PM10">PM10 (5 min. mean)</div>
             <div value="PM25" class="selected">PM2.5 (5 min. mean)</div>
         </div>
+            <p id="tooltip-text">The tooltip text.</p>
 
         <ul class="layerSelect">
             <li><input type="checkbox" id="cb_labs" checked="checked"/>
                 <label for="cb_labs" id="label_local_labs">Local labs</label></li>
+            <li><input type="checkbox" id="cb_s2s" checked="checked"/>
+                <label for="cb_s2s" id="label_sensor_school">Sensor2School</label></li>
+        </ul>
+        <ul class="layerSelect">
             <li><input type="checkbox" id="cb_wind" checked="checked"/>
                 <label for="cb_wind" id="label_wind_layer">Wind layer</label></li>
+            <li><input type="checkbox" id="indoor" checked="checked">
+                <label for="indoor" id="label_indoor">Show indoor sensors</label></li>
         </ul>
     </div>
 </div>
+
 </body>
 </html>

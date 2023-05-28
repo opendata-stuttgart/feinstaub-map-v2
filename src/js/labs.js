@@ -18,6 +18,7 @@ let labs = {
         let labelRight = L.Icon.extend({
             options: labelBaseOptions
         });
+        
         if (!dataRetrieved) {
             fetch(URL)
                 .then(checkStatus)
@@ -89,13 +90,13 @@ let labs = {
                         lab_popuptext += "</table>";
                         lab_popuptext += "<br />Your location is missing? Add it <a href='https://github.com/opendata-stuttgart/luftdaten-local-labs' target='_blank' rel='noreferrer'>here</a>."
                         L.marker([data[i].lat, data[i].lon], {
-                            icon: new labelRight(), riseOnHover: true
+                            icon: new labelRight(), riseOnHover: true, pane: 'markerPane1'
                         })
                             .bindPopup(lab_popuptext)
                             .addTo(map);
                     }
                 })
-                .then(()=>dataRetrieved = true)
+                .then(() => dataRetrieved = true)
                 .catch(function (error) {
                     console.log('request failed', error)
                 })

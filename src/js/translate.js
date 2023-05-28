@@ -1,15 +1,14 @@
-import * as translations from './translations.js';
+import * as translations from '../data/translations.js';
 
 export function getFirstBrowserLanguage() {
-    var nav = window.navigator,
+    let nav = window.navigator,
         browserLanguagePropertyKeys = ['language', 'browserLanguage', 'systemLanguage', 'userLanguage'],
         i,
         language,
         len;
 
-    // support for HTML 5.1 "navigator.languages"
     if (Array.isArray(nav.languages)) {
-        for (i = 0; i < nav.languages.length; i++) {
+        for (let i = 0, language, len; i < nav.languages.length; i++) {
             language = nav.languages[i];
             len = language.length;
             if (len) {
@@ -19,14 +18,13 @@ export function getFirstBrowserLanguage() {
     }
 
     // support for other well known properties in browsers
-    for (i = 0; i < browserLanguagePropertyKeys.length; i++) {
-        language = nav[browserLanguagePropertyKeys[i]];
+    for (const property of browserLanguagePropertyKeys) {
+        language = nav[property];
         len = language.length;
         if (len) {
             return language;
         }
     }
-
     return language;
 }
 
@@ -36,5 +34,4 @@ export function tr(lang, text) {
     } else {
         return text;
     }
-};
-
+}
