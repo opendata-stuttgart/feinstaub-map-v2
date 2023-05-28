@@ -4,7 +4,6 @@
   "description": "visualize recent sensor data on a world map for Sensor.Community",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --config webpack.dev.js --mode development",
     "build": "webpack --config webpack.config.js --mode production",
     "ghpages": "node ghpages.js"
