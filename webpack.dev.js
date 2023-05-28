@@ -23,11 +23,9 @@ module.exports = {
         rules: [{
             test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader'],
         }, {
-            test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/, exclude: /node_modules/, use: ['file-loader']
+            test: /\.(png|jpg|jpeg|gif|svg|ico)$/, exclude: /node_modules/, use: ['file-loader']
         }, {
-            test: /\.(jpe?g|png|gif|svg|ico|xml|webmanifest)$/i, include: /images/, loader: "file-loader", options: {
-                outputPath: 'images/', publicPath: 'images/', name: '[name].[ext]'
-            }
+            test: /\.(png|jpg)$/, exclude: /node_modules/, loader: 'url-loader'
         }, {
             test: /\.json$/, include: path.resolve(__dirname, 'data'),
             loader: 'json-loader', type: 'javascript/auto'
@@ -40,12 +38,13 @@ module.exports = {
             template: './src/index.html', inject: true,
             filename: 'index.html'
         }),
-        new MiniCssExtractPlugin({
-            filename: '[name].css', chunkFilename: '[name].css',
-        }),
+        new MiniCssExtractPlugin(),
         new CopyWebpackPlugin({
             patterns: [{
-                from: 'src/data', to: 'data', globOptions: {ignore: ['.*'],},},
+                from: 'src/data', to: 'data', globOptions: {ignore: ['.*'],},
+            }, {
+                from: 'src/images', to: 'images', globOptions: {ignore: ['.*'],},
+            },
             ],
         }),
     ],

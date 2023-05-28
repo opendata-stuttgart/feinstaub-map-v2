@@ -39,9 +39,7 @@ import "../css/style.css";
 import "../css/leaflet.css";
 
 let hexagonheatmap,
-    hexagonheatmap_indoor,
     hmhexaPM_aktuell,
-    hmhexaPM_aktuell_indoor,
     hmhexaPM_AQI,
     hmhexa_t_h_p,
     hmhexa_noise,
@@ -517,7 +515,7 @@ window.onload =
                 hmhexaPM_aktuell = api_stock_pm.filter(e => e.indoor == 0);;
 
             }
-            
+
             ready("reference");
             ready("pmDefault");
 
@@ -546,7 +544,7 @@ window.onload =
                             .then(function () {
                                 ready("aqi");
                             });
-                    } else {   
+                    } else {
                         LatLngMapper(hmhexaPM_aktuell, "PM");
                     }
                 });
@@ -564,7 +562,7 @@ window.onload =
                         api
                             .getData(config.data_host + "/data/v2/data.1h.json")
                             .then(function (result) {
-   
+
                                     hmhexaPM_WHO = result.cells.filter(e => e.indoor == 0);
                                     hmhexaPM_EU = result.cells.filter(e => e.indoor == 0);
                                 LatLngMapper(hmhexaPM_WHO, "EUWHO");
@@ -578,7 +576,7 @@ window.onload =
                                 ready("pmWHO");
                                 ready("pmEU");
                             });
-                    } else {   
+                    } else {
                         LatLngMapper(hmhexaPM_aktuell, "PM");
                         
                     }
@@ -623,10 +621,10 @@ window.onload =
                             console.log("indoor");
                             hmhexa_t_h_p = api_stock_thp;
                             //hmhexaPM_aktuell_indoor = result.cells.filter(e => e.indoor == 1);
-            
+
                         } else {
                             hmhexa_t_h_p = api_stock_thp.filter(e => e.indoor == 0);;
-            
+
                         }
 
                         LatLngMapper(hmhexa_t_h_p, "Temperature");
@@ -728,7 +726,7 @@ window.onload =
                     .then(function (result) {
 
                             hmhexaPM_WHO = result.cells.filter(e => e.indoor == 0);
-                        
+
                         if (document.querySelector("#indoor").checked) {
                             hmhexaPM_EU = result.cells;
                         } else {
@@ -1058,7 +1056,7 @@ window.onload =
                 .sort(sort_num);
 
             // console.log(data);
-            
+
             return median(d_temp);
         }
 
@@ -1419,14 +1417,14 @@ window.onload =
         }
 
         function switchIndoorLayer() {
-        
+
             if (user_selected_value != "PM25who" && user_selected_value != "PM10who" && user_selected_value != "PM25eu" && user_selected_value != "PM10eu" && user_selected_value != "AQIus" && user_selected_value != "NO2" && user_selected_value != "Reference"){
 
             document.querySelectorAll("path.hexbin-hexagon").forEach(function (d) {
                 d.remove();
             });
-            
-            //retrieveDataReload(); 
+
+            //retrieveDataReload();
             retrieveData();  //REVOIR LE SUPPORT DU RELOAD
         }
         }
@@ -1743,7 +1741,7 @@ function drawCircles() {
 //PJ
 
 function setColor(val1,val2){
-  
+
     var base = (max - min);
 
     if (prev == 250) {
@@ -1765,12 +1763,12 @@ function setColor(val1,val2){
         var perc = val2;
         }
     };
-        
+
     if (base == 0 && max!= 0  && min!=0) { console.log('min=max'); perc = 100;}
     else if (base == 0 && max== 0) { console.log('min=max=0');perc = 0; }
     else {
         // console.log('calculate');
-        perc = (perc - min) / base * 100; 
+        perc = (perc - min) / base * 100;
     }
 
     var r, g, b = 0;
@@ -1788,7 +1786,7 @@ function setColor(val1,val2){
         console.log(r);
     }
     var h = r * 0x10000 + g * 0x100 + b * 0x1;
-    return '#' + ('000000' + h.toString(16)).slice(-6); 
+    return '#' + ('000000' + h.toString(16)).slice(-6);
   }
 
 const popupMaker = (coo) => {

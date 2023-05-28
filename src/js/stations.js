@@ -1,16 +1,13 @@
-import 'whatwg-fetch'
-//import checkStatus from './utils'
+import 'whatwg-fetch';
 
-let dataRetrieved = false
+let dataRetrieved = false;
 
-let stations = {
-    getData: async function (URL) {
+const stations = {
+  getData: async function (URL) {
+    return fetch(URL)
+      .then((resp) => resp.json())
+      .then((geojson) => ({ cells: geojson }));
+  }
+};
 
-    return await fetch(URL)
-    .then((resp) => resp.json())
-    .then((geojson) => {
-        return Promise.resolve({cells: geojson});
-    })
-    }
-}
-export default stations
+export default stations;

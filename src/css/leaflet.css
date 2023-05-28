@@ -102,23 +102,23 @@
 }
 
 .leaflet-pane {
-    z-index: 400;
-}
-
-.leaflet-tile-pane {
     z-index: 200;
 }
 
+.leaflet-tile-pane {
+    z-index: 100;
+}
+
 .leaflet-overlay-pane {
-    z-index: 400;
+    z-index: 200;
 }
 
 .leaflet-shadow-pane {
-    z-index: 500;
+    z-index: 200;
 }
 
 .leaflet-marker-pane {
-    z-index: 600;
+    z-index: 200;
 }
 
 .leaflet-map-pane canvas {
@@ -152,34 +152,29 @@
     right: 0;
 }
 
-
 /* zoom and fade animations */
 .leaflet-fade-anim .leaflet-tile {
     will-change: opacity;
 }
 
 .leaflet-fade-anim .leaflet-popup {
-    opacity: 0;
-    -webkit-transition: opacity 0.2s linear;
-    -moz-transition: opacity 0.2s linear;
-    transition: opacity 0.2s linear;
+    -webkit-transition: opacity 0.4s linear;
+    -moz-transition: opacity 0.4s linear;
+    transition: opacity 0.4s linear;
 }
 
-.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
-    opacity: 1;
-    background-color: white;
-    border-radius: 5px;
-    z-index: 100;
-    padding: 0.5em;
+.leaflet-pane.leaflet-popup-pane {
+    z-index: 300;
+    margin: 1em 0.25em;
 }
 
 .leaflet-popup-content-wrapper {
     font-size: 0.8em;
     width: 23em;
-}
-
-.leaflet-popup-content {
-    margin: 1em;
+        background-color: white;
+    border-radius: 5px;
+    z-index: 100;
+    padding: 0.5em;
 }
 
 .leaflet-popup-close-button {
@@ -193,6 +188,7 @@
     text-align: center;
     text-decoration: none;
     background: transparent;
+    color: #c3c3c3;
     border: 0;
 }
 
@@ -266,27 +262,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
     /* pointer-events: all; */
     pointer-events: fill;
 }
-/* 
-.hexbin-hexagon:hover{
-
-    stroke:red;
-    stroke: none;
-    padding:0px;
-    stroke-width: 0.01em;
-  }  
-  */
-
 
 /* colorize leaflet map */
 img.leaflet-tile {
     filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
     -webkit-filter: grayscale(85%) saturate(150%) hue-rotate(60deg) contrast(90%) brightness(110%);
 }
-
- /* .hexbin-hexagon{
-
-    stroke:red;
-  }  */
 
 
 .leaflet-touch .leaflet-geosearch-bar form {
@@ -295,7 +276,7 @@ img.leaflet-tile {
     border: 1px solid #c2c2c2;
 }
 
-.leaflet-touch .leaflet-geosearch-bar .reset {
+.leaflet-control-geosearch a.reset:hover {
     background-color: transparent;
 }
 
