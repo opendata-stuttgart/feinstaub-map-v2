@@ -46,7 +46,8 @@ let hexagonheatmap,
     hmhexa_t_h_p,
     hmhexa_noise,
     hmhexaPM_WHO,
-    hmhexaPM_EU;
+    hmhexaPM_EU,
+    no2data;
 
 let api_stock_pm,api_stock_thp;
 let lastFetchTimeMain,lastFetchTime24h,lastFetchTime1h,lastFetchTimeNoise,lastFetchTimeTHP;
@@ -103,12 +104,13 @@ for (var i = 0; i < radios.length; i++) {
 let dateNO2 = "all";
 
 document.querySelector("#dateNO2").addEventListener('change', function () {
-    map.removeLayer(dataPointsNO2);
-
+    map.removeLayer(dataPointsNO2)
     dateNO2 = this.value;
 
-    dataPointsNO2 = L.geoJSON(no2data.default, {
+    dataPointsNO2 = L.geoJSON(no2data, {
         pointToLayer: function (feature, latlng) {
+
+            console.log(feature);
 
             if (dateNO2 === "all") {
 
@@ -1207,22 +1209,15 @@ window.onload =
                         });
                 }
 
-
-
-
                 if (val === "NO2") {
-
-                    //FETCH ICI
 
                     d3.select("#textCount").style("display", "none");
 
                     no2.getData("data/no2.json")
                         .then(function (result) {
-                            console.log(result);
-
+                            no2data = result.cells;
                             dataPointsNO2 = L.geoJSON(result.cells, {
                                 pointToLayer: function (feature, latlng) {
-
                                     if (dateNO2 === "all") {
                                         return L.circleMarker(latlng, {
                                             radius: responsiveRadius(mobile),
