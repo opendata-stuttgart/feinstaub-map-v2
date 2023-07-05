@@ -166,7 +166,7 @@ let api = {
                         .value();
 
                         //strictly filter indoor
-    
+
 
                     let cells2 = _.chain(json)
                         .map((values) => {

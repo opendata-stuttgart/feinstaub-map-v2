@@ -266,14 +266,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
     /* pointer-events: all; */
     pointer-events: fill;
 }
-/* 
+/*
 .hexbin-hexagon:hover{
 
     stroke:red;
     stroke: none;
     padding:0px;
     stroke-width: 0.01em;
-  }  
+  }
   */
 
 
@@ -298,4 +298,3 @@ img.leaflet-tile {
 .leaflet-touch .leaflet-geosearch-bar .reset {
     background-color: transparent;
 }
-
