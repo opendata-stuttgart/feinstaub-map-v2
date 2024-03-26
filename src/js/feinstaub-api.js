@@ -12,6 +12,7 @@ let api = {
         "PMS7003": true,
         "HPM": true,
         "SPS30": true,
+        "SEN5x": true,
         "NextPM": true,
         "IPS-7100": true,
     },
@@ -31,6 +32,7 @@ let api = {
         "SHT31": true,
         "SHT35": true,
         "SHT85": true,
+        "SEN5x": true,
     },
 
     noise_sensors: {
