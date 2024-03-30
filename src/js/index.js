@@ -46,7 +46,8 @@ let hexagonheatmap,
     hmhexa_t_h_p,
     hmhexa_noise,
     hmhexaPM_WHO,
-    hmhexaPM_EU;
+    hmhexaPM_EU,
+    no2data;
 
 let api_stock_pm,api_stock_thp;
 let lastFetchTimeMain,lastFetchTime24h,lastFetchTime1h,lastFetchTimeNoise,lastFetchTimeTHP;
@@ -78,6 +79,7 @@ let arrayCountSensorsHexPM, arrayCountSensorsHexEUWHO, arrayCountSensorsHexAQI, 
     coo = [], stationsInBounds, sensorsInBounds, sensorsInBoundsHex, mapBounds, max = 0, min = 0,
     radios = document.querySelectorAll('input[type=radio]'), prev = 250, stationsPointsCount, sensorsLocationsCount;
 
+let newCount;
 
 for (var i = 0; i < radios.length; i++) {
     radios[i].addEventListener('change', function () {
@@ -103,12 +105,13 @@ for (var i = 0; i < radios.length; i++) {
 let dateNO2 = "all";
 
 document.querySelector("#dateNO2").addEventListener('change', function () {
-    map.removeLayer(dataPointsNO2);
-
+    map.removeLayer(dataPointsNO2)
     dateNO2 = this.value;
 
-    dataPointsNO2 = L.geoJSON(no2data.default, {
+    dataPointsNO2 = L.geoJSON(no2data, {
         pointToLayer: function (feature, latlng) {
+
+            console.log(feature);
 
             if (dateNO2 === "all") {
 
@@ -482,6 +485,18 @@ window.onload =
             console.log("retrieveData()");
             console.log(lastFetchTimeMain);
             const now = new Date();
+
+            await fetch("https://stats.sensor.community/numbers.json")
+            .then((resp) => resp.json())
+            .then((json) => {
+                console.log(json.numbers.sensors_pm);
+                newCount = json.numbers.sensors_pm;
+            }).catch(function (error) {
+                // If there is any error you will catch them here
+                throw new Error(`Problems fetching data ${error}`)
+            });
+
+
             if (!lastFetchTimeMain || now - lastFetchTimeMain >= 5 * 60 * 1000) { //150000 ou 300000?
             await api
                 .getData(config.data_host + "/data/v2/data.dust.min.json", "pmDefault")
@@ -675,6 +690,21 @@ window.onload =
             console.log(user_selected_value);
 
             const now = new Date();
+
+
+
+
+            await fetch("https://stats.sensor.community/numbers.json")
+            .then((resp) => resp.json())
+            .then((json) => {
+                console.log(json.numbers.sensors_pm);
+                newCount = json.numbers.sensors_pm;
+            }).catch(function (error) {
+                // If there is any error you will catch them here
+                throw new Error(`Problems fetching data ${error}`)
+            });
+
+
 
             if (user_selected_value == "PM25" || user_selected_value == "PM10") {
                 await api
@@ -912,7 +942,8 @@ window.onload =
                 hexagonheatmap.data(hmhexaPM_aktuell);
                 hexagonheatmap_indoor.data(hmhexaPM_aktuell_indoor);
                 d3.select("span[class='sensorsCount']").html(boundsCountSensorsHex(arrayCountSensorsHexPM));
-                d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexPM.length);
+                // d3.select("span[class='sensorsCountTotal']").html(arrayCountSensorsHexPM.length);
+                d3.select("span[class='sensorsCountTotal']").html(newCount); 
             }
 
             if (vizType === "Reference" && user_selected_value === "Reference") {
@@ -1207,22 +1238,15 @@ window.onload =
                         });
                 }
 
-
-
-
                 if (val === "NO2") {
-
-                    //FETCH ICI
 
                     d3.select("#textCount").style("display", "none");
 
                     no2.getData("data/no2.json")
                         .then(function (result) {
-                            console.log(result);
-
+                            no2data = result.cells;
                             dataPointsNO2 = L.geoJSON(result.cells, {
                                 pointToLayer: function (feature, latlng) {
-
                                     if (dateNO2 === "all") {
                                         return L.circleMarker(latlng, {
                                             radius: responsiveRadius(mobile),
@@ -1640,7 +1664,9 @@ function boundsCountSensors(object) {
     });
 
     // document.getElementById("sensorsCountRef").textContent = sensorsInBounds.length + " / " + sensorsLocationsCount;
-    document.getElementById("textCount").innerHTML += "<br>" + sensorsInBounds.length + " sensor(s) / " + arrayCountSensorsHexPM.length;
+    //document.getElementById("textCount").innerHTML += "<br>" + sensorsInBounds.length + " sensor(s) / " + arrayCountSensorsHexPM.length;
+    document.getElementById("textCount").innerHTML += "<br>" + sensorsInBounds.length + " sensor(s) / " + newCount;
+
 
     //d3.select("#textCount").style("display", "block");
 }

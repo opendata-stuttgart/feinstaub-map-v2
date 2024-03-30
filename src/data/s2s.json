@@ -1,187 +1,301 @@
 [
-	{
-		"lat": 50.075296,
-		"lon": 14.405987,
-		"title": "Smíchovská střední průmyslová škola a gymnázium",
-		"text": "Naše škola je od března roku 2022 prvním účastníkem pilotního projektu „senzory do škol“. Jedná se o iniciativu veřejného sběru dat, konkrétně kvality ovzduší. Naše škola již disponuje meteostanicí, kterou si studenti sami postavili a sbírá veličiny v podobě intenzity prachu, teploty, vlhkosti a tlaku.",
-		"contacts_title": "Contact",
-		"contacts":[
-			{ "name": "Alexandr Waage", "url": "mailto:reditel@ssps.cz" }
-		]
-,"partner_title": "Partner",
-"partner":[
-	{ "name": "Senzorvzduchu.cz", "url": "https://www.senzorvzduchu.cz/" }
-]
-,"website": "https://www.ssps.cz/projekty/iot/senzory-do-skol/"
-,"facebook_page": "https://www.facebook.com/smichovskasps"
-  },
-	{
-		"lat": 50.074372,
-		"lon": 14.440435,
-		"title": "ZÁKLADNÍ ŠKOLA, PRAHA 2, SÁZAVSKÁ 5",
-		"text": "ZŠ Sázavská sleduje dlouhodobě kvalitu ovzduší ve svém okolí a účastní se projektů spojených se zlepšováním prostředí pro své žáky. Projekt Senzory do škol nemohl být vyjímkou. Studenti 6.ročníku si sami postavili senzor vzduchu a sbírají veličiny v podobě intenzity prachu, teploty, vlhkosti a tlaku.",
-		"contacts_title": "Contact",
-		"contacts":[
-			{ "name": "Mgr. Michal Voldřich", "url": "mailto:sazavska@zssazavska.cz" }
-		]
-,"partner_title": "Partner",
-"partner":[
-	{ "name": "Senzorvzduchu.cz", "url": "https://www.senzorvzduchu.cz/" }
-]
-,"website": "http://www.zssazavska.cz/"
-  },
-	{
-		"lat": 50.079602,
-		"lon": 14.418281,
-		"title": "Gymnázium Paměti národa",
-		"text": "Studenti Gymnázia Paměti národa si sami ve výuce postavili školní senzor a naměřená data v podobě intenzity prachu, teploty, vlhkosti a tlaku začleňují do výuky napříč všemi předměty.",
-		"contacts_title": "Contact",
-		"contacts":[
-			{ "name": "Mgr. Tereza Meinczingerová", "url": "mailto:info@gymnaziumpn.cz" }
-		]
-,"partner_title": "Partner",
-"partner":[
-	{ "name": "Senzorvzduchu.cz", "url": "https://www.senzorvzduchu.cz/" }
-]
-,"website": "https://gymnazium.pametnaroda.cz"
-,"facebook_page": "https://www.facebook.com/people/Gymnázium-Paměti-národa/100063965563823/"
-  },
-	{
-		"lat": 50.024220,
-		"lon": 14.491291,
-		"title": "Základní škola Campanus, Praha 4, Jírovcovo náměstí 1782",
-		"text": "Na konci října 2022 se naše škola zapojila do projektu Senzory do škol. Třída 9.A si tak měla možnost sestavit vlastní senzor vzduchu v rámci výuky. Senzor je umístěný ve třídě 9.A z venku. Na celém světě je těchto senzorů 13 200 v 72 zemích a mají za úkol zvýšit povědomí o atmosféře a jejím dopadu na zdraví člověka.",
-		"contacts_title": "Contact",
-		"contacts":[
-			{ "name": "Mgr. Simona Lišková", "url": "mailto:simona.liskova@campanus.cz" }
-		]
-,"partner_title": "Partner",
-"partner":[
-	{ "name": "Senzorvzduchu.cz", "url": "https://www.senzorvzduchu.cz/" }
-]
-,"website": "https://www.campanus.cz/blog/2022/11/01/senzory-do-skol/"
-,"facebook_page": "https://www.facebook.com/profile.php?id=100054479920170"
-  },
-	{
-		"lat": 50.239908,
-		"lon": 14.301319,
-		"title": "Dvořákovo gymnázium Kralupy nad Vltavou, příspěvková organizace",
-		"text": "Ve výuce informatiky realizujeme různé projekty. Inspirováni podzimním Makefairem jsme se rozhodli pro stavbu senzoru, který zaznamenává teplotu, tlak, vlhkost a množství prachových částic. Součástí projektu byla i přednáška o změnách klimatu na Zemi a znečištění ovzduší prachovými částicemi. Studenti 7. G sestavili tři moduly senzorů a jeden z nich je umístěný za oknem v učebně 16.",
-		"contacts_title": "Contact",
-		"contacts":[
-			{ "name": "Mgr. Eva Popová", "url": "popova@dgkralupy.eu" }
-		]
-,"partner_title": "Partner",
-"partner":[
-	{ "name": "Senzorvzduchu.cz", "url": "https://www.senzorvzduchu.cz/" }
-]
-,"website": "https://www.dgkralupy.cz/aktualne/projekt-senzory-do-skol/"
-,"facebook_page": "https://www.facebook.com/DGaSOSE/"
-  },
-	{
-		"lat": 49.200402,
-		"lon": 16.639982,
-		"title": "Škola příběhem - církevní základní škola",
-		"text": "Připojili jsme se k celosvětové síti sensor.community a společně se šesťáky jsme sestavili, pod vedením odborníků z Nádech z.s., pět senzorů vzduchu. Ode dneška měříme na školním dvoře prachové částice PM10 a PM2,5 a k tomu ještě teplotu, vlhkost a tlak vzduchu. Data můžete sledovat na webu sensor.community.",
-		"contacts_title": "Contact",
-		"contacts":[
-			{ "name": "Jaroslav Koleček", "url": "mailto:filipka@skolafilipka.cz" }
-		]
-,"partner_title": "Partner",
-"partner":[
-	{ "name": "Senzorvzduchu.cz", "url": "https://www.senzorvzduchu.cz/" }
-]
-,"website": "https://filipka.edupage.org/news/"
-,"facebook_page": "https://www.facebook.com/SkolaFilipka/"
-  },
-	{
-		"lat": 50.773385,
-		"lon": 15.075695,
-		"title": "Univerzitní mateřská škola ŠkaTULka v Liberci",
-		"text": "Naše školka je od listopadu roku 2022 jedním z prvních účastníků pilotního projektu „senzory do škol“. Naše školka disponuje meteostanicí s ohříváním zkoumaného vzduchu, která sbírá veličiny v podobě intenzity prachu, teploty, vlhkosti a tlaku.",
-		"contacts_title": "Contact",
-		"contacts":[
-			{ "name": "MgA. Ivana Honsnejmanová", "url": "mailto:ms@ubilehokralika.cz" }
-		]
-,"partner_title": "Partner",
-"partner":[
-	{ "name": "Senzorvzduchu.cz", "url": "https://www.senzorvzduchu.cz/" }
-]
-,"website": "https://msskatulka.cz"
-  },
-	{
-		"lat": 49.769114,
-		"lon": 18.315716,
-		"title": "Mateřská škola Vratimov",
-		"text": "MŠ Vratimov se dlouhodobě účastní projektů sledování kvality vzduchu. Účastnili jsme se projektu Čistá školka a nově sledujeme kvalitu ovzduší v rámci projektu Senzory do škol.",
-		"contacts_title": "Contact",
-		"contacts":[
-			{ "name": "Lenka Siváková", "url": "mailto:skolka@msvratimov.cz" }
-		]
-,"partner_title": "Partner",
-"partner":[
-	{ "name": "Senzorvzduchu.cz", "url": "https://www.senzorvzduchu.cz/" }
-]
-,"website": "https://msvratimov.cz/vratimov/"
-  },
-	{
-		"lat": 49.598162,
-		"lon": 18.002733,
-		"title": "Mateřská škola Máj",
-		"text": "MŠ Máj sleduje kvalitu ovzduší v rámci projektu Senzory do škol.",
-		"contacts_title": "Contact",
-		"contacts":[
-			{ "name": "Mgr. Jana Vrbová", "url": "mailto:msmaj@seznam.cz" }
-		]
-,"partner_title": "Partner",
-"partner":[
-	{ "name": "Senzorvzduchu.cz", "url": "https://www.senzorvzduchu.cz/" }
-]
-,"website": "https://www.msmajnj.cz"
-  },
-	{
-		"lat": 49.595735,
-		"lon": 17.999936,
-		"title": "Základní škola a Mateřská škola Nový Jičín, Jubilejní 3",
-		"text": "ZŠ a MŠ Jubilejní sleduje kvalitu ovzduší v rámci projektu Senzory do škol.",
-		"contacts_title": "Contact",
-		"contacts":[
-			{ "name": "Mgr. Ladislav Gróf", "url": "mailto:skola@zsjubilejni.cz" }
-		]
-,"partner_title": "Partner",
-"partner":[
-	{ "name": "Senzorvzduchu.cz", "url": "https://www.senzorvzduchu.cz/" }
-]
-,"website": "http://zsjubilejni.cz"
-	},
-	{
-		"lat": 49.594087,
-		"lon": 18.018854,
-		"title": "Mateřská škola Trojlístek Nový Jičín",
-		"text": "MŠ Trojlístek sleduje kvalitu ovzduší v rámci projektu Senzory do škol.",
-		"contacts_title": "Contact",
-		"contacts":[
-			{ "name": "Ing. Romana Seifertová", "url": "mailto:reditelka.trojlistek@seznam.cz" }
-		]
-,"partner_title": "Partner",
-"partner":[
-	{ "name": "Senzorvzduchu.cz", "url": "https://www.senzorvzduchu.cz/" }
-]
-,"website": "https://trojlistek-novy-jicin.webnode.cz"
-	},
-	{
-		"lat": 49.587483,
-		"lon": 18.017437,
-		"title": "Mateřská škola Sady Nový Jičín, Revoluční 52",
-		"text": "MŠ Sady Nový Jičín sleduje kvalitu ovzduší v rámci projektu Senzory do škol.",
-		"contacts_title": "Contact",
-		"contacts":[
-			{ "name": "Soňa Nevrlová", "url": "mailto:reditelka-mssady@seznam.cz" }
-		]
-,"partner_title": "Partner",
-"partner":[
-	{ "name": "Senzorvzduchu.cz", "url": "https://www.senzorvzduchu.cz/" }
-]
-,"website": "https://www.ms-sady.cz"
-	}
+ {
+   "lat": 50.075296,
+   "lon": 14.405987,
+   "title": "Smíchovská střední průmyslová škola a gymnázium",
+   "text": "Naše škola je od března roku 2022 prvním účastníkem pilotního projektu „senzory do škol“. Jedná se o iniciativu veřejného sběru dat, konkrétně kvality ovzduší. Naše škola již disponuje meteostanicí, kterou si studenti sami postavili a sbírá veličiny v podobě intenzity prachu, teploty, vlhkosti a tlaku.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "Alexandr Waage",
+         "url": "mailto:reditel@ssps.cz"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "https://www.ssps.cz/projekty/iot/senzory-do-skol/",
+   "facebook_page": ""
+},
+ {
+   "lat": 50.074372,
+   "lon": 14.440435,
+   "title": "ZÁKLADNÍ ŠKOLA, PRAHA 2, SÁZAVSKÁ 5",
+   "text": "ZŠ Sázavská sleduje dlouhodobě kvalitu ovzduší ve svém okolí a účastní se projektů spojených se zlepšováním prostředí pro své žáky. Projekt Senzory do škol nemohl být vyjímkou. Studenti 6.ročníku si sami postavili senzor vzduchu a sbírají veličiny v podobě intenzity prachu, teploty, vlhkosti a tlaku.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "Mgr. Michal Voldřich",
+         "url": "mailto:sazavska@zssazavska.cz"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "http://www.zssazavska.cz/",
+   "facebook_page": ""
+},
+ {
+   "lat": 50.079602,
+   "lon": 14.418281,
+   "title": "Gymnázium Paměti národa",
+   "text": "Studenti Gymnázia Paměti národa si sami ve výuce postavili školní senzor a naměřená data v podobě intenzity prachu, teploty, vlhkosti a tlaku začleňují do výuky napříč všemi předměty.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "Mgr. Tereza Meinczingerová",
+         "url": "mailto:info@gymnaziumpn.cz"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "https://gymnazium.pametnaroda.cz",
+   "facebook_page": ""
+},
+ {
+   "lat": 50.02422,
+   "lon": 14.491291,
+   "title": "Základní škola Campanus, Praha 4, Jírovcovo náměstí 1782",
+   "text": "Na konci října 2022 se naše škola zapojila do projektu Senzory do škol. Třída 9.A si tak měla možnost sestavit vlastní senzor vzduchu v rámci výuky. Senzor je umístěný ve třídě 9.A z venku. Na celém světě je těchto senzorů 13 200 v 72 zemích a mají za úkol zvýšit povědomí o atmosféře a jejím dopadu na zdraví člověka.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "Mgr. Simona Lišková",
+         "url": "mailto:simona.liskova@campanus.cz"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "https://www.campanus.cz/blog/2022/11/01/senzory-do-skol/",
+   "facebook_page": ""
+},
+ {
+   "lat": 50.239908,
+   "lon": 14.301319,
+   "title": "Dvořákovo gymnázium Kralupy nad Vltavou, příspěvková organizace",
+   "text": "Ve výuce informatiky realizujeme různé projekty. Inspirováni podzimním Makefairem jsme se rozhodli pro stavbu senzoru, který zaznamenává teplotu, tlak, vlhkost a množství prachových částic. Součástí projektu byla i přednáška o změnách klimatu na Zemi a znečištění ovzduší prachovými částicemi. Studenti 7. G sestavili tři moduly senzorů a jeden z nich je umístěný za oknem v učebně 16.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "Mgr. Eva Popová",
+         "url": "popova@dgkralupy.eu"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "https://www.dgkralupy.cz/aktualne/projekt-senzory-do-skol/",
+   "facebook_page": ""
+},
+ {
+   "lat": 49.200402,
+   "lon": 16.639982,
+   "title": "Škola příběhem - církevní základní škola",
+   "text": "Připojili jsme se k celosvětové síti sensor.community a společně se šesťáky jsme sestavili, pod vedením odborníků z Nádech z.s., pět senzorů vzduchu. Ode dneška měříme na školním dvoře prachové částice PM10 a PM2,5 a k tomu ještě teplotu, vlhkost a tlak vzduchu. Data můžete sledovat na webu sensor.community.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "Jaroslav Koleček",
+         "url": "mailto:filipka@skolafilipka.cz"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "https://filipka.edupage.org/news/",
+   "facebook_page": ""
+},
+ {
+   "lat": 50.773385,
+   "lon": 15.075695,
+   "title": "Univerzitní mateřská škola ŠkaTULka v Liberci",
+   "text": "Naše školka je od listopadu roku 2022 jedním z prvních účastníků pilotního projektu „senzory do škol“. Naše školka disponuje meteostanicí s ohříváním zkoumaného vzduchu, která sbírá veličiny v podobě intenzity prachu, teploty, vlhkosti a tlaku.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "MgA. Ivana Honsnejmanová",
+         "url": "mailto:ms@ubilehokralika.cz"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "https://msskatulka.cz",
+   "facebook_page": ""
+},
+ {
+   "lat": 49.769114,
+   "lon": 18.315716,
+   "title": "Mateřská škola Vratimov",
+   "text": "MŠ Vratimov se dlouhodobě účastní projektů sledování kvality vzduchu. Účastnili jsme se projektu Čistá školka a nově sledujeme kvalitu ovzduší v rámci projektu Senzory do škol.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "Lenka Siváková",
+         "url": "mailto:skolka@msvratimov.cz"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "https://msvratimov.cz/vratimov/",
+   "facebook_page": ""
+},
+ {
+   "lat": 49.598162,
+   "lon": 18.002733,
+   "title": "Mateřská škola Máj",
+   "text": "MŠ Máj sleduje kvalitu ovzduší v rámci projektu Senzory do škol.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "Mgr. Jana Vrbová",
+         "url": "mailto:msmaj@seznam.cz"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "https://www.msmajnj.cz",
+   "facebook_page": ""
+},
+ {
+   "lat": 49.595735,
+   "lon": 17.999936,
+   "title": "Základní škola a Mateřská škola Nový Jičín, Jubilejní 3",
+   "text": "ZŠ a MŠ Jubilejní sleduje kvalitu ovzduší v rámci projektu Senzory do škol.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "Mgr. Ladislav Gróf",
+         "url": "mailto:skola@zsjubilejni.cz"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "http://zsjubilejni.cz",
+   "facebook_page": ""
+},
+ {
+   "lat": 49.594087,
+   "lon": 18.018854,
+   "title": "Mateřská škola Trojlístek Nový Jičín",
+   "text": "MŠ Trojlístek sleduje kvalitu ovzduší v rámci projektu Senzory do škol.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "Ing. Romana Seifertová",
+         "url": "mailto:reditelka.trojlistek@seznam.cz"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "https://trojlistek-novy-jicin.webnode.cz",
+   "facebook_page": ""
+},
+ {
+   "lat": 49.587483,
+   "lon": 18.017437,
+   "title": "Mateřská škola Sady Nový Jičín, Revoluční 52",
+   "text": "MŠ Sady Nový Jičín sleduje kvalitu ovzduší v rámci projektu Senzory do škol.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "Soňa Nevrlová",
+         "url": "mailto:reditelka-mssady@seznam.cz"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "https://www.ms-sady.cz",
+   "facebook_page": ""
+},
+ {
+   "lat": 49.207562,
+   "lon": 16.588298,
+   "title": "Gymnázium Matyáše Lercha, Brno, Žižkova 55",
+   "text": "Studenti Gymnázia Matyáše Lercha si postavili 3 senzory, jeden bude měřit ve škole a dva si budou půjčovat mezi sebou.",
+   "contacts_title": "Contact",
+   "contacts": [
+      {
+         "name": "Mgr. Miroslav Kubera",
+         "url": "mailto:kubera@gml.cz"
+      }
+   ],
+   "partner_title": "Partner",
+   "partner": [
+      {
+         "name": "Senzorvzduchu.cz",
+         "url": "https://www.senzorvzduchu.cz/",
+         "mastodon": "https://mastodonczech.cz/@senzorvzduchu"
+      }
+   ],
+   "website": "https://www.gml.cz",
+   "facebook_page": ""
+}
 ]

@@ -49,7 +49,7 @@ let s2s = {
                             }
                             school_popuptext += "<br /></b>";
                             data[i].partner.forEach(function (partner) {
-                                school_popuptext += "<a href=\"" + partner.url + "\">" + partner.name + "</a><br />";
+                                school_popuptext += "<a href=\"" + partner.url + "\">" + partner.name + "</a><br /><a href=\"" + partner.mastodon + "\">Mastodon</a><br />";
                             });
                             school_popuptext += "<br />";
                         }
