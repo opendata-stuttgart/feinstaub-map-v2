@@ -380,8 +380,9 @@ window.onload =
             }
             },
             _redraw(selection, projection, zoom) {
-                // Generate the mapped version of the data
-                let data = this._data.map((d) => {
+                // Only sensors near the view are binned.
+                const bounds = this.map.getBounds().pad(0.1);
+                let data = this._data.filter((d) => bounds.contains(new L.LatLng(this.options.lat(d), this.options.lng(d)))).map((d) => {
                     let lng = this.options.lng(d);
                     let lat = this.options.lat(d);
                     let point = projection.latLngToLayerPoint([lat, lng]);
@@ -416,7 +417,7 @@ window.onload =
                 let bins = hexbin(data);
 
                 // Join - Join the Hexagons to the data
-                let join = g.selectAll("path.hexbin-hexagon").data(bins);
+                let join = g.selectAll("path.hexbin-hexagon").data(bins, (d) => d.x + "," + d.y);
 
                 // Update - set the fill and opacity on a transition (opacity is re-applied in case the enter transition was cancelled)
                 join
